@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calion – Kroniki, Świat i Gry</title>
+<style>
+  :root {
+    --bg-main: #0d1014;
+    --bg-panel: #151921;
+    --bg-card: #1c222d;
+    --gold: #b38743;
+    --gold-bright: #d9aa5f;
+    --gold-dim: rgba(179, 135, 67, 0.25);
+    --text-main: #e8ddc7;
+    --text-muted: #9e9380;
+    --red: #8a2424;
+    --green: #3b6e4c;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    background-image: radial-gradient(circle at 50% 0%, rgba(179, 135, 67, 0.12), transparent 60%);
+    color: var(--text-main);
+    font-family: 'Georgia', serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* NAGŁÓWEK */
+  header {
+    text-align: center;
+    padding: 28px 16px 20px;
+    border-bottom: 2px solid var(--gold);
+    background: linear-gradient(180deg, #12161d 0%, #0d1014 100%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+  }
+
+  .crest {
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-family: system-ui, sans-serif;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    color: var(--gold-bright);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    max-width: 600px;
+    margin: 0 auto 16px;
+    line-height: 1.4;
+  }
+
+  .top-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .btn {
+    background: linear-gradient(180deg, #b38743, #7d5b28);
+    color: #fff;
+    border: 1px solid var(--gold-bright);
+    padding: 9px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-family: system-ui, sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn:hover {
+    filter: brightness(1.15);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: #1c222d;
+    border: 1px solid var(--gold);
+    color: var(--text-main);
+  }
+
+  .btn-danger {
+    background: var(--red);
+    border-color: #c94a4a;
+  }
+
+  /* NAWIGACJA KATEGORII */
+  .nav-bar {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #11141b;
+    border-bottom: 1px solid var(--gold-dim);
+    justify-content: center;
+  }
+
+  @media (max-width: 650px) {
+    .nav-bar {
+      justify-content: flex-start;
+    }
+  }
+
+  .tab-btn {
+    background: var(--bg-panel);
+    color: var(--text-muted);
+    border: 1px solid var(--gold-dim);
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: system-ui, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: 0.2s;
+  }
+
+  .tab-btn.active {
+    background: var(--gold);
+    color: #0d1014;
+    border-color: var(--gold-bright);
+  }
+
+  /* WYSZUKIWARKA */
+  .container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    flex: 1;
+  }
+
+  .search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .search-input {
+    flex: 1;
+    background: var(--bg-panel);
+    border: 1px solid var(--gold-dim);
+    color: var(--text-main);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+  }
+
+  .search-input:focus {
+    border-color: var(--gold);
+  }
+
+  /* SIATKA KART */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--gold-dim);
+    border-radius: 8px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gold);
+  }
+
+  .card:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  }
+
+  .card-badge {
+    display: inline-block;
+    font-family: system-ui, sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gold-bright);
+    background: rgba(179, 135, 67, 0.15);
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    align-self: flex-start;
+  }
+
+  .card h3 {
+    font-size: 1.2rem;
+    color: var(--text-main);
+    margin-bottom: 6px;
+  }
+
+  .card-sub {
+    font-size: 0.82rem;
+    color: var(--gold);
+    margin-bottom: 10px;
+    font-style: italic;
+  }
+
+  .card-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-footer {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: system-ui, sans-serif;
+    font-size: 0.8rem;
+    color: var(--gold-bright);
+  }
+
+  /* OKNA MODALNE (PODGLĄD I DODAWANIE) */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.82);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    z-index: 100;
+  }
+
+  .modal-overlay.open {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--bg-panel);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    width: 100%;
+    max-width: 650px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 24px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+  }
+
+  .modal h2 {
+    color: var(--gold-bright);
+    margin-bottom: 6px;
+  }
+
+  .modal-body {
+    margin: 16px 0;
+    line-height: 1.6;
+    white-space: pre-line;
+    color: var(--text-main);
+    font-size: 0.98rem;
+  }
+
+  .form-group {
+    margin-bottom: 14px;
+  }
+
+  .form-group label {
+    display: block;
+    font-family: system-ui, sans-serif;
+    font-size: 0.85rem;
+    color: var(--gold-bright);
+    margin-bottom: 5px;
+  }
+
+  .form-control {
+    width: 100%;
+    background: var(--bg-main);
+    border: 1px solid var(--gold-dim);
+    color: var(--text-main);
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.95rem;
+  }
+
+  textarea.form-control {
+    min-height: 140px;
+    resize: vertical;
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+
+  footer {
+    text-align: center;
+    padding: 16px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--gold-dim);
+    font-family: system-ui, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="crest">Królewskie Archiwa Gildii</div>
+  <h1>Kroniki Calionu</h1>
+  <p class="subtitle">Kompendium wiedzy o świecie, historii, bohaterach, potworach oraz grach osadzonych w uniwersum Calionu.</p>
+  <div class="top-actions">
+    <button class="btn" onclick="openFormModal()">➕ Dodaj nowy wpis</button>
+    <button class="btn btn-secondary" onclick="exportToClipboard()">📋 Kopiuj bazę (do GitHuba)</button>
+  </div>
+</header>
+
+<nav class="nav-bar">
+  <button class="tab-btn active" onclick="filterCategory('all', this)">Wszystko</button>
+  <button class="tab-btn" onclick="filterCategory('swiat', this)">🌍 Świat i Lokacje</button>
+  <button class="tab-btn" onclick="filterCategory('historia', this)">📜 Historia i Magia</button>
+  <button class="tab-btn" onclick="filterCategory('postacie', this)">👥 Postacie i Frakcje</button>
+  <button class="tab-btn" onclick="filterCategory('gry', this)">🎮 Gry Calionu</button>
+  <button class="tab-btn" onclick="filterCategory('inne', this)">💡 Pomysły i Inne</button>
+</nav>
+
+<main class="container">
+  <div class="search-bar">
+    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Szukaj w kronikach (np. Elderon, Leoryk, Ralfor, żywioły)..." oninput="renderCards()">
+  </div>
+
+  <div class="cards-grid" id="cardsGrid"></div>
+</main>
+
+<!-- MODAL PODGLĄDU WPISU -->
+<div class="modal-overlay" id="viewModal">
+  <div class="modal">
+    <span class="card-badge" id="viewBadge">Kategoria</span>
+    <h2 id="viewTitle">Tytuł wpisu</h2>
+    <div class="card-sub" id="viewSub">Podtytuł</div>
+    <div class="modal-body" id="viewDesc"></div>
+    <div id="viewLinkBox" style="margin-top: 12px;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="btnDeleteEntry">🗑 Usuń</button>
+      <button class="btn btn-secondary" id="btnEditEntry">✏️ Edytuj</button>
+      <button class="btn" onclick="closeModals()">Zamknij</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DODAWANIA / EDYCJI WPISU -->
+<div class="modal-overlay" id="formModal">
+  <div class="modal">
+    <h2 id="formHeader">Nowy wpis w Kronice</h2>
+    <input type="hidden" id="editId">
+    
+    <div class="form-group">
+      <label>Kategoria</label>
+      <select id="inputCat" class="form-control">
+        <option value="swiat">🌍 Świat i Lokacje</option>
+        <option value="historia">📜 Historia i Magia</option>
+        <option value="postacie">👥 Postacie i Frakcje</option>
+        <option value="gry">🎮 Gry Calionu</option>
+        <option value="inne">💡 Pomysły i Inne</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Tytuł / Nazwa</label>
+      <input type="text" id="inputTitle" class="form-control" placeholder="np. Las Orklag / Kapitan Leoryk / Nowa mechanika">
+    </div>
+
+    <div class="form-group">
+      <label>Krótki podtytuł / Rola / Tag</label>
+      <input type="text" id="inputSub" class="form-control" placeholder="np. Dziki las na północy / Dowódca Straży Miejskiej">
+    </div>
+
+    <div class="form-group">
+      <label>Pełny opis</label>
+      <textarea id="inputDesc" class="form-control" placeholder="Wpisz tutaj całą historię, notatki, statystyki lub pomysły..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Link zewnętrzny (opcjonalnie – np. do gry lub grafiki)</label>
+      <input type="text" id="inputLink" class="form-control" placeholder="np. https://the-rozu.github.io/Karcianka/">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModals()">Anuluj</button>
+      <button class="btn" onclick="saveEntry()">💾 Zapisz w Kronice</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Kroniki Calionu • Wersja GitHub Pages (Pamięć lokalna + Eksport JSON) • Przyszła domena: Calion.pl
+</footer>
+
+<script>
+  // --- STARTOWA BAZA DANYCH ŚWIATA CALIONU ---
+  const INITIAL_DATA = [
+    {
+      id: "swiat-calion",
+      cat: "swiat",
+      title: "Miasto Calion",
+      sub: "Stolica i wielkie miasto-port nad Zatoką Calionu",
+      desc: "Tętniące życiem miasto-port, w którym przecinają się szlaki handlowe, wpływy Królewskiej Gildii Poszukiwaczy oraz cienie pod ulicami.\n\nKluczowe miejsca w mieście:\n• Przedbramie Południowe – główny punkt kontrolny, gdzie strażnicy legitymują przybyszów.\n• Rynek Główny – serce handlu.\n• Karczma „Pod Złotym Mewem” – ulubione miejsce najemników i szulerów karcianych.\n• Kuźnia Ralfora – surowy warsztat krasnoludzkiego mistrza kowalstwa.\n• Kościół Światła oraz Slumsy Calionu rządzone przez półświatek.",
+      link: ""
+    },
+    {
+      id: "swiat-okolice",
+      cat: "swiat",
+      title: "Okolice Calionu (Szlak i Krainy)",
+      sub: "Geografia regionu wokół stolicy",
+      desc: "Krainy otaczające stolicę:\n• Elderon (Dziki Las Północy) – najstarszy las w okolicy, w którym ścieżki zmieniają się same. Pełen goblinów, slime'ów, wargów i starych ruin.\n• Durnhollow – surowa osada wśród gór Grzbietu Kolosa (3–5 dni pieszo od Calionu).\n• Las Orklag i Jaskinie Lizardów – gęsty, mroczny las pełen dawnych mogił orków i wilgotnych tuneli.\n• Bagna Milczenia i Zatopione Ruiny – martwe ziemie na zachodzie skrywające ruiny starsze niż Imperium.\n• Dolina Rzeki Mirdan, Stary Trakt Kupiecki, miasteczko Vellan, osada Ostahler oraz warownia Fort Daegur na wschodzie.",
+      link: ""
+    },
+    {
+      id: "hist-os-czasu",
+      cat: "historia",
+      title: "Oś Czasu Królestwa Calionu",
+      sub: "Od Wielkiej Wojny z Demonami do lat 824–825",
+      desc: "Główne epoki historyczne uniwersum:\n• Dawne Ery: Wielka Wojna z Demonami oraz wyniszczające Wojny Run.\n• Czasy współczesne (lata 824–825): Okres pozornego pokoju pod rządami króla Arthela IV, w którym narastają napięcia wewnątrz miasta, anomalie na Placu Egzekucyjnym (grzyby Kośniaka) oraz zagrożenia na leśnych traktach.",
+      link: ""
+    },
+    {
+      id: "hist-magia",
+      cat: "historia",
+      title: "Kodeks Dominacji Żywiołów",
+      sub: "System magii i traktaty archimaga Serisa Kela",
+      desc: "Magia w świecie Calionu opiera się na dwóch filarach:\n1. Koło Pięciu Żywiołów – ścisłe relacje dominacji i ulegania pomiędzy żywiołami (np. Ogień kontruje Naturę, a ulega Wodzie).\n2. Oś Dualizmu – odwieczne napięcie pomiędzy Światłem a Mrokiem (Cieniem).",
+      link: ""
+    },
+    {
+      id: "post-leoryk",
+      cat: "postacie",
+      title: "Kapitan Leoryk i Straż Miejska",
+      sub: "Dowódca obrony Calionu",
+      desc: "Straż Miejska Calionu to zorganizowana, zdyscyplinowana formacja obronna utrzymująca porządek w murach miasta. Choć formalnie podlega królowi Arthelowi IV, w praktyce twardą ręką dowodzi nią Kapitan Leoryk, którego słowo na ulicach i bramach jest prawem samym w sobie.",
+      link: ""
+    },
+    {
+      id: "post-bohaterowie",
+      cat: "postacie",
+      title: "Gildie i Znane Postacie",
+      sub: "Poszukiwacze przygód, rzemieślnicy i mieszkańcy",
+      desc: "Ważne postacie i ugrupowania:\n• Królewska Gildia Poszukiwaczy – zrzesza najemników i śmiałków realizujących zlecenia.\n• Talion (Alarion) – młody rycerz rangi D z Gildii, posługujący się Dworską Szermierką, Lwią Tarczą i zdolnością Krew Króla.\n• Ralfor – krasnoludzki kowal prowadzący słynną kuźnię.\n• Riven Wistlow – dowódca kompanii „Biały Kieł Północy”.\n• Kompania „The Boss”.\n• Rozu – postać związana z cieniami i półświatkiem Calionu.",
+      link: ""
+    },
+    {
+      id: "gry-szulernia",
+      cat: "gry",
+      title: "Calion: Karciana Szulernia",
+      sub: "Gra karciana na stole karczemnym (HTML/JS)",
+      desc: "Grywalna karcianka osadzona w karczmie Calionu. Zawiera pojedynki przy drewnianym stole, przedmioty, mikstury oraz mechaniki taktyczne. W przyszłości zostanie rozbudowana o tablicę wyników (Leaderboard) oraz tryb PvP.",
+      link: "https://the-rozu.github.io/Karcianka/"
+    },
+    {
+      id: "gry-roguelite",
+      cat: "gry",
+      title: "Kroniki Calionu: Szlak Wyprawy (Roguelite D6)",
+      sub: "Taktyczna gra kościana w klimacie Dicey Dungeons (16:9)",
+      desc: "Wyprawa przez losowo generowaną mapę Lasu Elderon. Przypisujesz kości D6 do kart ekwipunku i umiejętności, walcząc ze Slime'ami, Goblinami, Szkieletami i Wargami.",
+      link: ""
+    },
+    {
+      id: "gry-idle",
+      cat: "gry",
+      title: "Calion: Idle RPG",
+      sub: "Mobilna gra RPG z rozwojem statystyk i Kuźnią Ralfora",
+      desc: "Bohater automatycznie przemierza Las Eldaron, walcząc z falami Leśnych i Błękitnych Slime'ów oraz Czarnym Slime Bossem. Zbieraj brązowe monety, trenuj STR, CON, DEX, WIS i wykuwaj coraz lepszy oręż u Ralfora.",
+      link: ""
+    },
+    {
+      id: "inne-pomysly",
+      cat: "inne",
+      title: "Plany rozwoju projektu Calion.pl",
+      sub: "Pomysły na przyszłość i serwer",
+      desc: "Lista rzeczy do zrealizowania w kolejnych etapach:\n• Wykupienie domeny calion.pl i podpięcie jej pod projekt.\n• Postawienie własnego serwera (PC i7-11700F / Synology) z tunelem Cloudflare.\n• Wspólna tablica wyników (Leaderboard) dla znajomych w karciance.\n• Interaktywna mapa Okolic Calionu z klikalnymi znacznikami lokacji.",
+      link: ""
+    }
+  ];
+
+  const STORAGE_KEY = "calion_kronika_data_v1";
+  let entries = [];
+  let activeCategory = "all";
+
+  const catLabels = {
+    swiat: "🌍 Świat i Lokacje",
+    historia: "📜 Historia i Magia",
+    postacie: "👥 Postacie i Frakcje",
+    gry: "🎮 Gry Calionu",
+    inne: "💡 Pomysły i Inne"
+  };
+
+  function loadEntries() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      entries = JSON.parse(saved);
+    } else {
+      entries = [...INITIAL_DATA];
+      saveToStorage();
+    }
+  }
+
+  function saveToStorage() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  }
+
+  function filterCategory(cat, btnEl) {
+    activeCategory = cat;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+    renderCards();
+  }
+
+  function renderCards() {
+    const grid = document.getElementById('cardsGrid');
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+    grid.innerHTML = '';
+
+    const filtered = entries.filter(item => {
+      const matchCat = activeCategory === 'all' || item.cat === activeCategory;
+      const matchSearch = item.title.toLowerCase().includes(query) ||
+                          item.sub.toLowerCase().includes(query) ||
+                          item.desc.toLowerCase().includes(query);
+      return matchCat && matchSearch;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 30px;">Brak wpisów spełniających kryteria. Dodaj nowy wpis przyciskiem na górze!</p>`;
+      return;
+    }
+
+    filtered.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => openViewModal(item.id);
+
+      card.innerHTML = `
+        <div>
+          <span class="card-badge">${catLabels[item.cat] || item.cat}</span>
+          <h3>${item.title}</h3>
+          <div class="card-sub">${item.sub}</div>
+          <div class="card-desc">${item.desc}</div>
+        </div>
+        <div class="card-footer">
+          <span>Otwórz zwój →</span>
+          ${item.link ? '<span>🔗 Zawiera link</span>' : ''}
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function openViewModal(id) {
+    const item = entries.find(e => e.id === id);
+    if (!item) return;
+
+    document.getElementById('viewBadge').innerText = catLabels[item.cat] || item.cat;
+    document.getElementById('viewTitle').innerText = item.title;
+    document.getElementById('viewSub').innerText = item.sub;
+    document.getElementById('viewDesc').innerText = item.desc;
+
+    const linkBox = document.getElementById('viewLinkBox');
+    if (item.link) {
+      linkBox.innerHTML = `<a href="${item.link}" target="_blank" class="btn">🚀 Uruchom / Otwórz link</a>`;
+    } else {
+      linkBox.innerHTML = '';
+    }
+
+    document.getElementById('btnEditEntry').onclick = () => {
+      closeModals();
+      openFormModal(item.id);
+    };
+
+    document.getElementById('btnDeleteEntry').onclick = () => {
+      if (confirm(`Czy na pewno chcesz usunąć wpis „${item.title}”?`)) {
+        entries = entries.filter(e => e.id !== id);
+        saveToStorage();
+        closeModals();
+        renderCards();
+      }
+    };
+
+    document.getElementById('viewModal').classList.add('open');
+  }
+
+  function openFormModal(editId = null) {
+    const header = document.getElementById('formHeader');
+    document.getElementById('editId').value = editId || '';
+
+    if (editId) {
+      const item = entries.find(e => e.id === editId);
+      header.innerText = "Edytuj wpis w Kronice";
+      document.getElementById('inputCat').value = item.cat;
+      document.getElementById('inputTitle').value = item.title;
+      document.getElementById('inputSub').value = item.sub;
+      document.getElementById('inputDesc').value = item.desc;
+      document.getElementById('inputLink').value = item.link || '';
+    } else {
+      header.innerText = "Dodaj nowy wpis do Kroniki";
+      document.getElementById('inputCat').value = activeCategory === 'all' ? 'swiat' : activeCategory;
+      document.getElementById('inputTitle').value = '';
+      document.getElementById('inputSub').value = '';
+      document.getElementById('inputDesc').value = '';
+      document.getElementById('inputLink').value = '';
+    }
+
+    document.getElementById('formModal').classList.add('open');
+  }
+
+  function saveEntry() {
+    const editId = document.getElementById('editId').value;
+    const cat = document.getElementById('inputCat').value;
+    const title = document.getElementById('inputTitle').value.trim();
+    const sub = document.getElementById('inputSub').value.trim();
+    const desc = document.getElementById('inputDesc').value.trim();
+    const link = document.getElementById('inputLink').value.trim();
+
+    if (!title || !desc) {
+      alert("Wpisz przynajmniej tytuł oraz opis!");
+      return;
+    }
+
+    if (editId) {
+      const idx = entries.findIndex(e => e.id === editId);
+      if (idx > -1) {
+        entries[idx] = { id: editId, cat, title, sub, desc, link };
+      }
+    } else {
+      const newEntry = {
+        id: 'wpis-' + Date.now(),
+        cat,
+        title,
+        sub,
+        desc,
+        link
+      };
+      entries.unshift(newEntry);
+    }
+
+    saveToStorage();
+    closeModals();
+    renderCards();
+  }
+
+  function closeModals() {
+    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
+  }
+
+  function exportToClipboard() {
+    const jsonText = "const INITIAL_DATA = " + JSON.stringify(entries, null, 2) + ";";
+    navigator.clipboard.writeText(jsonText).then(() => {
+      alert("Skopiowano całą bazę wpisów do schowka! Możesz ją teraz wkleić do pliku na GitHubie, aby zapisać zmiany na stałe w chmurze.");
+    }).catch(() => {
+      alert("Nie udało się automatycznie skopiować. Spróbuj w przeglądarce.");
+    });
+  }
+
+  loadEntries();
+  renderCards();
+</script>
+</body>
+</html>
