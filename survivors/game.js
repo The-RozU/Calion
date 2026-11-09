@@ -1,13 +1,14 @@
-/* Calion Survivors · prototype 0.0.9 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.10 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.9';
+  const VERSION = '0.0.10';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
   const MAX_ENEMIES = 58; // Slightly denser than v0.0.8, without flooding the arena.
   const MAX_PROJECTILES = 70;
   const MAX_HOSTILE_PROJECTILES = 26;
   const ENEMY_UNLOCK_INTERVAL = 30;
   const ELITE_SPAWN_INTERVAL = 60;
+  const PLAYER_HIT_FLASH = .23; // Warm white hit feedback; separate from immunity blinking.
   const MAX_DROPS = 100;
   const MOD_SLOTS = 2;
   const BOUNCE_CHANCE_STEP = .20; // Every card level grants +20 percentage points.
@@ -55,7 +56,7 @@
     radius:19, contact:17, xp:8
   };
   const JUMP_DATA = {
-    'slime-blue':{range:155,travel:94,windup:.42,duration:.30,cooldown:3.6,radius:0,damage:0},
+    'slime-blue':{range:155,travel:112,windup:.42,duration:.26,cooldown:3.6,radius:0,damage:8},
     'slime-red':{range:160,travel:115,windup:.68,duration:.42,cooldown:4.7,radius:35,damage:11},
     'slime-elite':{range:190,travel:135,windup:.80,duration:.47,cooldown:4.1,radius:46,damage:16}
   };
@@ -69,7 +70,7 @@
     return {
       elapsed: 0, spawnClock: .95, enemyStage: 0, nextEliteAt: ELITE_SPAWN_INTERVAL, eliteSpawns: 0,
       shots: 0, kills: 0, nextEnemyId: 1,
-      player: { x: 0, y: 0, hp: 100, maxHp: 100, hitCooldown: 0, shotCooldown: .45, face: 1 },
+      player: { x: 0, y: 0, hp: 100, maxHp: 100, hitCooldown: 0, flashTimer: 0, shotCooldown: .45, face: 1 },
       level: 1, xp: 0, upgrades: Object.fromEntries(UPGRADE_DEFS.map(u => [u.id, 0])),
       enemies: [], projectiles: [], enemyProjectiles: [], drops: [], particles: [], offered: []
     };
@@ -313,7 +314,7 @@
       speed:kind.speed*(1 + .13*factor) + rand(-1.8,1.8),
       contact:kind.contact, hit:0, attackTimer:rand(1.1,2.4),
       skillCooldown:kind.id===ELITE_ENEMY.id?1.5:rand(1.8,3.0),
-      jump:null, impact:null,
+      jump:null, impact:null, recovery:0,
       aiTime:rand(0,TAU), wobble:rand(0,TAU), radius:kind.radius, spawnAge:0
     });
   }
@@ -386,6 +387,7 @@
     if (p.hitCooldown > 0) return;
     p.hp = Math.max(0, p.hp - damage);
     p.hitCooldown = .85;
+    p.flashTimer = PLAYER_HIT_FLASH;
     addParticles(p.x,p.y,6,'#bc6353');
     if (p.hp <= 0) endRun(false);
   }
@@ -402,10 +404,19 @@
       startX:e.x,startY:e.y,
       targetX:e.x+(p.x-e.x)*fraction,
       targetY:e.y+(p.y-e.y)*fraction,
+      dash:e.type==='slime-blue',dashHit:false,
       radius:info.radius,damage:info.damage
     };
     e.skillCooldown=info.cooldown+rand(-.3,.5);
     return true;
+  }
+
+  function distanceToSegmentSq(px,py,ax,ay,bx,by){
+    const dx=bx-ax,dy=by-ay;
+    const lengthSq=dx*dx+dy*dy;
+    const t=lengthSq===0?0:clamp(((px-ax)*dx+(py-ay)*dy)/lengthSq,0,1);
+    const cx=ax+t*dx,cy=ay+t*dy;
+    return (px-cx)*(px-cx)+(py-cy)*(py-cy);
   }
 
   function advanceEnemyJump(e,dt) {
@@ -418,10 +429,20 @@
     }
     j.elapsed+=dt;
     const t=clamp(j.elapsed/j.duration,0,1);
-    // Smooth flight along a fixed route; no homing at the last instant.
-    const move=t*t*(3-2*t);
+    // Blue uses a fast, straight dash along the warned line; red and elite still jump.
+    const move=j.dash?t:t*t*(3-2*t);
+    const oldX=e.x,oldY=e.y;
     e.x=j.startX+(j.targetX-j.startX)*move;
     e.y=j.startY+(j.targetY-j.startY)*move;
+    if(j.dash&&!j.dashHit){
+      const p=state.player;
+      const contact=e.radius+5;
+      // Segment test catches hits even if a dash moves past the player in one frame.
+      if(distanceToSegmentSq(p.x,p.y,oldX,oldY,e.x,e.y)<=contact*contact){
+        j.dashHit=true;
+        hurtPlayer(j.damage);
+      }
+    }
     if(t>=1){
       e.x=j.targetX;e.y=j.targetY;
       e.jump=null;
@@ -431,7 +452,8 @@
         if(Math.hypot(p.x-e.x,p.y-e.y)<=j.radius+5) hurtPlayer(j.damage);
         addParticles(e.x,e.y,9,e.elite?'#b69bba':'#c36d53');
       } else {
-        addParticles(e.x,e.y,3,'#75afd2');
+        e.recovery=.48; // Brief pause after sprint gives the player time to react.
+        addParticles(e.x,e.y,5,'#75afd2');
       }
     }
     return true;
@@ -463,6 +485,10 @@
       if(e.impact.time<=0)e.impact=null;
     }
     if(advanceEnemyJump(e,dt))return;
+    if(e.recovery>0){
+      e.recovery=Math.max(0,e.recovery-dt);
+      return;
+    }
     if(beginEnemyJump(e,p,d))return;
     let forward=1, sideways=0, speed=e.speed;
     if(e.type==='slime-blue'){
@@ -504,6 +530,7 @@
     const length = Math.hypot(dx,dy);
     if (length > 0) { dx /= Math.max(1,length); dy /= Math.max(1,length); const movement = combatStats().speed * dt; p.x += dx * movement; p.y += dy * movement; if (Math.abs(dx) > .15) p.face = dx > 0 ? 1 : -1; }
     p.hitCooldown = Math.max(0,p.hitCooldown - dt);
+    p.flashTimer = Math.max(0,p.flashTimer - dt);
     p.shotCooldown -= dt;
     if (p.shotCooldown <= 0) { fireArrow(); p.shotCooldown += combatStats().interval; }
     // Unlock order: 0 s green, 30 s blue, 60 s red, 90 s goblin, 120 s archer.
@@ -605,7 +632,7 @@
       const base = elite ? '#756281' : red ? '#9d493c' : blue ? '#427da2' : '#5e9750';
       const light = elite ? '#b9a1cb' : red ? '#d7775c' : blue ? '#76b9dd' : '#97c576';
       const dark = elite ? '#3f324d' : red ? '#542a2c' : blue ? '#224c6c' : '#315737';
-      const jump = e.jump?.phase==='airborne'
+      const jump = e.jump?.phase==='airborne' && !e.jump.dash
         ? Math.sin(Math.PI*clamp(e.jump.elapsed/e.jump.duration,0,1))*(elite?13:red?11:9)
         : Math.abs(Math.sin(e.wobble))*(blue?3:1.3);
       const top = y - Math.round(jump);
@@ -662,7 +689,7 @@
   function drawHero(p,cx,cy,animated) {
     const x=int(p.x-cx),y=int(p.y-cy), bounce=animated?int(Math.sin(state.elapsed*12)*1.2):0;
     ctx.fillStyle='#101811b8';ctx.beginPath();ctx.ellipse(x,y+11,12,4,0,0,TAU);ctx.fill();
-    if(p.hitCooldown>0 && int(p.hitCooldown*10)%2===0) ctx.globalAlpha=.48;
+    if(p.hitCooldown>0 && p.flashTimer<=0 && int(p.hitCooldown*10)%2===0) ctx.globalAlpha=.48;
     // Boots, cloak, leather body, hood and face, readable even at 2x CSS size.
     rect('#121710',x-7,y+6,6,7);rect('#171b14',x+2,y+6,6,7);
     rect('#253e33',x-9,y-6+bounce,19,17);rect('#345244',x-10,y+1+bounce,6,10);rect('#172c25',x+5,y+2+bounce,6,11);
@@ -673,7 +700,23 @@
     // Bow and arm swap sides according to orientation.
     ctx.save();ctx.translate(x + p.face*10,y-4+bounce);ctx.scale(p.face,1);
     rect('#9b7851',-6,1,8,3);rect('#9d7044',3,-12,2,22);rect('#cc9c5d',4,-14,2,4);rect('#dbd0b2',3,-11,1,19);rect('#b4864e',4,7,2,4);
-    ctx.restore();ctx.globalAlpha=1;
+    ctx.restore();
+    if(p.flashTimer>0){
+      // Silhouette highlights reproduce the monsters' hit flash, without a box over the player.
+      ctx.save();
+      ctx.globalAlpha=.28+.65*clamp(p.flashTimer/PLAYER_HIT_FLASH,0,1);
+      ctx.shadowColor='#fff1c9';ctx.shadowBlur=8;
+      rect('#fff1df',x-8,y-16+bounce,17,12); // Hood
+      rect('#ffddc6',x-5,y-10+bounce,12,7); // Face
+      rect('#fff1df',x-8,y-5+bounce,17,14); // Torso
+      rect('#fff1df',x-10,y+1+bounce,5,9); // Arms
+      rect('#fff1df',x+7,y+1+bounce,5,9);
+      rect('#fff1df',x-7,y+7+bounce,6,6); // Boots
+      rect('#fff1df',x+2,y+7+bounce,6,6);
+      rect('#ffddb1',x+p.face*13,y-16+bounce,3,23); // Bow
+      ctx.restore();
+    }
+    ctx.globalAlpha=1;
   }
   function drawArrow(a,cx,cy) {
     const x=a.x-cx,y=a.y-cy;
@@ -691,18 +734,35 @@
       if(e.hp<=0)continue;
       const j=e.jump,impact=e.impact;
       if(j && (j.phase==='warning'||j.phase==='airborne')){
-        const radius=j.radius || 13;
-        const x=j.targetX-cx,y=j.targetY-cy;
         const progress=j.phase==='warning'?1-clamp(j.time/j.windup,0,1):1;
-        const isBlue=e.type==='slime-blue';
         ctx.save();
-        ctx.globalAlpha=.55+progress*.35;
-        ctx.fillStyle=isBlue?'#345d8a36':e.elite?'#87619b3b':'#a842333b';
-        ctx.strokeStyle=isBlue?'#78bfdb':e.elite?'#c9a5d5':'#e88b65';
-        ctx.lineWidth=isBlue?1.8:2.3;
-        ctx.beginPath();ctx.arc(x,y,radius,0,TAU);ctx.fill();ctx.stroke();
-        const pulse=radius*(.35+.65*progress);
-        ctx.beginPath();ctx.arc(x,y,pulse,0,TAU);ctx.stroke();
+        if(j.dash){
+          // Luminous blue telegraph shows the exact path, not just the endpoint.
+          const ax=j.startX-cx,ay=j.startY-cy;
+          const bx=j.targetX-cx,by=j.targetY-cy;
+          ctx.lineCap='round';
+          ctx.globalAlpha=.22+.20*progress;
+          ctx.strokeStyle='#3b87bd';
+          ctx.lineWidth=12;
+          ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();
+          ctx.globalAlpha=.65+.30*progress;
+          ctx.strokeStyle='#a4e9ff';
+          ctx.lineWidth=2.5;
+          ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();
+          ctx.fillStyle='#c7f2ff';
+          ctx.fillRect(bx-3,by-3,6,6);
+        } else {
+          // Red slime and elite retain their circular area-of-effect warnings.
+          const radius=j.radius;
+          const x=j.targetX-cx,y=j.targetY-cy;
+          ctx.globalAlpha=.55+progress*.35;
+          ctx.fillStyle=e.elite?'#87619b3b':'#a842333b';
+          ctx.strokeStyle=e.elite?'#c9a5d5':'#e88b65';
+          ctx.lineWidth=2.3;
+          ctx.beginPath();ctx.arc(x,y,radius,0,TAU);ctx.fill();ctx.stroke();
+          const pulse=radius*(.35+.65*progress);
+          ctx.beginPath();ctx.arc(x,y,pulse,0,TAU);ctx.stroke();
+        }
         ctx.restore();
       }
       if(impact && impact.time>0){

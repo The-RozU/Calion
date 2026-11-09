@@ -1,6 +1,6 @@
-# Calion Survivors · prototyp 0.0.9
+# Calion Survivors · prototyp 0.0.10
 
-Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.9** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
+Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.10** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
 
 ## Uruchomienie
 
@@ -24,11 +24,19 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Pięciominutowa próba przetrwania; ekran wygranej lub porażki oraz statystyki.
 - Proceduralne proste grafiki pixel art w odcieniach ciemnego drewna, stali, kamienia i mchu. Docelowe sprite'y WebP i animacje zastąpią te tymczasowe rysunki.
 
+## Zmiany w 0.0.10
+
+- Niebieski slime zamiast skoku wykonuje **sprint/szarżę**. Ostrzeżenie to wąska niebieska linia wskazująca od punktu startowego po koniec szarży. Ostrzeżenie trwa 0,42 sekundy, sprint trwa 0,26 sekundy i sięga do 112 jednostek.
+- Sprint ma kolizję z graczem na całej przebytej trasie, daje maksymalnie jedno trafienie za **8 HP** i nie ma obrażeń obszarowych. Trasę ustala się na początku ostrzeżenia, więc można ją ominąć. Po sprincie slime odpoczywa przez 0,48 sekundy.
+- Czerwony slime i Spaczony slime zachowują skok z okręgiem ostrzegawczym i obrażeniami obszarowymi, bez zmian balansu.
+- Bohater po otrzymaniu obrażeń krótko rozbłyska ciepłym, jasnym konturem przez 0,23 sekundy. Po wygaśnięciu rozbłysku pozostaje dotychczasowe miganie sygnalizujące chwilową odporność na kolejne trafienia.
+- Nie zmieniono obrażeń łuku, HP, liczby przeciwników ani rozwoju kart.
+
 ## Zmiany w 0.0.9
 
 - Startowe HP Łotrzyka zmniejszone ze 120 do **100 HP**; ulepszenie Hart ducha pozostaje +20 HP.
 - Tekst sterowania na ekranie startowym i w instrukcji: **PC: WSAD / strzałki**. Samo sterowanie W/A/S/D pozostaje bez zmian.
-- Niebieski slime przygotowuje skok przez 0,42 s, celuje w pozycję gracza w chwili przygotowania i wykonuje szybki skok na odległość do 94 jednostek. Miejsce lądowania oznaczone jest niebieskim okręgiem.
+- Niebieski slime w v0.0.9 przygotowywał skok przez 0,42 s na odległość do 94 jednostek z niebieskim okręgiem celu (mechanika zastąpiona sprintem z linią w v0.0.10).
 - Czerwony slime przygotowuje skok przez 0,68 s, pokonuje do 115 jednostek i przy lądowaniu zadaje **11 obrażeń** w promieniu **35 jednostek**. Obszar jest zaznaczony na ziemi przed atakiem. Można uniknąć trafienia, zmieniając pozycję.
 - Co **60 sekund** (1:00, 2:00, 3:00, 4:00) pojawia się elitarny **Spaczony slime**: duży fioletowy wróg z koroną, zwiększonym HP (150 bazowo), większym zasięgiem skoku, ostrzeżeniem o ataku obszarowym (46 jednostek, 16 obrażeń), wyraźnym paskiem HP i 8 EXP za pokonanie.
 - Częstotliwość pojawiania się zwykłych przeciwników nieznacznie zwiększona (interwał od 1,60 do 0,80 s, wcześniej od 1,85 do 0,92 s). Maksymalna liczba przeciwników zwiększona **48 → 58**. Miejsce dla elity jest rezerwowane również przy pełnym limicie.
