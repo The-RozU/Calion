@@ -13,6 +13,7 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - `F`: przełączenie pełnego ekranu; także przycisk obok pauzy i przycisk w menu startowym.
 - `C`: panel statystyk na HUD oraz pod kartami (wstrzymuje walkę), zamykanie C, Esc lub ✕.
 - Podczas awansu: kliknij jedną z trzech kart lub naciśnij `1`, `2`, `3`.
+- Ruletka broni uruchamia się przed każdą wyprawą. Po pierwszym losowaniu można raz ponowić los lub zaakceptować broń.
 - Telefon: dwa joysticki dotykowe. Domyślnie prawy jest widoczny w pełni, a lewy w 10%; dotknięcie dowolnego joysticka zamienia ich widoczność i aktywuje sterowanie.
 
 ## Zakres prototypu
@@ -141,7 +142,7 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 
 ## Świadomie poza wersją 0.0.15
 
-Brak pozostałych klas, ruletki startowej, konta, monet, sklepu, zapisywania postępu, rzadkości kart, kooperacji i gotowych animowanych assetów. To osobny prototyp, nie zmienia istniejącej strony świata Calionu.
+Brak pozostałych klas, konta, monet, sklepu, zapisywania postępu, rzadkości kart, kooperacji i gotowych animowanych assetów. To osobny prototyp, nie zmienia istniejącej strony świata Calionu.
 
 ## Główne parametry balansu (na próbę)
 

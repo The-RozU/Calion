@@ -218,7 +218,7 @@
     visibleMode('menu');
     panelTitle.textContent = 'SURVIVORS';
     panelSubtitle.textContent = 'Zapomniany Trakt';
-    panelContent.innerHTML = `<p class="intro-text">Na Zapomniany Trakt wpełzły slime’y. Co 30 sekund dołączają kolejne potwory, a na końcu gobliny. Przetrwaj 5 minut. Łotrzyk sam strzela w najbliższe zagrożenie, a Ty wybierasz, jak rozwinąć jego łuk.</p>
+    panelContent.innerHTML = `<p class="intro-text">Na Zapomniany Trakt wpełzły slime’y. Co 30 sekund dołączają kolejne potwory, a na końcu gobliny. Przetrwaj 5 minut. Ruletka przed wyprawą losuje łuk, sztylety lub łańcuch. Możesz raz ponownie losować.</p>
       <div class="info-trio"><div class="info-box"><b>05:00</b><span>CZAS PRÓBY</span></div><div class="info-box"><b>1</b><span>BROŃ NA RUN</span></div><div class="info-box"><b>3</b><span>KARTY WYBORU</span></div></div>
       ${button('Rozpocznij wyprawę', 'start')}
       ${button('Pełny ekran', 'fullscreen', true)}
