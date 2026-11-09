@@ -1,7 +1,7 @@
-/* Calion Survivors · prototype 0.0.14 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.15 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.14';
+  const VERSION = '0.0.15';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
   const MAX_ENEMIES = 80; // Requested population cap for the denser arena.
   const MAX_PROJECTILES = 70;
@@ -15,6 +15,13 @@
   const BOUNCE_CHANCE_STEP = .20; // Every card level grants +20 percentage points.
   const BOUNCE_MAX_HITS = 2; // Chance is checked separately for each possible ricochet.
   const MODIFIER_EXCLUDES = Object.freeze({ bounce:'split', split:'bounce' });
+  const WEAPONS=[
+    {id:'bow',name:'Łuk',symbol:'➶',desc:'Strzały, odbicia i rozdzielenie.'},
+    {id:'daggers',name:'Sztylety',symbol:'⚔',desc:'Szybkie cięcia i krwawienie.'},
+    {id:'chain',name:'Łańcuch',symbol:'⛓',desc:'Wirujący atak obszarowy.'}
+  ];
+  const CHAIN_BASE_LENGTH=64,CHAIN_BASE_RATE=4.3,DEG=Math.PI/180;
+  let roulette=null;
   const CAMERA_ZOOM = 0.74; // v0.0.3: wider view without shrinking player hitboxes.
   const TAU = Math.PI * 2;
   const $ = id => document.getElementById(id);
@@ -35,13 +42,17 @@
   let worldTile = null;
 
   const UPGRADE_DEFS = [
-    { id: 'damage', title: 'Mocniejsze strzały', icon: '⚔', max: 3, type: 'stat', desc: 'Każdy poziom zwiększa obrażenia strzał o 2.' },
-    { id: 'speed', title: 'Sprawne dłonie', icon: '➶', max: 3, type: 'stat', desc: 'Każdy poziom skraca czas między strzałami o 11%.' },
-    { id: 'reach', title: 'Sokoli wzrok', icon: '◎', max: 2, type: 'stat', desc: 'Każdy poziom zwiększa zasięg ataku o 40.' },
+    { id: 'damage', title: 'Mocniejsze uderzenia', icon: '⚔', max: 3, type: 'stat', desc: 'Obrażenia broni +2 na poziom.' },
+    { id: 'speed', title: 'Sprawne dłonie', icon: '➶', max: 3, type: 'stat', desc: 'Przyspiesza ataki lub obrót łańcucha.' },
+    { id: 'reach', title: 'Sokoli wzrok', icon: '◎', max: 2, type: 'stat', desc: 'Zwiększa zasięg aktualnej broni.' },
     { id: 'feet', title: 'Lekki krok', icon: '✦', max: 2, type: 'stat', desc: 'Każdy poziom zwiększa prędkość ruchu o 10%.' },
     { id: 'health', title: 'Hart ducha', icon: '✚', max: 2, type: 'stat', desc: 'Zwiększa maksymalne życie o 20 i leczy 20 HP.' },
-    { id: 'bounce', title: 'Odbijająca strzała', icon: '↗', max: 5, type: 'modifier', desc: 'Po trafieniu strzała ma szansę odbić się do kolejnego wroga. Każdy poziom daje +20% szansy.' },
-    { id: 'split', title: 'Rozdzielenie', icon: '⋔', max: 2, type: 'modifier', desc: 'Po trafieniu strzała dzieli się na 2 słabsze pociski, a na drugim poziomie na 3.' }
+    { id: 'bounce', title: 'Odbijająca strzała', icon: '↗', max: 5, type: 'modifier', weapon:'bow', desc: 'Szansa na odbicie +20% na poziom.' },
+    { id: 'split', title: 'Rozdzielenie', icon: '⋔', max: 2, type: 'modifier', weapon:'bow', desc: 'Dzieli strzałę na 2/3 słabsze pociski.' },
+    { id: 'wideSlash', title: 'Szerokie cięcie', icon: '◡', max: 3, type:'modifier', weapon:'daggers', desc:'Poszerza zamach do 60° / 90° / 120°.' },
+    { id: 'bleed', title: 'Krwawiące ostrza', icon: '♠', max: 3, type:'modifier', weapon:'daggers', desc:'Krwawienie przez 3 s: 2 / 4 / 6 HP/s, bez kumulowania.' },
+    { id: 'longChain', title: 'Długi łańcuch', icon: '⛓', max: 3, type:'modifier', weapon:'chain', desc:'Długość łańcucha +20% na poziom.' },
+    { id: 'doubleChain', title: 'Podwójny łańcuch', icon: '⟲', max: 3, type:'modifier', weapon:'chain', desc:'Drugi łańcuch, następnie obroty +20% / +40%.' }
   ];
 
   // Every 30 seconds one more enemy kind joins the spawn pool.
@@ -70,7 +81,7 @@
   function newState() {
     return {
       elapsed: 0, spawnClock: .95, enemyStage: 0, nextEliteAt: ELITE_SPAWN_INTERVAL, eliteSpawns: 0,
-      shots: 0, kills: 0, nextEnemyId: 1,
+      shots: 0, kills: 0, nextEnemyId: 1, weapon:'bow', chainAngle:0, slash:null,
       player: { x: 0, y: 0, motionX: 0, motionY: 0, hp: 100, maxHp: 100, hitCooldown: 0, flashTimer: 0, shotCooldown: .45, face: 1 },
       level: 1, xp: 0, upgrades: Object.fromEntries(UPGRADE_DEFS.map(u => [u.id, 0])),
       enemies: [], projectiles: [], enemyProjectiles: [], drops: [], particles: [], offered: []
@@ -81,13 +92,24 @@
   const BASE_DAMAGE=17, DAMAGE_PER_LEVEL=2, BASE_INTERVAL=.75, INTERVAL_FACTOR=.11;
   const BASE_RANGE=205, RANGE_STEP=40, BASE_SPEED=99, SPEED_FACTOR=.10;
   function combatStats(){
-    const u=state.upgrades,p=state.player;
-    const damage=BASE_DAMAGE+u.damage*DAMAGE_PER_LEVEL;
-    const interval=BASE_INTERVAL*(1-u.speed*INTERVAL_FACTOR);
-    return {damage,interval,rate:1/interval,dps:damage/interval,
-      range:BASE_RANGE+u.reach*RANGE_STEP,speed:BASE_SPEED*(1+u.feet*SPEED_FACTOR),
-      hp:p.hp,maxHp:p.maxHp,bounce:u.bounce,bounceChance:Math.round(u.bounce*BOUNCE_CHANCE_STEP*100),split:u.split,
-      splitCount:u.split?u.split+1:0,usedMods:Number(u.bounce>0)+Number(u.split>0)};
+    const u=state.upgrades,p=state.player,w=state.weapon;
+    const damage=(w==='daggers'?9:w==='chain'?17:BASE_DAMAGE)+u.damage*DAMAGE_PER_LEVEL;
+    let interval,range,chainCount=0,chainRate=0,arc=0;
+    if(w==='daggers'){
+      interval=.32*(1-u.speed*INTERVAL_FACTOR);range=58+u.reach*14;
+      arc=[40,60,90,120][u.wideSlash];
+    }else if(w==='chain'){
+      chainCount=u.doubleChain?2:1;
+      chainRate=CHAIN_BASE_RATE*(1+u.speed*INTERVAL_FACTOR)*(1+Math.max(0,u.doubleChain-1)*.2);
+      interval=TAU/chainRate;
+      range=CHAIN_BASE_LENGTH*(1+u.longChain*.2)+u.reach*11;
+    }else{interval=BASE_INTERVAL*(1-u.speed*INTERVAL_FACTOR);range=BASE_RANGE+u.reach*RANGE_STEP;}
+    const rate=w==='chain'?chainRate/TAU*chainCount:1/interval;
+    const usedMods=UPGRADE_DEFS.filter(def=>def.type==='modifier'&&def.weapon===w&&u[def.id]>0).length;
+    return {weapon:w,weaponName:WEAPONS.find(z=>z.id===w).name,damage,interval,rate,dps:damage*rate,range,
+      arc,chainCount,chainRate,bleedDps:u.bleed*2,speed:BASE_SPEED*(1+u.feet*SPEED_FACTOR),
+      hp:p.hp,maxHp:p.maxHp,bounce:u.bounce,bounceChance:Math.round(u.bounce*BOUNCE_CHANCE_STEP*100),
+      split:u.split,splitCount:u.split?u.split+1:0,usedMods};
   }
   const fmt=(x,n=1)=>x.toFixed(n).replace('.',',');
   function buildSummary(){
@@ -175,6 +197,7 @@
     mode=next;
     overlay.classList.toggle('shown',next!=='playing');
     overlay.classList.toggle('levelup-mode',next==='levelup');
+    overlay.classList.toggle('roulette-mode',next==='roulette');
   }
   function button(label, action, secondary = false) {
     return `<button class="${secondary ? 'secondary-button' : 'primary-button'}" data-action="${action}">${label}</button>`;
@@ -192,13 +215,53 @@
       <p class="hint">PC: WSAD / strzałki · P: pauza · C: statystyki · 1, 2, 3: wybór karty<br>Telefon: joystick po lewej lub prawej stronie</p>`;
     updateHud();
   }
-  function startGame() {
-    closeStats();
-    state = newState();
-    keys.clear(); touchMove.x = touchMove.y = 0; resetJoystick();
-    visibleMode('playing');
-    updateHud();
-    toast('Przetrwaj pięć minut');
+  function beginRoulette(){
+    closeStats();state=newState();keys.clear();touchMove.x=touchMove.y=0;resetJoystick();
+    roulette={spinning:false,elapsed:0,duration:2.25,index:0,start:0,target:0,steps:0,lastStep:-1,selection:null,rerollsLeft:1};
+    visibleMode('roulette');panelTitle.textContent='RULETKA BRONI';
+    panelSubtitle.textContent='Los łotrzyka · jedna broń na wyprawę';
+    spinRoulette(false);
+  }
+  function spinRoulette(reroll){
+    if(mode!=='roulette'||!roulette||roulette.spinning)return;
+    if(reroll){
+      if(roulette.rerollsLeft<=0||!roulette.selection)return;
+      roulette.rerollsLeft--;
+    }else if(roulette.selection!==null)return;
+    const choices=WEAPONS.map((w,i)=>i).filter(i=>!reroll||WEAPONS[i].id!==roulette.selection);
+    roulette.target=choices[int(Math.random()*choices.length)];
+    roulette.start=roulette.index;roulette.steps=21+((roulette.target-roulette.start+3)%3);
+    roulette.elapsed=0;roulette.spinning=true;roulette.lastStep=-1;roulette.selection=null;
+    renderRoulette();
+  }
+  function updateRoulette(dt){
+    if(mode!=='roulette'||!roulette||!roulette.spinning)return;
+    roulette.elapsed=Math.min(roulette.duration,roulette.elapsed+dt);
+    const progress=clamp(roulette.elapsed/roulette.duration,0,1);
+    const step=Math.min(roulette.steps,int((1-(1-progress)**3)*roulette.steps));
+    if(step!==roulette.lastStep){roulette.index=(roulette.start+step)%3;roulette.lastStep=step;renderRoulette();}
+    if(progress>=1){
+      roulette.index=roulette.target;roulette.spinning=false;
+      roulette.selection=WEAPONS[roulette.target].id;renderRoulette();
+    }
+  }
+  function renderRoulette(){
+    const r=roulette;
+    const cards=WEAPONS.map((w,i)=>'<div class="roulette-weapon '+(i===r.index?'selected':'')+'"><span class="roulette-symbol">'+w.symbol+'</span><strong>'+w.name+'</strong><small>'+w.desc+'</small></div>').join('');
+    const outcome=r.spinning?'Ruletka wiruje…':'Wylosowano: <strong>'+WEAPONS[r.target].name+'</strong>';
+    const buttons=r.spinning?'<p class="hint">Losowanie trwa…</p>':
+      (r.rerollsLeft?button('Losuj ponownie (1 raz)','reroll',true):'<p class="roulette-spent">Ponowne losowanie wykorzystane</p>')+
+      button('Ruszaj w drogę','confirm');
+    panelContent.innerHTML='<div class="roulette-track">'+cards+'</div><p class="roulette-outcome" aria-live="polite">'+outcome+'</p>'+buttons+
+      '<p class="hint">Wylosowana broń zostaje do końca wyprawy. '+(r.rerollsLeft?'Możesz raz ponowić losowanie.':'Ostateczny wynik.')+'</p>';
+  }
+  function startGame(){
+    if(mode!=='roulette'||!roulette||roulette.spinning||!roulette.selection)return;
+    const weapon=roulette.selection;
+    closeStats();state=newState();state.weapon=weapon;roulette=null;
+    keys.clear();touchMove.x=touchMove.y=0;resetJoystick();
+    visibleMode('playing');updateHud();
+    toast('Broń: '+WEAPONS.find(w=>w.id===weapon).name+'. Przetrwaj pięć minut!');
   }
   function pauseGame() {
     if (mode === 'playing') {
@@ -218,9 +281,9 @@
   }
   function getEligible() {
     const levels = state.upgrades;
-    const occupied = ['bounce','split'].filter(id => levels[id] > 0).length;
-    return UPGRADE_DEFS.filter(u => levels[u.id] < u.max &&
-      !excludedModifier(u.id) && (u.type !== 'modifier' || levels[u.id] > 0 || occupied < MOD_SLOTS));
+    const occupied=UPGRADE_DEFS.filter(u=>u.type==='modifier'&&u.weapon===state.weapon&&levels[u.id]>0).length;
+    return UPGRADE_DEFS.filter(u=>(!u.weapon||u.weapon===state.weapon)&&levels[u.id]<u.max&&
+      !excludedModifier(u.id)&&(u.type!=='modifier'||levels[u.id]>0||occupied<MOD_SLOTS));
   }
   function showLevelUp() {
     const options = getEligible();
@@ -349,15 +412,63 @@
       angle:a, life:1.5, damage:combatStats().damage, visited:new Set(), bounces:0, generation:0, splitUsed:false });
     addParticles(p.x + Math.cos(a)*13, p.y - 4 + Math.sin(a)*11, 1, '#d3b988');
   }
+  function attackDaggers(){
+    const p=state.player,s=combatStats(),target=nearestEnemy(p.x,p.y,s.range);
+    if(!target)return;
+    const angle=Math.atan2(target.y-p.y,target.x-p.x),half=s.arc*DEG/2;
+    p.face=Math.cos(angle)>=0?1:-1;
+    state.shots++;state.slash={angle,half,range:s.range,time:.18,full:.18};
+    for(const e of state.enemies){
+      if(e.hp<=0)continue;
+      const d=Math.hypot(e.x-p.x,e.y-p.y);
+      if(d>s.range+e.radius)continue;
+      const theta=Math.atan2(e.y-p.y,e.x-p.x);
+      const diff=Math.atan2(Math.sin(theta-angle),Math.cos(theta-angle));
+      if(Math.abs(diff)>half+Math.asin(Math.min(1,e.radius/Math.max(d,e.radius))))continue;
+      hurtEnemy(e,s.damage);
+      if(e.hp>0&&state.upgrades.bleed>0)e.bleed={time:3,dps:state.upgrades.bleed*2,visualClock:0};
+    }
+  }
+  function updateBleeds(dt){
+    for(const e of state.enemies){
+      if(e.hp<=0||!e.bleed)continue;
+      const b=e.bleed,active=Math.min(dt,b.time);
+      b.time-=active;b.visualClock+=active;
+      if(active>0)hurtEnemy(e,b.dps*active,false);
+      if(e.hp>0&&b.visualClock>=.5){b.visualClock-=.5;addParticles(e.x,e.y-10,1,'#b34c49');}
+      if(b.time<=.00001)e.bleed=null;
+    }
+  }
+  function advanceChains(dt){
+    const p=state.player,s=combatStats(),before=state.chainAngle;
+    const delta=s.chainRate*dt,steps=Math.max(1,Math.ceil(delta/.16));
+    for(let step=1;step<=steps;step++){
+      const angle=before+delta*step/steps;
+      for(let c=0;c<s.chainCount;c++){
+        const rotation=angle+c*Math.PI,turn=Math.floor(rotation/TAU);
+        const ex=p.x+Math.cos(rotation)*s.range,ey=p.y+Math.sin(rotation)*s.range;
+        for(const e of state.enemies){
+          if(e.hp<=0)continue;
+          if(!e.chainTurns)e.chainTurns=[-Infinity,-Infinity];
+          if(e.chainTurns[c]===turn)continue;
+          const radius=e.radius+4;
+          if(distanceToSegmentSq(e.x,e.y,p.x,p.y,ex,ey)>radius*radius)continue;
+          e.chainTurns[c]=turn;hurtEnemy(e,s.damage);
+        }
+      }
+    }
+    state.chainAngle=before+delta;
+  }
   function addParticles(x,y,count,color) {
     for (let i = 0; i < count && state.particles.length < 90; i++) {
       state.particles.push({ x, y, vx:rand(-40,40), vy:rand(-48,22), life:rand(.2,.42), max:.42, color });
     }
   }
-  function hurtEnemy(enemy,damage) {
-    enemy.hp -= damage; enemy.hit = .13;
-    addParticles(enemy.x,enemy.y - 6,2,'#9ca57b');
-    if (enemy.hp <= 0) {
+  function hurtEnemy(enemy,damage,visual=true) {
+    if(enemy.hp<=0)return;
+    enemy.hp-=damage;
+    if(visual){enemy.hit=.13;addParticles(enemy.x,enemy.y-6,2,'#9ca57b');}
+    if(enemy.hp<=0) {
       state.kills++;
       addParticles(enemy.x,enemy.y,5,'#677a53');
       if (state.drops.length < MAX_DROPS) state.drops.push({x:enemy.x,y:enemy.y,amount:enemy.xp+(state.kills%8===0?1:0),phase:rand(0,TAU)});
@@ -646,7 +757,12 @@
     p.hitCooldown = Math.max(0,p.hitCooldown - dt);
     p.flashTimer = Math.max(0,p.flashTimer - dt);
     p.shotCooldown -= dt;
-    if (p.shotCooldown <= 0) { fireArrow(); p.shotCooldown += combatStats().interval; }
+    if(state.weapon==='chain')advanceChains(dt);
+    else if(p.shotCooldown<=0){
+      if(state.weapon==='daggers')attackDaggers();else fireArrow();
+      p.shotCooldown+=combatStats().interval;
+    }
+    if(state.slash){state.slash.time-=dt;if(state.slash.time<=0)state.slash=null;}
     // Unlock order: 0 s green, 30 s blue, 60 s red, 90 s goblin, 120 s archer.
     const stage = Math.min(ENEMY_ROSTER.length-1, int(s.elapsed/ENEMY_UNLOCK_INTERVAL));
     while (s.enemyStage < stage) {
@@ -671,6 +787,7 @@
       if (p.hp <= 0) { updateHud(); return; }
     }
     resolveEnemyCrowding();
+    updateBleeds(dt);
     for (let i = s.projectiles.length-1; i >= 0; i--) {
       const a = s.projectiles[i]; a.x += a.vx*dt; a.y += a.vy*dt; a.life -= dt;
       let keep = a.life > 0;
@@ -926,6 +1043,7 @@
   function tick(ts) {
     const dt=Math.min((ts-lastTimestamp)/1000||0,.04);lastTimestamp=ts;
     if(mode==='playing' && !statsOpen)update(dt);
+    if(mode==='roulette' && !statsOpen)updateRoulette(dt);
     if(toastLeft>0){toastLeft-=dt;if(toastLeft<=0)toastEl.classList.remove('active');}
     draw();requestAnimationFrame(tick);
   }
@@ -1011,13 +1129,14 @@
     document.addEventListener('keydown',e=>{
       const key=e.key.toLowerCase();
       if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(key))e.preventDefault();
-      if(key==='c'&&!e.repeat&&!e.altKey&&!e.ctrlKey&&!e.metaKey){e.preventDefault();toggleStats();return;}
+      if(key==='c'&&mode!=='roulette'&&!e.repeat&&!e.altKey&&!e.ctrlKey&&!e.metaKey){e.preventDefault();toggleStats();return;}
       if(key==='escape'&&statsOpen){e.preventDefault();closeStats();return;}
       if(statsOpen)return;
       if(key==='f'&&!e.repeat&&!e.altKey&&!e.ctrlKey&&!e.metaKey){e.preventDefault();toggleFullscreen();return;}
       if(key==='escape'&&isFullscreen()) return; // Browser handles Esc to exit full screen.
       if(key==='p'||key==='escape'){pauseGame();return;}
       if(mode==='levelup'&&['1','2','3'].includes(key)){selectCard(Number(key)-1);return;}
+      if(mode==='roulette')return;
       keys.add(key);
     });
     document.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
@@ -1025,7 +1144,9 @@
     overlay.addEventListener('click',e=>{
       const card=e.target.closest('[data-card]');if(card){selectCard(Number(card.dataset.card));return;}
       const action=e.target.closest('[data-action]')?.dataset.action;
-      if(action==='start'||action==='restart')startGame();
+      if(action==='start'||action==='restart')beginRoulette();
+      else if(action==='reroll')spinRoulette(true);
+      else if(action==='confirm')startGame();
       else if(action==='menu')showMenu();else if(action==='resume')visibleMode('playing');
       else if(action==='fullscreen')toggleFullscreen();
       else if(action==='stats')showStats();
