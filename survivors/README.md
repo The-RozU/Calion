@@ -1,6 +1,6 @@
-# Calion Survivors · prototyp 0.0.8
+# Calion Survivors · prototyp 0.0.9
 
-Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.8** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
+Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.9** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
 
 ## Uruchomienie
 
@@ -8,7 +8,7 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 
 ## Sterowanie
 
-- PC: `WASD` lub strzałki; łuk automatycznie strzela do najbliższego wroga.
+- PC: `WSAD` lub strzałki; łuk automatycznie strzela do najbliższego wroga.
 - `P` / `Esc`: pauza i wznowienie (Esc w pełnym ekranie wychodzi z trybu pełnoekranowego).
 - `F`: przełączenie pełnego ekranu; także przycisk obok pauzy i przycisk w menu startowym.
 - `C`: panel statystyk na HUD oraz pod kartami (wstrzymuje walkę), zamykanie C, Esc lub ✕.
@@ -17,12 +17,23 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 
 ## Zakres prototypu
 
-- Jedna klasa (Łotrzyk), jedna broń (Łuk), jedna arena (Zapomniany Trakt), pięć typów wrogów (3 slime’y i 2 gobliny).
+- Jedna klasa (Łotrzyk), jedna broń (Łuk), jedna arena (Zapomniany Trakt), pięć podstawowych typów wrogów (3 slime’y i 2 gobliny) oraz elitarny Spaczony slime.
 - Ruch w czterech kierunkach, kamera śledząca postać, automatyczne celowanie, kolizje, punkty życia.
 - Zdobywanie EXP i **powolniejsze** poziomowanie o rosnącym koszcie, zatrzymanie gry na wybór jednej z **3 losowych kart**.
 - Limity poziomów kart, **2 sloty modyfikatorów**; odbijanie i dzielenie strzał **wzajemnie się wykluczają**. Podział ma tylko jedno pokolenie, a odbicia są limitowane.
 - Pięciominutowa próba przetrwania; ekran wygranej lub porażki oraz statystyki.
 - Proceduralne proste grafiki pixel art w odcieniach ciemnego drewna, stali, kamienia i mchu. Docelowe sprite'y WebP i animacje zastąpią te tymczasowe rysunki.
+
+## Zmiany w 0.0.9
+
+- Startowe HP Łotrzyka zmniejszone ze 120 do **100 HP**; ulepszenie Hart ducha pozostaje +20 HP.
+- Tekst sterowania na ekranie startowym i w instrukcji: **PC: WSAD / strzałki**. Samo sterowanie W/A/S/D pozostaje bez zmian.
+- Niebieski slime przygotowuje skok przez 0,42 s, celuje w pozycję gracza w chwili przygotowania i wykonuje szybki skok na odległość do 94 jednostek. Miejsce lądowania oznaczone jest niebieskim okręgiem.
+- Czerwony slime przygotowuje skok przez 0,68 s, pokonuje do 115 jednostek i przy lądowaniu zadaje **11 obrażeń** w promieniu **35 jednostek**. Obszar jest zaznaczony na ziemi przed atakiem. Można uniknąć trafienia, zmieniając pozycję.
+- Co **60 sekund** (1:00, 2:00, 3:00, 4:00) pojawia się elitarny **Spaczony slime**: duży fioletowy wróg z koroną, zwiększonym HP (150 bazowo), większym zasięgiem skoku, ostrzeżeniem o ataku obszarowym (46 jednostek, 16 obrażeń), wyraźnym paskiem HP i 8 EXP za pokonanie.
+- Częstotliwość pojawiania się zwykłych przeciwników nieznacznie zwiększona (interwał od 1,60 do 0,80 s, wcześniej od 1,85 do 0,92 s). Maksymalna liczba przeciwników zwiększona **48 → 58**. Miejsce dla elity jest rezerwowane również przy pełnym limicie.
+- Ostrzeżenia i animacje lądowania są rysowane bez dodatkowych assetów. Atak obszarowy zadaje obrażenia tylko przy lądowaniu, nie przez cały czas ostrzeżenia.
+- Poza tym zachowano dotychczasowe poziomy ulepszeń, szanse odbić i ograniczenia modyfikatorów.
 
 ## Zmiany w 0.0.8
 
@@ -80,7 +91,7 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Przełączanie aktywnego joysticka przez dotknięcie, sterowanie wyłącznie jednym joystickiem naraz.
 - Kamera oddalona do 82% poprzedniego przybliżenia, widać większy obszar areny.
 
-## Świadomie poza wersją 0.0.8
+## Świadomie poza wersją 0.0.9
 
 Brak pozostałych klas, ruletki startowej, konta, monet, sklepu, zapisywania postępu, rzadkości kart, kooperacji i gotowych animowanych assetów. To osobny prototyp, nie zmienia istniejącej strony świata Calionu.
 

@@ -1,12 +1,13 @@
-/* Calion Survivors · prototype 0.0.8 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.9 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.8';
+  const VERSION = '0.0.9';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
-  const MAX_ENEMIES = 48;
+  const MAX_ENEMIES = 58; // Slightly denser than v0.0.8, without flooding the arena.
   const MAX_PROJECTILES = 70;
   const MAX_HOSTILE_PROJECTILES = 26;
   const ENEMY_UNLOCK_INTERVAL = 30;
+  const ELITE_SPAWN_INTERVAL = 60;
   const MAX_DROPS = 100;
   const MOD_SLOTS = 2;
   const BOUNCE_CHANCE_STEP = .20; // Every card level grants +20 percentage points.
@@ -49,6 +50,15 @@
     { id:'goblin', name:'Goblin', weight:3, hp:36, speed:35, radius:10, contact:11, xp:2 },
     { id:'goblin-archer', name:'Goblin łucznik', weight:2, hp:29, speed:31, radius:10, contact:7, xp:2 }
   ];
+  const ELITE_ENEMY = {
+    id:'slime-elite', name:'Spaczony slime', hp:150, speed:28,
+    radius:19, contact:17, xp:8
+  };
+  const JUMP_DATA = {
+    'slime-blue':{range:155,travel:94,windup:.42,duration:.30,cooldown:3.6,radius:0,damage:0},
+    'slime-red':{range:160,travel:115,windup:.68,duration:.42,cooldown:4.7,radius:35,damage:11},
+    'slime-elite':{range:190,travel:135,windup:.80,duration:.47,cooldown:4.1,radius:46,damage:16}
+  };
   const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
   const rand = (min, max) => Math.random() * (max - min) + min;
   const dist2 = (a, b) => (a.x - b.x) ** 2 + (a.y - b.y) ** 2;
@@ -57,8 +67,9 @@
 
   function newState() {
     return {
-      elapsed: 0, spawnClock: 1.1, enemyStage: 0, shots: 0, kills: 0, nextEnemyId: 1,
-      player: { x: 0, y: 0, hp: 120, maxHp: 120, hitCooldown: 0, shotCooldown: .45, face: 1 },
+      elapsed: 0, spawnClock: .95, enemyStage: 0, nextEliteAt: ELITE_SPAWN_INTERVAL, eliteSpawns: 0,
+      shots: 0, kills: 0, nextEnemyId: 1,
+      player: { x: 0, y: 0, hp: 100, maxHp: 100, hitCooldown: 0, shotCooldown: .45, face: 1 },
       level: 1, xp: 0, upgrades: Object.fromEntries(UPGRADE_DEFS.map(u => [u.id, 0])),
       enemies: [], projectiles: [], enemyProjectiles: [], drops: [], particles: [], offered: []
     };
@@ -172,7 +183,7 @@
       <div class="info-trio"><div class="info-box"><b>05:00</b><span>CZAS PRÓBY</span></div><div class="info-box"><b>1</b><span>BROŃ NA RUN</span></div><div class="info-box"><b>3</b><span>KARTY WYBORU</span></div></div>
       ${button('Rozpocznij wyprawę', 'start')}
       ${button('Pełny ekran', 'fullscreen', true)}
-      <p class="hint">PC: WASD / strzałki · P: pauza · C: statystyki · 1, 2, 3: wybór karty<br>Telefon: joystick po lewej lub prawej stronie</p>`;
+      <p class="hint">PC: WSAD / strzałki · P: pauza · C: statystyki · 1, 2, 3: wybór karty<br>Telefon: joystick po lewej lub prawej stronie</p>`;
     updateHud();
   }
   function startGame() {
@@ -287,7 +298,8 @@
     const weightSum = eligible.reduce((sum, def) => sum + def.weight, 0);
     let roll = Math.random() * weightSum, kind = eligible[eligible.length - 1];
     for (const def of eligible) { roll -= def.weight; if (roll < 0) { kind = def; break; } }
-    if (forcedType) kind = ENEMY_ROSTER.find(def => def.id === forcedType) || kind;
+    if (forcedType) kind = forcedType===ELITE_ENEMY.id
+      ? ELITE_ENEMY : (ENEMY_ROSTER.find(def => def.id === forcedType) || kind);
     const angle = rand(0,TAU);
     // Limited distance keeps enemies participating on ultrawide monitors as well as phones.
     const radius = clamp(Math.min(screenW,screenH)/2 + 52, 225, 355);
@@ -297,8 +309,11 @@
     const hp = Math.round(kind.hp * (1 + .28 * factor));
     state.enemies.push({
       id:state.nextEnemyId++, type:kind.id, x, y, hp, maxHp:hp, xp:kind.xp,
+      elite:kind.id===ELITE_ENEMY.id,
       speed:kind.speed*(1 + .13*factor) + rand(-1.8,1.8),
       contact:kind.contact, hit:0, attackTimer:rand(1.1,2.4),
+      skillCooldown:kind.id===ELITE_ENEMY.id?1.5:rand(1.8,3.0),
+      jump:null, impact:null,
       aiTime:rand(0,TAU), wobble:rand(0,TAU), radius:kind.radius, spawnAge:0
     });
   }
@@ -375,45 +390,109 @@
     if (p.hp <= 0) endRun(false);
   }
 
+  function beginEnemyJump(e, p, distance) {
+    const info=JUMP_DATA[e.type];
+    if(!info || e.jump || e.skillCooldown>0 || e.spawnAge<.85 ||
+        distance > info.range || distance<28) return false;
+    // Target locks in during the tell. A moving player can dodge the landing zone.
+    const fraction=Math.min(1,info.travel/distance);
+    e.jump={
+      phase:'warning',time:info.windup,windup:info.windup,
+      duration:info.duration,elapsed:0,
+      startX:e.x,startY:e.y,
+      targetX:e.x+(p.x-e.x)*fraction,
+      targetY:e.y+(p.y-e.y)*fraction,
+      radius:info.radius,damage:info.damage
+    };
+    e.skillCooldown=info.cooldown+rand(-.3,.5);
+    return true;
+  }
+
+  function advanceEnemyJump(e,dt) {
+    if(!e.jump) return false;
+    const j=e.jump;
+    if(j.phase==='warning'){
+      j.time-=dt;
+      if(j.time<=0){j.phase='airborne';j.elapsed=0;}
+      return true;
+    }
+    j.elapsed+=dt;
+    const t=clamp(j.elapsed/j.duration,0,1);
+    // Smooth flight along a fixed route; no homing at the last instant.
+    const move=t*t*(3-2*t);
+    e.x=j.startX+(j.targetX-j.startX)*move;
+    e.y=j.startY+(j.targetY-j.startY)*move;
+    if(t>=1){
+      e.x=j.targetX;e.y=j.targetY;
+      e.jump=null;
+      if(j.radius>0){
+        e.impact={x:e.x,y:e.y,radius:j.radius,time:.27,full:.27};
+        const p=state.player;
+        if(Math.hypot(p.x-e.x,p.y-e.y)<=j.radius+5) hurtPlayer(j.damage);
+        addParticles(e.x,e.y,9,e.elite?'#b69bba':'#c36d53');
+      } else {
+        addParticles(e.x,e.y,3,'#75afd2');
+      }
+    }
+    return true;
+  }
+
+  function spawnElite() {
+    // Elite arrival is guaranteed even if the arena reaches the ordinary spawn cap.
+    if(state.enemies.length>=MAX_ENEMIES){
+      const index=state.enemies.findIndex(e=>!e.elite);
+      if(index>=0)state.enemies.splice(index,1);
+    }
+    if(state.enemies.length>=MAX_ENEMIES)return;
+    spawnEnemy(ELITE_ENEMY.id);
+    state.eliteSpawns++;
+    toast('ELITA: Spaczony slime!');
+  }
+
   function moveEnemy(e, dt) {
+    if(e.hp<=0)return;
     const p = state.player;
     const vx = p.x-e.x, vy = p.y-e.y, d = Math.max(.0001,Math.hypot(vx,vy));
     const ux = vx/d, uy = vy/d;
-    e.aiTime += dt; e.wobble += dt*(e.type==='slime-blue'?9:5);
-    e.hit = Math.max(0,e.hit-dt);
-    e.spawnAge += dt;
+    e.aiTime+=dt;e.wobble+=dt*(e.type==='slime-blue'?9:5);
+    e.hit=Math.max(0,e.hit-dt);
+    e.spawnAge+=dt;
+    e.skillCooldown=Math.max(0,(e.skillCooldown||0)-dt);
+    if(e.impact){
+      e.impact.time-=dt;
+      if(e.impact.time<=0)e.impact=null;
+    }
+    if(advanceEnemyJump(e,dt))return;
+    if(beginEnemyJump(e,p,d))return;
     let forward=1, sideways=0, speed=e.speed;
-    if(e.type==='slime-blue') {
-      // Rapid sideways hops and a short burst every couple of seconds.
-      sideways = Math.sin(e.aiTime*6 + e.id)*.27;
-      if(e.aiTime%2.4<.40) speed *= 1.55;
-    } else if(e.type==='slime-red') {
-      // Heavy slime is slow, then briefly surges forward.
-      if(e.aiTime%3.5<.32) speed *= 1.5;
-    } else if(e.type==='goblin') {
-      sideways = Math.sin(e.aiTime*3.6 + e.id)*.42;
-    } else if(e.type==='goblin-archer') {
-      // Keep range and strafe rather than behaving like another melee goblin.
-      forward = d > 198 ? 1 : d < 128 ? -1 : 0;
-      sideways = d < 280 ? Math.sin(e.aiTime*1.65+e.id) * .68 : 0;
-      e.attackTimer -= dt;
-      if(e.spawnAge > .5 && d < 275 && e.attackTimer <= 0 && state.enemyProjectiles.length < MAX_HOSTILE_PROJECTILES) {
-        const angle = Math.atan2(vy,vx);
+    if(e.type==='slime-blue'){
+      sideways=Math.sin(e.aiTime*6+e.id)*.21;
+    } else if(e.type==='slime-red'||e.elite){
+      // Heavy slimes mostly advance normally, leaving their jumps as main threat.
+      sideways=Math.sin(e.aiTime*2+e.id)*.12;
+    } else if(e.type==='goblin'){
+      sideways=Math.sin(e.aiTime*3.6+e.id)*.42;
+    } else if(e.type==='goblin-archer'){
+      forward=d>198?1:d<128?-1:0;
+      sideways=d<280?Math.sin(e.aiTime*1.65+e.id)*.68:0;
+      e.attackTimer-=dt;
+      if(e.spawnAge>.5&&d<275&&e.attackTimer<=0&&state.enemyProjectiles.length<MAX_HOSTILE_PROJECTILES){
+        const angle=Math.atan2(vy,vx);
         state.enemyProjectiles.push({
-          x:e.x, y:e.y-5, vx:Math.cos(angle)*128, vy:Math.sin(angle)*128,
-          angle, life:2.6, damage:9
+          x:e.x,y:e.y-5,vx:Math.cos(angle)*128,vy:Math.sin(angle)*128,
+          angle,life:2.6,damage:9
         });
         e.attackTimer=rand(2.1,2.9);
         addParticles(e.x,e.y-6,3,'#bd8c55');
       }
     }
-    const dirX = ux*forward - uy*sideways, dirY = uy*forward + ux*sideways;
-    const mag = Math.max(1,Math.hypot(dirX,dirY));
-    if(d > e.radius+5 || forward<0) {
-      e.x += dirX/mag * speed * dt;
-      e.y += dirY/mag * speed * dt;
+    const dirX=ux*forward-uy*sideways, dirY=uy*forward+ux*sideways;
+    const mag=Math.max(1,Math.hypot(dirX,dirY));
+    if(d>e.radius+5||forward<0){
+      e.x+=dirX/mag*speed*dt;
+      e.y+=dirY/mag*speed*dt;
     }
-    if(e.spawnAge > .40 && Math.hypot(e.x-p.x,e.y-p.y) < e.radius+8) hurtPlayer(e.contact);
+    if(e.spawnAge>.40&&Math.hypot(e.x-p.x,e.y-p.y)<e.radius+8)hurtPlayer(e.contact);
   }
 
   function update(dt) {
@@ -435,9 +514,16 @@
       if (s.enemies.length < MAX_ENEMIES) spawnEnemy(newcomer.id);
       toast('Nowy przeciwnik: ' + newcomer.name);
     }
-    s.spawnClock -= dt;
-    const interval = 1.85 - (s.elapsed / RUN_DURATION) * .93;
-    while (s.spawnClock <= 0) { if (s.enemies.length < MAX_ENEMIES) spawnEnemy(); s.spawnClock += interval; }
+    while(s.elapsed>=s.nextEliteAt && s.nextEliteAt<RUN_DURATION){
+      spawnElite();
+      s.nextEliteAt+=ELITE_SPAWN_INTERVAL;
+    }
+    s.spawnClock-=dt;
+    const interval=1.60-(s.elapsed/RUN_DURATION)*.80;
+    while(s.spawnClock<=0){
+      if(s.enemies.length<MAX_ENEMIES)spawnEnemy();
+      s.spawnClock+=interval;
+    }
 
     for (const e of s.enemies) {
       moveEnemy(e,dt);
@@ -514,12 +600,14 @@
     if (e.spawnAge < .35) ctx.globalAlpha = Math.max(.22,e.spawnAge/.35);
     const slime = e.type.startsWith('slime-');
     if (slime) {
-      const red = e.type==='slime-red', blue = e.type==='slime-blue';
-      const size = red ? 16 : 10;
-      const base = red ? '#9d493c' : blue ? '#427da2' : '#5e9750';
-      const light = red ? '#d7775c' : blue ? '#76b9dd' : '#97c576';
-      const dark = red ? '#542a2c' : blue ? '#224c6c' : '#315737';
-      const jump = Math.abs(Math.sin(e.wobble))*(blue?3:1.3);
+      const red = e.type==='slime-red', blue = e.type==='slime-blue', elite = e.elite;
+      const size = elite ? 20 : red ? 16 : 10;
+      const base = elite ? '#756281' : red ? '#9d493c' : blue ? '#427da2' : '#5e9750';
+      const light = elite ? '#b9a1cb' : red ? '#d7775c' : blue ? '#76b9dd' : '#97c576';
+      const dark = elite ? '#3f324d' : red ? '#542a2c' : blue ? '#224c6c' : '#315737';
+      const jump = e.jump?.phase==='airborne'
+        ? Math.sin(Math.PI*clamp(e.jump.elapsed/e.jump.duration,0,1))*(elite?13:red?11:9)
+        : Math.abs(Math.sin(e.wobble))*(blue?3:1.3);
       const top = y - Math.round(jump);
       ctx.fillStyle='#101811a8';ctx.beginPath();ctx.ellipse(x,y+7,size+2,4,0,0,TAU);ctx.fill();
       rect(dark,x-size,top-4,size*2,size+9);
@@ -531,7 +619,13 @@
       const eyeY=top+1;
       rect('#15231e',x-5,eyeY,3,4); rect('#15231e',x+3,eyeY,3,4);
       rect('#e1ead0',x-4,eyeY,1,2); rect('#e1ead0',x+4,eyeY,1,2);
-      if(red) {rect('#b75849',x-14,top-12,9,5);rect('#e39a72',x-11,top-11,4,2);}
+      if(red || elite) {rect(elite?'#b79a56':'#b75849',x-size+2,top-12,9,5);rect(elite?'#e1c889':'#e39a72',x-size+5,top-11,4,2);}
+      if(elite){
+        rect('#cbb781',x-12,top-15,24,4);
+        rect('#e1c98f',x-6,top-19,12,5);
+        rect('#c3a46f',x-2,top-23,4,5);
+        rect('#f2c782',x-5,top+1,4,3);rect('#f2c782',x+2,top+1,4,3);
+      }
       if(e.hit>0){ctx.globalAlpha=.45;rect('#fff0cc',x-size-2,top-10,size*2+4,size+19);}
     } else {
       const archer=e.type==='goblin-archer';
@@ -553,12 +647,12 @@
     ctx.restore();
     // Every enemy, including green and blue slimes, reveals HP after taking damage.
     // Keep it small and legible over moving sprites without flooding the arena with full bars.
-    if (e.hp > 0 && e.hp < e.maxHp) {
+    if (e.hp > 0 && (e.hp < e.maxHp || e.elite)) {
       const red = e.type === 'slime-red';
       const slime = e.type.startsWith('slime-');
-      const width = red ? 30 : slime ? 22 : 21;
+      const width = e.elite?38:red?30:slime?22:21;
       // Below the feet of each sprite, rather than above its head.
-      const barX = x-int(width/2), barY = y+(red ? 22 : slime ? 16 : 15);
+      const barX = x-int(width/2), barY = y+(e.elite?28:red?22:slime?16:15);
       const fill = Math.max(1, int((width - 2)*clamp(e.hp/e.maxHp,0,1)));
       rect('#100f0d',barX-1,barY-1,width+2,5);
       rect('#5d3a35',barX,barY,width,3);
@@ -592,10 +686,41 @@
     ctx.restore();
   }
 
+  function drawDangerMarkers(cx,cy) {
+    for(const e of state.enemies){
+      if(e.hp<=0)continue;
+      const j=e.jump,impact=e.impact;
+      if(j && (j.phase==='warning'||j.phase==='airborne')){
+        const radius=j.radius || 13;
+        const x=j.targetX-cx,y=j.targetY-cy;
+        const progress=j.phase==='warning'?1-clamp(j.time/j.windup,0,1):1;
+        const isBlue=e.type==='slime-blue';
+        ctx.save();
+        ctx.globalAlpha=.55+progress*.35;
+        ctx.fillStyle=isBlue?'#345d8a36':e.elite?'#87619b3b':'#a842333b';
+        ctx.strokeStyle=isBlue?'#78bfdb':e.elite?'#c9a5d5':'#e88b65';
+        ctx.lineWidth=isBlue?1.8:2.3;
+        ctx.beginPath();ctx.arc(x,y,radius,0,TAU);ctx.fill();ctx.stroke();
+        const pulse=radius*(.35+.65*progress);
+        ctx.beginPath();ctx.arc(x,y,pulse,0,TAU);ctx.stroke();
+        ctx.restore();
+      }
+      if(impact && impact.time>0){
+        const life=clamp(impact.time/impact.full,0,1);
+        ctx.save();ctx.globalAlpha=life*.85;
+        ctx.lineWidth=2.5;
+        ctx.strokeStyle=e.elite?'#d1b4e6':'#e89b6e';
+        ctx.beginPath();ctx.arc(impact.x-cx,impact.y-cy,impact.radius*(1.1-life*.12),0,TAU);ctx.stroke();
+        ctx.restore();
+      }
+    }
+  }
+
   function draw() {
     if (!state) return;
     const cx=state.player.x-screenW/2,cy=state.player.y-screenH/2;
     drawGround(cx,cy);
+    drawDangerMarkers(cx,cy);
     for(const d of state.drops) drawDrop(d,cx,cy);
     const entities = state.enemies.map(e=>({y:e.y,draw:()=>drawEnemy(e,cx,cy)}));
     entities.push({y:state.player.y,draw:()=>drawHero(state.player,cx,cy,mode==='playing')});
@@ -725,6 +850,6 @@
   }
   setupInput();resizeCanvas();showMenu();requestAnimationFrame(tick);
   // Stable read-only debug bridge to inspect the prototype in browser tests.
-  window.CalionPrototype={version:VERSION,getSnapshot:()=>({mode,statsOpen,stats:combatStats(),elapsed:state.elapsed,level:state.level,xp:state.xp,kills:state.kills,hp:state.player.hp,upgrades:{...state.upgrades},enemies:state.enemies.length,enemyTypes:state.enemies.map(e=>e.type),enemyStage:state.enemyStage,enemyShots:state.enemyProjectiles.length}),start:startGame};
+  window.CalionPrototype={version:VERSION,getSnapshot:()=>({mode,statsOpen,stats:combatStats(),elapsed:state.elapsed,level:state.level,xp:state.xp,kills:state.kills,hp:state.player.hp,upgrades:{...state.upgrades},enemies:state.enemies.length,enemyTypes:state.enemies.map(e=>e.type),enemyStage:state.enemyStage,enemyShots:state.enemyProjectiles.length,eliteSpawns:state.eliteSpawns,nextEliteAt:state.nextEliteAt}),start:startGame};
 })();
 
