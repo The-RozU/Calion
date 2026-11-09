@@ -1,7 +1,7 @@
-/* Calion Survivors · prototype 0.0.7 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.8 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.7';
+  const VERSION = '0.0.8';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
   const MAX_ENEMIES = 48;
   const MAX_PROJECTILES = 70;
@@ -9,6 +9,9 @@
   const ENEMY_UNLOCK_INTERVAL = 30;
   const MAX_DROPS = 100;
   const MOD_SLOTS = 2;
+  const BOUNCE_CHANCE_STEP = .20; // Every card level grants +20 percentage points.
+  const BOUNCE_MAX_HITS = 2; // Chance is checked separately for each possible ricochet.
+  const MODIFIER_EXCLUDES = Object.freeze({ bounce:'split', split:'bounce' });
   const CAMERA_ZOOM = 0.74; // v0.0.3: wider view without shrinking player hitboxes.
   const TAU = Math.PI * 2;
   const $ = id => document.getElementById(id);
@@ -34,7 +37,7 @@
     { id: 'reach', title: 'Sokoli wzrok', icon: '◎', max: 2, type: 'stat', desc: 'Każdy poziom zwiększa zasięg ataku o 40.' },
     { id: 'feet', title: 'Lekki krok', icon: '✦', max: 2, type: 'stat', desc: 'Każdy poziom zwiększa prędkość ruchu o 10%.' },
     { id: 'health', title: 'Hart ducha', icon: '✚', max: 2, type: 'stat', desc: 'Zwiększa maksymalne życie o 20 i leczy 20 HP.' },
-    { id: 'bounce', title: 'Odbijająca strzała', icon: '↗', max: 2, type: 'modifier', desc: 'Strzała odbija się od trafionego wroga do kolejnego celu. Kolejny poziom dodaje odbicie.' },
+    { id: 'bounce', title: 'Odbijająca strzała', icon: '↗', max: 5, type: 'modifier', desc: 'Po trafieniu strzała ma szansę odbić się do kolejnego wroga. Każdy poziom daje +20% szansy.' },
     { id: 'split', title: 'Rozdzielenie', icon: '⋔', max: 2, type: 'modifier', desc: 'Po trafieniu strzała dzieli się na 2 słabsze pociski, a na drugim poziomie na 3.' }
   ];
 
@@ -70,7 +73,7 @@
     const interval=BASE_INTERVAL*(1-u.speed*INTERVAL_FACTOR);
     return {damage,interval,rate:1/interval,dps:damage/interval,
       range:BASE_RANGE+u.reach*RANGE_STEP,speed:BASE_SPEED*(1+u.feet*SPEED_FACTOR),
-      hp:p.hp,maxHp:p.maxHp,bounce:u.bounce,split:u.split,
+      hp:p.hp,maxHp:p.maxHp,bounce:u.bounce,bounceChance:Math.round(u.bounce*BOUNCE_CHANCE_STEP*100),split:u.split,
       splitCount:u.split?u.split+1:0,usedMods:Number(u.bounce>0)+Number(u.split>0)};
   }
   const fmt=(x,n=1)=>x.toFixed(n).replace('.',',');
@@ -106,6 +109,18 @@
     return `<span class="stats-icon stats-icon--${name}" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">${shape}</svg></span>`;
   }
 
+  function excludedModifier(id) {
+    const rival=MODIFIER_EXCLUDES[id];
+    return rival && state.upgrades[rival]>0 ? UPGRADE_DEFS.find(u=>u.id===rival) : null;
+  }
+  function modifierNote(id) {
+    if (!MODIFIER_EXCLUDES[id]) return '';
+    const blocked=excludedModifier(id);
+    if (blocked) return 'Zablokowane przez: '+blocked.title;
+    const rival=UPGRADE_DEFS.find(u=>u.id===MODIFIER_EXCLUDES[id]);
+    return 'Wyklucza: '+rival.title;
+  }
+
   function renderStats(){
     const s=combatStats();
     const rows=[
@@ -118,7 +133,7 @@
       ['dps','DPS na jednym celu (teor.)',fmt(s.dps,2)],
       ['range','Zasięg',`${s.range} jedn.`],
       ['movement','Prędkość ruchu',`${fmt(s.speed)} jedn./s`],
-      ['bounce','Odbicia',s.bounce],
+      ['bounce','Szansa na odbicie',s.bounceChance ? `${s.bounceChance}% · maks. ${BOUNCE_MAX_HITS}` : '0%'],
       ['split','Rozdzielenie',s.splitCount?`${s.splitCount} strzały po trafieniu`:'Brak'],
       ['splitDamage','Obrażenia dzielonych strzał',s.splitCount?'58% głównej':'Brak'],
       ['slots','Sloty modyfikatorów',`${s.usedMods} / ${MOD_SLOTS}`]
@@ -126,7 +141,8 @@
     $('stats-content').innerHTML=`<p class="stats-section">ŁOTRZYK · ŁUK</p>
       <div class="stats-grid">${rows.map(([icon,title,value])=>`<div class="stats-item"><div class="stats-item-heading">${statIcon(icon)}<span>${title}</span></div><strong>${value}</strong></div>`).join('')}</div>
       <p class="stats-section">ULEPSZENIA</p>
-      <div class="stats-upgrades">${UPGRADE_DEFS.map(u=>`<div><span class="stats-upgrade-heading">${statIcon(UPGRADE_STAT_ICONS[u.id])}<span>${u.title}</span></span><strong>${state.upgrades[u.id]}/${u.max}</strong></div>`).join('')}</div>
+      <div class="stats-upgrades">${UPGRADE_DEFS.map(u=>`<div class="${excludedModifier(u.id)?'is-locked':''}" title="${modifierNote(u.id)}"><span class="stats-upgrade-heading">${statIcon(UPGRADE_STAT_ICONS[u.id])}<span>${u.title}${u.type==='modifier'? `<small class="upgrade-rule">${modifierNote(u.id)}</small>` : ''}</span></span><strong>${excludedModifier(u.id)?'BLOKADA':`${state.upgrades[u.id]}/${u.max}`}</strong></div>`).join('')}</div>
+      <p class="stats-exclusion-note">Odbijająca strzała i Rozdzielenie wzajemnie się wykluczają. Raz wybrany modyfikator pozostaje na tę wyprawę.</p>
       <p class="stats-note">Teoretyczny DPS: jeden cel, bez odbić, podziałów i przerw między walkami.</p>`;
   }
   function closeStats(){
@@ -186,7 +202,8 @@
   function getEligible() {
     const levels = state.upgrades;
     const occupied = ['bounce','split'].filter(id => levels[id] > 0).length;
-    return UPGRADE_DEFS.filter(u => levels[u.id] < u.max && (u.type !== 'modifier' || levels[u.id] > 0 || occupied < MOD_SLOTS));
+    return UPGRADE_DEFS.filter(u => levels[u.id] < u.max &&
+      !excludedModifier(u.id) && (u.type !== 'modifier' || levels[u.id] > 0 || occupied < MOD_SLOTS));
   }
   function showLevelUp() {
     const options = getEligible();
@@ -200,6 +217,8 @@
       <div class="card-grid">${state.offered.map((u, i) => `<button class="upgrade-card ${u.type === 'modifier' ? 'modifier' : ''}" data-card="${i}">
       <span class="upgrade-icon">${u.icon}</span><span class="upgrade-title">${u.title}</span>
       <span class="upgrade-desc">${u.desc}</span>
+      ${u.id==='bounce' ? `<span class="upgrade-progression">SZANSA: ${state.upgrades.bounce*20}% → ${(state.upgrades.bounce+1)*20}%</span>` : ''}
+      ${u.type==='modifier' ? `<span class="upgrade-conflict">${modifierNote(u.id)}</span>` : ''}
       <span class="upgrade-level">POZIOM ${state.upgrades[u.id]} / ${u.max}</span>
       <span class="upgrade-choice"><kbd>${i+1}</kbd><span>WYBIERZ</span></span></button>`).join('')}</div>
       ${buildSummary()}
@@ -208,7 +227,7 @@
   function selectCard(index) {
     if (mode !== 'levelup') return;
     const u = state.offered[index];
-    if (!u) return;
+    if (!u || !getEligible().some(available=>available.id===u.id)) return;
     state.upgrades[u.id]++;
     if (u.id === 'health') {
       state.player.maxHp += 20;
@@ -231,7 +250,7 @@
     $('level-text').textContent = `POZIOM ${state.level}`;
     $('xp-text').textContent = `${state.xp} / ${neededXp(state.level)} EXP`;
     $('xp-fill').style.width = `${clamp(state.xp / neededXp(state.level) * 100,0,100)}%`;
-    const m = ['bounce','split'].filter(id => state.upgrades[id] > 0).map(id => `${id === 'bounce' ? '↗' : '⋔'} ${state.upgrades[id]}/2`);
+    const m = ['bounce','split'].filter(id => state.upgrades[id] > 0).map(id => id === 'bounce' ? `↗ ${state.upgrades.bounce*20}%` : `⋔ ${state.upgrades.split}/2`);
     while (m.length < MOD_SLOTS) m.push('◇ PUSTE');
     $('mods-text').textContent = m.join(' · ');
     $('kills-text').textContent = `Pokonani: ${state.kills}`;
@@ -322,7 +341,7 @@
     arrow.visited.add(enemy.id);
     hurtEnemy(enemy,arrow.damage);
     const levels = state.upgrades;
-    // Child projectiles cannot split again. Each lineage may bounce at most twice.
+    // Split cannot chain. Bounce is mutually exclusive with split and rolls per hit.
     if (levels.split > 0 && !arrow.splitUsed && arrow.generation === 0 && state.projectiles.length < MAX_PROJECTILES - 3) {
       arrow.splitUsed = true;
       const count = levels.split + 1;
@@ -333,9 +352,9 @@
           life:.80, damage:arrow.damage*.58, visited:new Set(arrow.visited), bounces:arrow.bounces, generation:1, splitUsed:true });
       }
     }
-    if (arrow.bounces < levels.bounce) {
+    if (levels.bounce > 0 && arrow.bounces < BOUNCE_MAX_HITS) {
       const next = nearestEnemy(enemy.x,enemy.y,140,arrow.visited);
-      if (next) {
+      if (next && Math.random() < levels.bounce * BOUNCE_CHANCE_STEP) {
         const a = Math.atan2(next.y - enemy.y,next.x - enemy.x);
         arrow.x = enemy.x; arrow.y = enemy.y; arrow.vx = Math.cos(a)*245; arrow.vy = Math.sin(a)*245;
         arrow.angle = a; arrow.bounces++; arrow.damage *= .75; arrow.life = Math.min(arrow.life, .75); return true;
@@ -538,7 +557,8 @@
       const red = e.type === 'slime-red';
       const slime = e.type.startsWith('slime-');
       const width = red ? 30 : slime ? 22 : 21;
-      const barX = x-int(width/2), barY = y-(red ? 26 : 23);
+      // Below the feet of each sprite, rather than above its head.
+      const barX = x-int(width/2), barY = y+(red ? 22 : slime ? 16 : 15);
       const fill = Math.max(1, int((width - 2)*clamp(e.hp/e.maxHp,0,1)));
       rect('#100f0d',barX-1,barY-1,width+2,5);
       rect('#5d3a35',barX,barY,width,3);

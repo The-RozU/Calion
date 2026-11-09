@@ -1,6 +1,6 @@
-# Calion Survivors · prototyp 0.0.7
+# Calion Survivors · prototyp 0.0.8
 
-Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.7** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
+Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.8** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
 
 ## Uruchomienie
 
@@ -20,9 +20,18 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Jedna klasa (Łotrzyk), jedna broń (Łuk), jedna arena (Zapomniany Trakt), pięć typów wrogów (3 slime’y i 2 gobliny).
 - Ruch w czterech kierunkach, kamera śledząca postać, automatyczne celowanie, kolizje, punkty życia.
 - Zdobywanie EXP i **powolniejsze** poziomowanie o rosnącym koszcie, zatrzymanie gry na wybór jednej z **3 losowych kart**.
-- Limity poziomów kart, **2 sloty modyfikatorów**; odbijanie i dzielenie strzał można łączyć. Podział ma tylko jedno pokolenie, a odbicia są limitowane.
+- Limity poziomów kart, **2 sloty modyfikatorów**; odbijanie i dzielenie strzał **wzajemnie się wykluczają**. Podział ma tylko jedno pokolenie, a odbicia są limitowane.
 - Pięciominutowa próba przetrwania; ekran wygranej lub porażki oraz statystyki.
 - Proceduralne proste grafiki pixel art w odcieniach ciemnego drewna, stali, kamienia i mchu. Docelowe sprite'y WebP i animacje zastąpią te tymczasowe rysunki.
+
+## Zmiany w 0.0.8
+
+- Paski życia **wszystkich wrogów** przeniesione pod sprite'y. Nadal pojawiają się po otrzymaniu obrażeń; to test położenia przed ostatecznym wyborem.
+- **Odbijająca strzała** ma pięć poziomów szansy: 20%, 40%, 60%, 80%, 100%. Przed wyborem 0%, po pierwszej karcie 20%. Przy trafieniu i obecności kolejnego celu w zasięgu 140 jednostek wykonywany jest osobny rzut szansy. Maksymalnie dwa odbicia na strzałę, każde kolejne osłabia ją o 25%.
+- **Odbijająca strzała** i **Rozdzielenie** wzajemnie się wykluczają w trakcie jednej wyprawy. Po wyborze jednego drugi nie pojawia się w kartach i nie może zostać wybrany nawet przez stary zapis oferty.
+- Karta odbicia pokazuje aktualną i kolejną szansę procentową, a obie karty modyfikatorów wskazują konflikt.
+- Panel statystyk pokazuje procent szansy odbicia i wyraźnie oznacza drugi modyfikator jako zablokowany z powodem. HUD pokazuje procent odbicia zamiast liczby odbić.
+- Nie zmieniono bazowych obrażeń, HP przeciwników, ani pozostałych statystyk.
 
 ## Zmiany w 0.0.7
 
@@ -71,7 +80,7 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Przełączanie aktywnego joysticka przez dotknięcie, sterowanie wyłącznie jednym joystickiem naraz.
 - Kamera oddalona do 82% poprzedniego przybliżenia, widać większy obszar areny.
 
-## Świadomie poza wersją 0.0.7
+## Świadomie poza wersją 0.0.8
 
 Brak pozostałych klas, ruletki startowej, konta, monet, sklepu, zapisywania postępu, rzadkości kart, kooperacji i gotowych animowanych assetów. To osobny prototyp, nie zmienia istniejącej strony świata Calionu.
 
@@ -80,7 +89,7 @@ Brak pozostałych klas, ruletki startowej, konta, monet, sklepu, zapisywania pos
 - RUN: `RUN_DURATION=300` sekund w `game.js`.
 - Wprowadzanie typów wrogów: `ENEMY_UNLOCK_INTERVAL=30` sekund i `ENEMY_ROSTER`.
 - Poziomy: `neededXp(level) = 8 + (level - 1) * 9`.
-- 2 sloty modyfikatorów, do 2 poziomów każdy.
+- 2 sloty modyfikatorów w HUD (na razie dostępny jest jeden z dwóch wzajemnie wykluczających się efektów). Odbicie ma 5 poziomów (20–100% szansy), Rozdzielenie 2 poziomy.
 - Liczba przeciwników i pocisków jest ograniczona dla wydajności i czytelności.
 
 ## Pliki
