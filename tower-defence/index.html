@@ -1,0 +1,1700 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101611">
+<meta name="description" content="Broń traktów Calionu. Dwie misje tower defence w świecie Kronik Calionu.">
+<title>Calion Tower Defence • v0.0.1</title>
+<style>
+:root{
+  color-scheme:dark;
+  --ground:#101612;--panel:#19201a;--deep:#121913;--line:#424638;
+  --gold:#e0c489;--bright:#f2e4c4;--text:#e3d9c2;--muted:#aaa998;
+  --green:#334a3b;--red:#e29b8d;--sans:system-ui,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;min-width:320px;color:var(--text);background:radial-gradient(ellipse at 51% 0,#293126 0,transparent 52%),linear-gradient(#141a15,#0d120f);font:15px/1.5 Georgia,serif;min-height:100vh}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+button:disabled{cursor:default}
+button:focus-visible,.stage:focus-visible{outline:2px solid #f1d994;outline-offset:3px}
+p,h1,h2,h3{margin:0}
+.page{max-width:1428px;margin:auto;padding:0 28px}
+.mast{display:flex;align-items:center;justify-content:space-between;min-height:79px;border-bottom:1px solid #66604972;gap:15px}
+.wordmark{display:flex;align-items:center;gap:11px;line-height:1}
+.crest{width:40px;height:46px;filter:drop-shadow(0 2px 4px #000a)}
+.wordmark b{color:var(--bright);font-size:25px;letter-spacing:.2em}
+.wordmark small{display:block;margin-top:5px;color:#ceb783;font:750 9px var(--sans);letter-spacing:.29em}
+nav{display:flex;gap:8px}
+.quiet,.square,.ability,.secondary{border:1px solid #4a5041;background:linear-gradient(#252e25,#19231c);box-shadow:inset 0 1px #ffffff08,0 2px 0 #111713;color:#e3dbbf}
+.quiet{padding:7px 12px;min-height:39px;font:650 13px var(--sans)}
+.quiet span{margin-right:3px;color:var(--gold)}
+.quiet:hover,.square:hover:not(:disabled),.ability:hover:not(:disabled),.secondary:hover{border-color:#99865e;background:#303d2e}
+.sound{min-width:38px;font-size:17px}
+.sound[aria-pressed=false]{color:#a29e88}
+.mission-heading{display:flex;justify-content:space-between;align-items:end;gap:12px;padding:24px 1px 18px}
+.eyebrow{font:750 10px/1.4 var(--sans);letter-spacing:.19em;text-transform:uppercase;color:#c5b181}
+h1{font-size:clamp(29px,4.4vw,58px);font-weight:normal;line-height:1.03;letter-spacing:-.03em;margin:4px 0 6px;color:var(--bright);text-shadow:0 3px #121a12}
+#objective{font-size:15px;color:#bcbba6}
+.era{flex:none;text-align:right;padding-bottom:4px;color:#a9a793}
+.era span{display:block;font:700 9px/1.5 var(--sans);letter-spacing:.2em}
+.era b{font:700 14px/1.5 Georgia,serif;letter-spacing:.13em;color:#d4c297}
+.game-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(244px,274px);gap:15px;align-items:start}
+.field{min-width:0;border:1px solid #706751;background:#1b241c;box-shadow:0 10px 28px #060907a6}
+.hud{display:flex;min-height:59px;align-items:stretch;background:linear-gradient(#242b21,#1a231b);border-bottom:1px solid #6b614b}
+.stat{display:flex;align-items:center;gap:8px;padding:5px 15px;border-right:1px solid #444737;min-width:100px}
+.stat-icon{font:21px/1 Georgia,serif;color:#d2c39c}
+.life .stat-icon{color:var(--red)}
+.money .stat-icon{color:#ebc171}
+.stat small{display:block;color:#b9ac89;font:750 9px/1.35 var(--sans);letter-spacing:.13em}
+.stat strong{display:block;color:var(--bright);font-size:22px;line-height:1.2;font-variant-numeric:tabular-nums}
+.hud-options{margin-left:auto;display:flex;gap:6px;align-items:center;padding:5px 9px}
+.square{width:38px;height:36px;font:700 14px var(--sans)}
+.square:disabled{opacity:.55}
+.stage{position:relative;isolation:isolate;line-height:0;overflow:hidden;background:#333b2c}
+.stage canvas{width:100%;height:auto;display:block;image-rendering:pixelated}
+.stage.aiming{cursor:crosshair}
+.stage.aiming .marker{pointer-events:none}
+.map-caption,.aim-label{position:absolute;left:12px;top:11px;padding:6px 9px;background:#101912e0;border:1px solid #bba16e85;pointer-events:none;color:#e9d9ac;font:700 9px/1.2 var(--sans);letter-spacing:.12em;text-transform:uppercase}
+.map-caption span:first-child{color:#c49d5d;margin-right:3px}
+.aim-label{top:auto;bottom:9px;left:50%;transform:translateX(-50%);min-width:max-content;font-size:10px;letter-spacing:.07em}
+.marker{position:absolute;z-index:1;transform:translate(-50%,-63%);width:clamp(29px,4vw,54px);height:clamp(31px,4.1vw,56px);border:0;background:transparent;border-radius:2px;padding:0}
+.marker.built{height:clamp(32px,5vw,64px);transform:translate(-50%,-80%)}
+.marker:focus-visible{outline-offset:-2px}
+.marker[aria-pressed=true]::after{content:"";position:absolute;bottom:16%;left:17%;width:66%;height:17%;border-bottom:2px solid #f2d28e;border-left:2px solid #f2d28e;border-right:2px solid #f2d28e;filter:drop-shadow(0 1px #292719);pointer-events:none}
+.marker.built[aria-pressed=true]::after{bottom:13%}
+.banner{position:absolute;top:9%;left:50%;transform:translateX(-50%);width:max-content;max-width:85%;padding:9px 18px;z-index:2;color:#f2ddad;background:#191c14ed;border:1px solid #a78955;box-shadow:0 4px 14px #0007;font:700 clamp(12px,2vw,17px)/1.15 Georgia,serif;text-align:center;pointer-events:none}
+.banner.danger{color:#ffd9bc;background:#35251fee;border-color:#ae7159}
+.command{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 13px;background:linear-gradient(#263025,#1b251e);border-top:1px solid #6b614b}
+.wave-info{min-width:0}
+.wave-info p{margin-top:4px;font:13px/1.3 var(--sans);color:#d9d4bb}
+.primary{border:1px solid #d1ac67;background:linear-gradient(#d9bc7e,#ba9254);color:#231c13;min-height:44px;padding:8px 14px;font:750 13px/1.2 var(--sans);box-shadow:inset 0 0 0 2px #f9e2a33a,0 3px #100e0a;white-space:nowrap}
+.primary:hover:not(:disabled){background:linear-gradient(#e8cc92,#d2a663)}
+.primary:disabled{opacity:.48}
+.wave-button span{margin-right:5px}
+.wave-progress{height:3px;background:#131a15}
+.wave-progress i{display:block;width:0;height:100%;background:#bfaa6d}
+.controls{min-width:0;display:grid;gap:11px}
+.build-panel,.hero-panel{background:linear-gradient(145deg,#252c23,#171f19);border:1px solid #565a46;box-shadow:0 6px 18px #0b0e0b72}
+.panel-heading{padding:13px 13px 10px}
+.panel-heading h2{font-size:24px;font-weight:normal;color:var(--bright);line-height:1.1;margin:4px 0 4px}
+.panel-heading p:not(.eyebrow),.hero-info p{font:12px/1.4 var(--sans);color:#b9b7a5}
+.actions{display:grid;gap:5px;padding:0 8px 8px}
+.tower-choice,.action{min-width:0;width:100%;display:grid;text-align:left;align-items:center;gap:7px;padding:6px 7px;border:1px solid #414c40;background:#212a21;box-shadow:inset 0 0 0 1px #181f18}
+.tower-choice{grid-template-columns:43px minmax(0,1fr) auto;min-height:59px}
+.tower-choice img{width:43px;height:41px;image-rendering:pixelated;background:#172018;border:1px solid #465044}
+.tower-choice b,.action b{display:block;font:700 13px/1.18 var(--sans);color:#eee3c9}
+.tower-choice small,.action small{display:block;margin-top:3px;color:#b4b6a1;font:11px/1.22 var(--sans)}
+.tower-choice .price,.action .price{color:#e4c489;font:750 12px/1 var(--sans);white-space:nowrap}
+.tower-choice:hover:not(:disabled),.tower-choice.active,.action:hover:not(:disabled){background:#354333;border-color:#b09a69}
+.tower-choice:disabled,.action:disabled{opacity:.49}
+.tower-choice .price em{display:block;text-align:right;margin-top:4px;color:#aaa88f;font:normal 9px var(--sans)}
+.action{grid-template-columns:minmax(0,1fr) auto;min-height:49px;padding:7px 9px}
+.sell{border-color:#665447;background:#29241e}
+.tower-stats{font:12px/1.5 var(--sans);color:#d1bd93;padding:4px 5px 8px}
+.hero-panel{display:grid;grid-template-columns:37px minmax(0,1fr);gap:8px;padding:10px}
+.hero-badge{display:grid;place-items:center;background:#28392f;border:1px solid #657461;color:#e8d4a2;font:23px Georgia,serif}
+.hero-info h3{color:var(--bright);line-height:1.15;font-size:17px}
+.hero-info p{font-size:11px;margin-top:3px}
+.ability{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;min-height:35px;padding:5px 8px;font:700 12px/1.2 var(--sans)}
+.ability[aria-pressed=true]{border-color:var(--gold);color:var(--gold)}
+.ability:disabled{opacity:.58}
+kbd{font:700 10px/1.25 var(--sans);padding:2px 5px;border:1px solid #55594a;background:#1c241c;color:#d5c9a8;white-space:nowrap}
+.game-footer,.foot{display:flex;justify-content:space-between;gap:10px;color:#b9baa6;font:12px/1.45 var(--sans);padding:11px 1px}
+.keys{flex:none}
+.keys kbd{margin-left:4px}
+.foot{border-top:1px solid #514d3a99;color:#aaa186;font:700 9px/1.4 var(--sans);letter-spacing:.15em;padding:12px 1px;margin-top:2px}
+dialog{color:var(--text);width:min(580px,calc(100% - 24px));max-height:calc(100dvh - 26px);padding:18px;background:linear-gradient(145deg,#293128,#171f19);border:1px solid #a89564;box-shadow:0 0 0 4px #181c13,0 18px 55px #000b}
+dialog::backdrop{background:#090e0bcf;backdrop-filter:blur(2px)}
+.dialog-heading{position:relative;padding-right:42px;margin-bottom:14px}
+.dialog-heading h2{color:var(--bright);font-weight:normal;font-size:clamp(24px,5.6vw,39px);line-height:1.12;margin-top:5px}
+#dialog-close{position:absolute;right:0;top:0;font-size:20px}
+.dialog-copy{color:#d2ceb8;margin:0 0 13px}
+.dialog-actions{display:flex;flex-wrap:wrap;gap:7px}
+.secondary{min-height:44px;padding:7px 11px;font:700 13px var(--sans)}
+.mission-card{display:grid;grid-template-columns:115px 1fr;align-items:center;gap:11px;width:100%;border:1px solid #666551;background:#202a21;margin-top:8px;padding:5px;text-align:left}
+.mission-card img{width:115px;height:64px;object-fit:cover;image-rendering:pixelated;border:1px solid #626751}
+.mission-card strong,.mission-card small,.mission-card em{display:block}
+.mission-card strong{font-size:17px;color:var(--bright)}
+.mission-card small{color:#e4c68b;font:700 11px var(--sans)}
+.mission-card em{font:normal 11px var(--sans);color:#bfc0ac;margin-top:3px}
+.mission-card:hover:not(:disabled){border-color:var(--gold)}
+.mission-card:disabled{opacity:.67}
+.requisitions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.order{min-width:0;min-height:139px;text-align:left;padding:9px;background:linear-gradient(#3b4435,#20291f);border:1px solid #aa9062}
+.order:hover{background:#424f3c;border-color:#e2c58c}
+.order b{display:block;color:#ead7a7;font-size:20px;margin-bottom:5px}
+.order b span{color:#dbab80}
+.order small{display:block;color:#ded8c4;font:12px/1.35 var(--sans)}
+.result-stars{font-size:32px;letter-spacing:.15em;color:#ecc67a;margin-bottom:5px}
+.codex-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 13px;margin:0}
+.codex-list div{border-top:1px solid #60614f;padding:7px 0}
+.codex-list dt{color:#e4ca94}
+.codex-list dd{margin:2px 0;color:#cbc9b5;font:12px/1.4 var(--sans)}
+@media (max-width:840px){
+  .page{padding:0 15px}
+  .game-layout{grid-template-columns:minmax(0,1fr) minmax(212px,228px);gap:10px}
+  .tower-choice{grid-template-columns:35px minmax(0,1fr) auto}
+  .tower-choice img{width:35px;height:36px}
+  .stat{min-width:0;padding:5px 9px}
+}
+@media (max-width:690px){
+  .page{padding:0 9px}
+  .mast{min-height:61px}
+  .crest{width:30px;height:36px}
+  .wordmark{gap:6px}
+  .wordmark b{font-size:18px}
+  .wordmark small{font-size:7px}
+  nav{gap:4px}
+  .quiet{padding:5px 6px;min-height:34px;font-size:11px}
+  .sound{min-width:28px;font-size:15px}
+  .mission-heading{padding:15px 1px 11px}
+  #objective{font-size:13px}
+  .era{display:none}
+  .game-layout{grid-template-columns:minmax(0,1fr);gap:8px}
+  .hud{min-height:45px}
+  .stat strong{font-size:18px}
+  .stat-icon{font-size:16px}
+  .hud-options{gap:4px;padding:3px 5px}
+  .square{width:34px;height:32px}
+  .map-caption{left:5px;top:5px;padding:4px 5px;font-size:7px}
+  .command{min-height:56px;padding:6px 7px}
+  .wave-info p{font-size:11px}
+  .primary{min-height:37px;padding:5px 7px;font-size:11px}
+  .wave-button span{margin-right:2px}
+  .controls{gap:7px}
+  .panel-heading{padding:7px 8px 5px}
+  .panel-heading h2{font-size:21px;margin:2px 0}
+  .actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:0 5px 5px}
+  .tower-choice{padding:4px;min-height:52px;gap:4px}
+  .tower-choice b{font-size:11px}
+  .tower-choice small,.tower-choice .price{font-size:10px}
+  .tower-choice .price em{display:none}
+  .tower-stats{grid-column:1/-1}
+  .hero-panel{grid-template-columns:31px 1fr auto;gap:6px;padding:5px}
+  .hero-info h3{font-size:15px}
+  .hero-info p{display:none}
+  .ability{grid-column:3;min-width:104px;gap:5px}
+  .keys{display:none}
+  .game-footer,.foot{padding:7px 1px}
+}
+@media (max-width:370px){
+  .stat{padding:5px 6px;gap:4px}
+  .stat small{font-size:8px}
+  .tower-choice{grid-template-columns:30px minmax(0,1fr) auto}
+  .tower-choice img{width:30px;height:32px}
+  .requisitions{grid-template-columns:1fr}
+  .order{min-height:0}
+}
+@media (min-width:900px){
+  .page{max-width:min(1230px,max(900px,calc((100dvh - 350px)*1.64 + 345px)))}
+}
+
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="mast">
+    <div class="wordmark">
+      <svg class="crest" viewBox="0 0 40 46" aria-hidden="true">
+        <path d="M3 3H37V29L20 43 3 29Z" fill="#273830" stroke="#bda66f" stroke-width="2"/>
+        <path d="M7 7H33V27L20 38 7 27Z" fill="none" stroke="#776a4a"/>
+        <path d="m20 11 5 8-5 8-5-8zm-9 8h18M20 27v6" fill="none" stroke="#e1c78b" stroke-width="2"/>
+      </svg>
+      <div><b>CALION</b><small>TOWER DEFENCE</small></div>
+    </div>
+    <nav aria-label="Menu gry">
+      <button id="campaign" class="quiet"><span aria-hidden="true">◇</span> Kampania</button>
+      <button id="codex" class="quiet"><span aria-hidden="true">▤</span> Kroniki</button>
+      <button id="sound" class="quiet sound" aria-label="Włącz dźwięk" aria-pressed="false">♪</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="mission-heading" aria-labelledby="title">
+      <div>
+        <p class="eyebrow" id="region"></p>
+        <h1 id="title"></h1>
+        <p id="objective"></p>
+      </div>
+      <div class="era"><span>KRONIKI CALIONU</span><b>ROK 825</b></div>
+    </section>
+    <div class="game-layout">
+      <section class="field" aria-label="Pole bitwy">
+        <div class="hud">
+          <div class="stat life"><span class="stat-icon" aria-hidden="true">♥</span><div><small>BRAMA</small><strong id="life">20</strong></div></div>
+          <div class="stat money"><span class="stat-icon" aria-hidden="true">◈</span><div><small>MONETY</small><strong id="gold">265</strong></div></div>
+          <div class="stat"><span class="stat-icon" aria-hidden="true">⚑</span><div><small>FALA</small><strong id="wave">0 / 8</strong></div></div>
+          <div class="hud-options">
+            <button id="speed" class="square" aria-label="Zmień prędkość gry" title="Prędkość gry">1×</button>
+            <button id="pause" class="square" aria-label="Pauza" title="Pauza (P)">Ⅱ</button>
+          </div>
+        </div>
+        <div id="stage" class="stage" aria-label="Mapa obrony" tabindex="0">
+          <canvas id="map" width="480" height="292" aria-label="Mapa bitwy w stylu pixel art"></canvas>
+          <div class="map-caption"><span aria-hidden="true">◆</span> <span id="caption"></span></div>
+          <div id="markers"></div>
+          <div id="banner" class="banner" hidden></div>
+          <div id="aim-label" class="aim-label" hidden>Wskaż miejsce na trakcie · Esc anuluje</div>
+        </div>
+        <div class="command">
+          <div class="wave-info">
+            <small id="wave-label" class="eyebrow"></small>
+            <p id="wave-mix"></p>
+          </div>
+          <button id="next-wave" class="primary wave-button"><span aria-hidden="true">▶</span> Rozpocznij falę</button>
+        </div>
+        <div class="wave-progress" aria-hidden="true"><i id="wave-progress"></i></div>
+      </section>
+
+      <aside class="controls" aria-label="Dowodzenie">
+        <section class="build-panel">
+          <div class="panel-heading">
+            <p class="eyebrow" id="panel-kicker">ROZKAZY GILDII</p>
+            <h2 id="panel-title">Budowa</h2>
+            <p id="panel-hint"></p>
+          </div>
+          <div id="actions" class="actions"></div>
+        </section>
+        <section class="hero-panel">
+          <div class="hero-badge" aria-hidden="true">⚔</div>
+          <div class="hero-info"><small class="eyebrow">BOHATER</small><h3>Corin Vance</h3><p>Walczy tam, gdzie go poślesz.</p></div>
+          <button id="hero" class="ability" type="button" aria-label="Szarża Corina" aria-pressed="false"><span>Szarża Corina</span><kbd>Q</kbd></button>
+        </section>
+      </aside>
+    </div>
+    <div class="game-footer">
+      <span id="status" role="status" aria-live="polite">Kliknij fundament z plusem, by zbudować pierwszą wieżę.</span>
+      <span class="keys"><kbd>1–4</kbd> Wieże <kbd>Spacja</kbd> Fala <kbd>P</kbd> Pauza</span>
+    </div>
+  </main>
+  <footer class="foot"><span>◆ &nbsp; KRÓLEWSKA GILDIA POSZUKIWACZY</span><span>PROTOTYP &nbsp; v0.0.1</span></footer>
+</div>
+
+<dialog id="dialog" aria-labelledby="dialog-title">
+  <div class="dialog-heading">
+    <p id="dialog-kicker" class="eyebrow"></p>
+    <h2 id="dialog-title"></h2>
+    <button id="dialog-close" class="square" aria-label="Zamknij">×</button>
+  </div>
+  <div id="dialog-content"></div>
+</dialog>
+
+<script>
+'use strict';
+const WIDTH = 480;
+const HEIGHT = 292;
+const MAX_LIFE = 20;
+const HERO_COOLDOWN = 22;
+const WAVE_COUNT = 8;
+
+function route(points) {
+  const segments = [];
+  let length = 0;
+  for (let i = 1; i < points.length; i++) {
+    const [x, y] = points[i - 1];
+    const dx = points[i][0] - x;
+    const dy = points[i][1] - y;
+    const size = Math.hypot(dx, dy);
+    segments.push({ x, y, dx, dy, size, start: length });
+    length += size;
+  }
+  return { points, segments, length };
+}
+
+const waves = (...lists) => lists.map(list => list.map(([kind, count, interval, lane = -1]) =>
+  ({ kind, count, interval, lane })));
+
+const MAPS = [
+  {
+    name: 'Strażnica Południowa', numeral: 'I', region: 'POŁUDNIOWY TRAKT', gold: 265, seed: 4203,
+    intro: 'Kroniki odnotowały wielki najazd goblinów w roku 328. Teraz na południowym trakcie znów rozbrzmiewają ich rogi.',
+    goal: 'Utrzymaj bramę przed hordą z południa.',
+    routes: [route([[-12,213],[46,213],[77,187],[98,150],[136,133],[182,137],[213,158],[239,197],[268,213],[304,208],[333,182],[344,144],[370,113],[411,111],[452,111]])],
+    sites: [[54,168],[112,105],[148,175],[190,102],[211,211],[263,166],[297,244],[309,164],[376,158],[389,77],[418,146]],
+    gate: [448,111], hero: [131,135],
+    waves: waves(
+      [['gob',9,.85]],
+      [['gob',8,.58],['warg',6,.66]],
+      [['shield',6,.9],['gob',10,.52]],
+      [['warg',12,.57],['shaman',3,1.0],['shield',5,.70]],
+      [['gob',17,.36],['shield',8,.65],['shaman',3,.66]],
+      [['warg',16,.36],['shield',9,.56],['shaman',4,.74]],
+      [['shield',14,.46],['shaman',5,.58],['warg',14,.34]],
+      [['gob',16,.32],['shield',10,.48],['chief',1,1.1],['shaman',4,.8],['warg',12,.36]]
+    )
+  },
+  {
+    name: 'Durnhollow', numeral: 'II', region: 'SKRAJ ELDERONU', gold: 305, seed: 5821,
+    intro: 'U stóp Kamiennego Kolosa budzą się dawne runy. Corin Vance ma utrzymać oba trakty, aż ostatni mieszkańcy dotrą do bramy.',
+    goal: 'Broń wspólnej bramy przed atakiem z dwóch stron.',
+    routes: [
+      route([[-12,105],[49,105],[80,121],[111,145],[158,139],[201,116],[245,116],[281,144],[312,150],[347,137],[379,119],[452,119]]),
+      route([[-12,244],[50,243],[86,227],[120,202],[168,193],[218,208],[259,195],[284,169],[312,150],[347,137],[379,119],[452,119]])
+    ],
+    sites: [[43,75],[80,158],[64,207],[134,240],[158,166],[194,82],[218,158],[264,89],[295,200],[342,177],[352,103],[399,154]],
+    gate: [448,119], hero: [312,150],
+    waves: waves(
+      [['gob',14,.53]],
+      [['warg',12,.46,1],['gob',10,.42,0]],
+      [['stone',8,.77],['shade',10,.49]],
+      [['shaman',5,.58],['shield',10,.52,0],['warg',15,.37,1]],
+      [['shade',15,.36],['stone',12,.60],['shaman',4,.65]],
+      [['shield',15,.39],['shade',15,.33,0],['warg',14,.36,1]],
+      [['stone',15,.43],['shaman',6,.60],['shade',18,.33]],
+      [['stone',10,.43],['warden',1,.9,0],['shade',12,.32,1],['shaman',7,.52],['warg',16,.31]]
+    )
+  }
+];
+
+const ENEMIES = {
+  gob: { name:'Goblin', hp:46, speed:28, loot:8, leak:1, tint:'#94ae5f' },
+  warg: { name:'Warg', hp:53, speed:51, loot:9, leak:1, tint:'#9a94a8' },
+  shield: { name:'Tarczownik', hp:132, speed:22, loot:15, leak:2, armor:.53, tint:'#a69977' },
+  shaman: { name:'Szaman', hp:110, speed:26, loot:17, leak:2, healer:true, tint:'#bf8bd1' },
+  shade: { name:'Runiczny cień', hp:83, speed:42, loot:13, leak:1, ward:.53, tint:'#8fc3db' },
+  stone: { name:'Kamienny sługa', hp:174, speed:21, loot:17, leak:2, armor:.49, tint:'#9fa89a' },
+  chief: { name:'Wódz Goblinów', hp:1430, speed:18, loot:95, leak:6, armor:.34, boss:true, tint:'#f0a47d',
+    note:'Poniżej połowy życia wpada w szał i przyspiesza.' },
+  warden: { name:'Strażnik Run', hp:2250, speed:17, loot:125, leak:8, armor:.31, ward:.22, boss:true, tint:'#b0f0cc',
+    note:'Poniżej połowy życia wzmacnia ochronę runiczną.' }
+};
+
+const TOWERS = {
+  bow: { name:'Łucznicy', cost:75, upgrade:85, range:72, rate:.57, damage:15, color:'#dec184', type:'physical', role:'Szybki ostrzał',
+    desc:'Szybko strzelają do jednego celu. Dobrzy przeciw wargom i cieniom.',
+    left:{ name:'Długi łuk', cost:155, range:24, damage:1.85, rate:1.04, note:'Większy zasięg i moc strzały.' },
+    right:{ name:'Podwójna cięciwa', cost:145, range:2, damage:1.28, rate:.69, extra:1, note:'Strzela szybciej i do dwóch wrogów.' } },
+  guard: { name:'Koszary', cost:95, upgrade:105, range:43, rate:.62, damage:17, color:'#e39d87', type:'physical', role:'Blokada drogi',
+    desc:'Strażnicy zatrzymują do dwóch wrogów. Bossów jedynie spowalniają.',
+    left:{ name:'Żelazna warta', cost:160, range:5, damage:1.45, rate:1, block:2, note:'Wystawia czterech strażników.' },
+    right:{ name:'Halabardnicy', cost:150, range:7, damage:2.18, rate:.83, pierce:.62, note:'Strażnicy przebijają część pancerza.' } },
+  rune: { name:'Wieża runiczna', cost:110, upgrade:115, range:65, rate:.91, damage:35, color:'#9edac1', type:'magic', role:'Przebija pancerz',
+    desc:'Magia ignoruje fizyczny pancerz. Runiczne cienie są na nią odporne.',
+    left:{ name:'Iglica Rozłamu', cost:170, range:10, damage:2.05, rate:1, note:'Bardzo mocne uderzenia w pojedynczy cel.' },
+    right:{ name:'Więzy Elderonu', cost:155, range:12, damage:1.43, rate:.83, slow:1.75, note:'Spowalnia każdy trafiony cel.' } },
+  brew: { name:'Alchemicy', cost:120, upgrade:110, range:64, rate:1.45, damage:28, color:'#eaae6e', type:'fire', role:'Wybuch obszarowy',
+    desc:'Rozbijają fiolki pod nogami wrogów. Najlepsi przeciw skupionym hordom.',
+    left:{ name:'Ogień z Kotwicy', cost:165, range:6, damage:1.75, rate:.95, splash:15, note:'Mocniejsza eksplozja na większym obszarze.' },
+    right:{ name:'Kwaśny deszcz', cost:155, range:10, damage:1.28, rate:.7, splash:4, corrode:3, note:'Na 3 sekundy osłabia pancerz trafionych.' } }
+};
+
+const CARDS = {
+  straight: { name:'Strit', suit:'♠', note:'Łucznicy i strażnicy mają o 15% krótszą przerwę między atakami do końca bitwy.' },
+  flush: { name:'Kolor', suit:'♦', note:'+35 monet od razu i +2 monety za każdego pokonanego wroga.' },
+  full: { name:'Full', suit:'♥', note:'Naprawia 5 punktów bramy i daje 35 monet.' }
+};
+
+function positionOnRoute(path, distance) {
+  const segment = path.segments.find(s => distance <= s.start + s.size) ?? path.segments.at(-1);
+  const t = Math.max(0, Math.min(1, (distance - segment.start) / segment.size));
+  return { x:segment.x + segment.dx*t, y:segment.y + segment.dy*t, dx:segment.dx };
+}
+
+function nearestRoad(map, x, y) {
+  let best = { gap:Infinity };
+  for (const path of map.routes) {
+    for (const s of path.segments) {
+      const t = Math.max(0, Math.min(1, ((x - s.x)*s.dx + (y - s.y)*s.dy) / (s.size*s.size)));
+      const px = s.x + t*s.dx;
+      const py = s.y + t*s.dy;
+      const gap = Math.hypot(x - px, y - py);
+      if (gap < best.gap) best = { x:px, y:py, gap };
+    }
+  }
+  return best;
+}
+
+function towerStats(tower, perks = {straight:0}) {
+  const base = TOWERS[tower.kind];
+  const choice = base[tower.branch];
+  const level = tower.level;
+  const physicalBonus = base.type === 'physical' ? .85 ** perks.straight : 1;
+  return {
+    range: base.range + (level > 1 ? 6 : 0) + (choice?.range ?? 0),
+    damage: base.damage * (level > 1 ? 1.58 : 1) * (choice?.damage ?? 1),
+    rate: base.rate * (level > 1 ? .89 : 1) * (choice?.rate ?? 1) * physicalBonus,
+    splash: tower.kind === 'brew' ? 26 + (level > 1 ? 4 : 0) + (choice?.splash ?? 0) : 0,
+    block: tower.kind === 'guard' ? 2 + (choice?.block ?? 0) : 0,
+    extra: choice?.extra ?? 0,
+    pierce: choice?.pierce ?? 0,
+    slow: choice?.slow ?? 0,
+    corrode: choice?.corrode ?? 0
+  };
+}
+
+class Battle {
+  constructor(index) {
+    this.index = index;
+    this.map = MAPS[index];
+    this.gold = this.map.gold;
+    this.life = MAX_LIFE;
+    this.towers = this.map.sites.map(() => null);
+    this.enemies = [];
+    this.events = [];
+    this.wave = -1;
+    this.queue = [];
+    this.spawnClock = 0;
+    this.phase = 'ready';
+    this.time = 0;
+    this.kills = 0;
+    this.perks = { straight:0, flush:0 };
+    this.hero = { x:this.map.hero[0], y:this.map.hero[1], cooldown:0, swing:0 };
+  }
+
+  buildable() {
+    return this.phase === 'ready' || this.phase === 'wave';
+  }
+
+  build(slot, kind) {
+    if (!Object.hasOwn(TOWERS, kind)) return false;
+    const definition = TOWERS[kind];
+    if (!this.buildable() || this.towers[slot] !== null || this.gold < definition.cost) return false;
+    this.gold -= definition.cost;
+    this.towers[slot] = { kind, level:1, branch:null, spent:definition.cost, clock:0 };
+    this.events.push({kind:'build', x:this.map.sites[slot][0], y:this.map.sites[slot][1]});
+    return true;
+  }
+
+  upgrade(slot, branch) {
+    const tower = this.towers[slot];
+    if (!this.buildable() || !tower || tower.level === 3) return false;
+    const definition = TOWERS[tower.kind];
+    if (tower.level === 1 ? branch !== undefined : branch !== 'left' && branch !== 'right') return false;
+    const cost = tower.level === 1 ? definition.upgrade : definition[branch].cost;
+    if (this.gold < cost) return false;
+    this.gold -= cost;
+    tower.spent += cost;
+    tower.level++;
+    tower.branch = branch ?? null;
+    this.events.push({kind:'build', x:this.map.sites[slot][0], y:this.map.sites[slot][1]});
+    return true;
+  }
+
+  sell(slot) {
+    const tower = this.towers[slot];
+    if (!this.buildable() || !tower) return false;
+    this.gold += Math.floor(tower.spent*.65);
+    this.towers[slot] = null;
+    return true;
+  }
+
+  startWave() {
+    if (this.phase !== 'ready' || this.wave >= WAVE_COUNT - 1) return false;
+    this.wave++;
+    this.phase = 'wave';
+    this.spawnClock = .45;
+    let ordinal = 0;
+    this.queue = this.map.waves[this.wave].flatMap(group =>
+      Array.from({length:group.count}, () => ({
+        kind:group.kind, interval:group.interval,
+        lane:group.lane < 0 ? ordinal++ % this.map.routes.length : group.lane
+      }))
+    );
+    this.events.push({kind:'wave'});
+    return true;
+  }
+
+  takeCard(card) {
+    if (this.phase !== 'cards' || !Object.hasOwn(CARDS, card)) return false;
+    if (card === 'full') {
+      this.life = Math.min(MAX_LIFE, this.life + 5);
+      this.gold += 35;
+    } else {
+      this.perks[card]++;
+      if (card === 'flush') this.gold += 35;
+    }
+    this.phase = 'ready';
+    return true;
+  }
+
+  cast(x, y) {
+    if (this.phase !== 'wave' || this.hero.cooldown > 0) return false;
+    const road = nearestRoad(this.map, x, y);
+    if (road.gap > 23) return false;
+    Object.assign(this.hero, {x:road.x, y:road.y, cooldown:HERO_COOLDOWN, swing:.25});
+    this.events.push({kind:'hero', x:road.x, y:road.y});
+    for (const e of this.enemies) {
+      if (e.hp > 0 && Math.hypot(road.x-e.x, road.y-e.y) <= 37) {
+        this.hit(e, 115 + this.wave*6, 'physical', .72);
+        e.slow = Math.max(e.slow, 2);
+      }
+    }
+    return true;
+  }
+
+  spawn({kind, lane}) {
+    const base = ENEMIES[kind];
+    const path = this.map.routes[lane];
+    const hp = Math.round(base.hp * (base.boss ? 1 : 1 + this.wave*.055));
+    this.enemies.push({
+      kind, base, path, maxHp:hp, hp, distance:0, slow:0, corrode:0, healClock:.8, enraged:false,
+      ...positionOnRoute(path,0)
+    });
+    if (base.boss) this.events.push({kind:'boss', enemy:kind});
+  }
+
+  hit(enemy, damage, type, pierce = 0) {
+    if (enemy.hp <= 0) return;
+    const armor = (enemy.base.armor ?? 0) * (enemy.corrode > 0 ? .44 : 1);
+    const ward = (enemy.base.ward ?? 0) + (enemy.kind === 'warden' && enemy.enraged ? .26 : 0);
+    const reduction = type === 'magic' ? ward : armor * (1-pierce) * (type === 'fire' ? .52 : 1);
+    enemy.hp = Math.max(0, enemy.hp - damage*(1-reduction));
+    enemy.hit = .12;
+    if (enemy.hp === 0) {
+      const loot = enemy.base.loot + this.perks.flush*2;
+      this.gold += loot;
+      this.kills++;
+      this.events.push({kind:'kill', x:enemy.x, y:enemy.y, tint:enemy.base.tint, loot});
+    }
+  }
+
+  attack(tower, x, y, stats, targets) {
+    const base = TOWERS[tower.kind];
+    const target = targets[0];
+    const victims = stats.splash
+      ? this.enemies.filter(e => e.hp > 0 && Math.hypot(target.x-e.x,target.y-e.y) <= stats.splash)
+      : targets.slice(0, stats.block || 1 + stats.extra);
+    for (const e of victims) {
+      this.hit(e, stats.damage, base.type, stats.pierce);
+      e.slow = Math.max(e.slow, stats.slow);
+      e.corrode = Math.max(e.corrode, stats.corrode);
+    }
+    const visuals = stats.splash ? [target] : victims;
+    for (const e of visuals) {
+      this.events.push({kind:tower.kind, x, y, tx:e.x, ty:e.y, tint:base.color, radius:stats.splash});
+    }
+  }
+
+  step(dt) {
+    this.time += dt;
+    if (this.phase === 'ready' || this.phase === 'wave') {
+      this.hero.cooldown = Math.max(0, this.hero.cooldown-dt);
+    }
+    if (this.phase !== 'wave') return;
+    this.spawnClock -= dt;
+    if (this.queue.length && this.spawnClock <= 0) {
+      const group = this.queue.shift();
+      this.spawn(group);
+      this.spawnClock += group.interval;
+    }
+    for (const e of this.enemies) {
+      e.slow = Math.max(0, e.slow - dt);
+      e.corrode = Math.max(0, e.corrode - dt);
+      e.hit = Math.max(0, (e.hit ?? 0) - dt);
+      if (e.base.boss && !e.enraged && e.hp > 0 && e.hp <= e.maxHp*.5) {
+        e.enraged = true;
+        this.events.push({kind:'rage', enemy:e.kind, x:e.x, y:e.y});
+      }
+      if (e.base.healer && e.hp > 0) {
+        e.healClock -= dt;
+        if (e.healClock <= 0) {
+          e.healClock = 1.6;
+          for (const ally of this.enemies) {
+            if (ally !== e && ally.hp > 0 && Math.hypot(e.x-ally.x,e.y-ally.y) < 40) {
+              ally.hp = Math.min(ally.maxHp, ally.hp + (ally.base.boss ? 20 : 15));
+            }
+          }
+          this.events.push({kind:'heal', x:e.x, y:e.y});
+        }
+      }
+    }
+    const ahead = this.enemies.filter(e => e.hp > 0).sort((a,b) => (a.path.length-a.distance)-(b.path.length-b.distance));
+    const held = new Set();
+    for (const [index,tower] of this.towers.entries()) {
+      if (!tower) continue;
+      const [x,y] = this.map.sites[index];
+      const stats = towerStats(tower,this.perks);
+      const targets = ahead.filter(e => e.hp > 0 && Math.hypot(x-e.x,y-e.y) <= stats.range && (!stats.block || !held.has(e)));
+      if (stats.block) {
+        for (const target of targets.slice(0, stats.block)) held.add(target);
+      }
+      tower.clock -= dt;
+      if (tower.clock <= 0 && targets.length) {
+        tower.clock = stats.rate;
+        this.attack(tower,x,y,stats,targets);
+      }
+    }
+    this.hero.swing -= dt;
+    if (this.hero.swing <= 0) {
+      const enemy = ahead.find(e => e.hp > 0 && Math.hypot(e.x-this.hero.x,e.y-this.hero.y) <= 22);
+      if (enemy) {
+        this.hero.swing = .71;
+        this.hit(enemy, 25+this.wave*2, 'physical', .25);
+        this.events.push({kind:'guard', x:this.hero.x,y:this.hero.y,tx:enemy.x,ty:enemy.y,tint:'#f8e3ab'});
+      }
+    }
+    for (const e of this.enemies) {
+      if (e.hp <= 0) continue;
+      const block = held.has(e) ? (e.base.boss ? .78 : 0) : 1;
+      const rage = e.kind === 'chief' && e.enraged ? 1.65 : 1;
+      e.distance += e.base.speed * block * rage * (e.slow > 0 ? .58 : 1) * dt;
+      Object.assign(e,positionOnRoute(e.path,e.distance));
+      if (e.distance >= e.path.length) {
+        this.life = Math.max(0,this.life-e.base.leak);
+        this.events.push({kind:'leak', x:e.x, y:e.y});
+      }
+    }
+    this.enemies = this.enemies.filter(e => e.hp > 0 && e.distance < e.path.length);
+    if (this.life === 0) {
+      this.phase = 'lost';
+    } else if (!this.enemies.length && !this.queue.length) {
+      if (this.wave === WAVE_COUNT - 1) {
+        this.phase = 'won';
+      } else {
+        const bonus = 48 + this.wave*4;
+        this.gold += bonus;
+        this.events.push({kind:'clear', bonus});
+        this.phase = [2,5].includes(this.wave) ? 'cards' : 'ready';
+      }
+    }
+  }
+
+  stars() {
+    return this.phase === 'won' ? (this.life >= 18 ? 3 : this.life >= 10 ? 2 : 1) : 0;
+  }
+}
+
+
+
+function seedRandom(seed) {
+  return () => {
+    seed = (Math.imul(1664525,seed) + 1013904223) >>> 0;
+    return seed / 4294967296;
+  };
+}
+function box(ctx, color, x, y, w, h) {
+  ctx.fillStyle = color;
+  ctx.fillRect(Math.round(x),Math.round(y),w,h);
+}
+function polygon(ctx, color, points) {
+  ctx.beginPath();
+  points.forEach(([x,y],i) => i ? ctx.lineTo(x,y) : ctx.moveTo(x,y));
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+}
+function disk(ctx, color, x, y, rx, ry = rx) {
+  ctx.beginPath();
+  ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);
+  ctx.fillStyle = color;
+  ctx.fill();
+}
+function pathLine(ctx, points, width, color, yOffset = 0) {
+  ctx.beginPath();
+  points.forEach(([x,y],i) => i ? ctx.lineTo(x,y+yOffset) : ctx.moveTo(x,y+yOffset));
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+}
+function tree(ctx, x, y, size, cold, variant) {
+  ctx.save();
+  ctx.translate(Math.round(x),Math.round(y));
+  ctx.scale(size,size);
+  disk(ctx,'#090e0db0',4,1,14,5);
+  box(ctx,'#261f19',-2,-14,5,16);
+  box(ctx,'#554033',-1,-10,2,10);
+  const shades = cold ? ['#162624','#223934','#335047','#436456'] :
+    variant ? ['#14241a','#263b24','#3a502e','#4c6337'] : ['#14241d','#203626','#2d4931','#435e39'];
+  for (const [top,w] of [[-29,13],[-36,11],[-44,8]]) {
+    polygon(ctx,shades[0],[[0,top],[-w,top+22],[-w+5,top+25],[w-3,top+24],[w,top+20]]);
+    polygon(ctx,shades[1],[[0,top+1],[-w+2,top+19],[-w+7,top+22],[w-4,top+20]]);
+    polygon(ctx,shades[2],[[0,top+3],[-w+4,top+16],[-w+7,top+17],[0,top+14],[w-6,top+17]]);
+    box(ctx,shades[3],-2,top+10,3,2);
+    box(ctx,shades[2],-w+3,top+20,4,2);
+  }
+  ctx.restore();
+}
+function rock(ctx,x,y,s,cold) {
+  polygon(ctx,'#12191a',[[x-s,y],[x-s*.7,y-s*.55],[x+s*.4,y-s*.74],[x+s,y-s*.25],[x+s*.55,y+s*.19]]);
+  polygon(ctx,cold?'#43514f':'#4a5145',[[x-s*.78,y-s*.09],[x-s*.55,y-s*.46],[x+s*.41,y-s*.68],[x+s*.77,y-s*.29],[x+s*.04,y-s*.08]]);
+  box(ctx,cold?'#68736c':'#6a6c56',x-s*.35,y-s*.50,Math.max(1,Math.floor(s*.45)),1);
+}
+function torch(ctx,x,y) {
+  box(ctx,'#241d16',x-1,y-6,3,7);
+  disk(ctx,'#e2884232',x,y-9,8,8);
+  box(ctx,'#a5482e',x-2,y-11,5,5);
+  box(ctx,'#e98a49',x-1,y-12,3,5);
+  box(ctx,'#ffda81',x,y-13,1,4);
+}
+function roof(ctx,x,y,w,shade) {
+  polygon(ctx,'#1b1b18',[[x-w/2-2,y+5],[x,y-w*.43-2],[x+w/2+2,y+5],[x+w/2,y+9],[x-w/2,y+9]]);
+  polygon(ctx,shade,[[x-w/2,y+5],[x,y-w*.43],[x+w/2,y+5],[x+w/2-4,y+7],[x-w/2+2,y+7]]);
+  pathLine(ctx,[[x-w/2,y+5],[x,y-w*.43]],1,'#b19464');
+  box(ctx,'#251f1c',x-w/2+2,y+6,w-4,2);
+}
+function hut(ctx,x,y,cold) {
+  disk(ctx,'#131716aa',x+5,y,18,7);
+  box(ctx,'#292821',x-12,y-15,24,16);
+  box(ctx,'#6d5b48',x-11,y-13,17,13);
+  box(ctx,'#4d4335',x+6,y-14,5,14);
+  box(ctx,'#211e1a',x-5,y-9,6,10);
+  box(ctx,'#e7ac59',x+4,y-9,4,4);
+  roof(ctx,x,y-19,28,cold?'#52605b':'#755341');
+  box(ctx,'#696457',x+6,y-29,4,11);
+}
+function citadel(ctx,x,y,cold) {
+  const stone = cold ? '#6b7e75' : '#7b7966';
+  const lit = cold ? '#9aa89a' : '#a79e81';
+  disk(ctx,'#0a1010b9',x+1,y+13,30,13);
+  box(ctx,'#2a2f28',x-22,y-30,44,45);
+  box(ctx,stone,x-19,y-26,36,36);
+  box(ctx,'#424a43',x+10,y-27,8,37);
+  for(let yy=y-22;yy<y+10;yy+=5) {
+    box(ctx,'#555c50',x-18,yy,35,1);
+    for(let xx=x-15+(yy%2)*4;xx<x+17;xx+=8) box(ctx,'#54594e',xx,yy,1,4);
+  }
+  box(ctx,lit,x-19,y-27,35,3);
+  for(const offset of [-16,15]) {
+    const tx=x+offset;
+    box(ctx,'#353d33',tx-6,y-32,13,45);
+    box(ctx,stone,tx-6,y-28,10,39);
+    box(ctx,lit,tx-6,y-33,12,3);
+    box(ctx,lit,tx-6,y-38,3,6);
+    box(ctx,lit,tx+3,y-38,3,6);
+    box(ctx,'#252923',tx-2,y-23,3,10);
+    box(ctx,'#b67649',tx-1,y-20,1,5);
+    box(ctx,'#4a3b2b',tx-5,y+11,11,2);
+  }
+  polygon(ctx,'#22201b',[[x-8,y+12],[x-8,y-1],[x-5,y-7],[x+5,y-7],[x+8,y-1],[x+8,y+12]]);
+  box(ctx,'#5c422e',x-5,y-1,11,12);
+  for(const off of [-4,0,4]) box(ctx,'#3b2b21',x+off,y-1,1,12);
+  box(ctx,'#a77e49',x-6,y+5,12,2);
+  box(ctx,'#d3ba75',x-1,y-20,2,8);
+  box(ctx,'#d3ba75',x-4,y-18,8,2);
+  box(ctx,'#8b704c',x-6,y-50,1,20);
+  polygon(ctx,cold?'#6b9985':'#aa5c42',[[x-5,y-50],[x+13,y-48],[x+9,y-43],[x-5,y-44]]);
+  torch(ctx,x-12,y+11);
+  torch(ctx,x+12,y+11);
+}
+function colossus(ctx) {
+  polygon(ctx,'#202e2d',[[291,0],[477,0],[480,61],[454,81],[409,76],[383,87],[339,67],[327,36]]);
+  polygon(ctx,'#2b3b39',[[307,0],[480,0],[480,47],[461,54],[451,70],[424,68],[386,81],[349,62],[335,34]]);
+  polygon(ctx,'#394946',[[345,0],[480,0],[480,30],[451,42],[439,64],[413,53],[397,66],[373,65],[353,40]]);
+  polygon(ctx,'#293636',[[418,0],[460,0],[460,27],[447,35],[438,60],[416,76],[388,62],[377,40],[393,24]]);
+  polygon(ctx,'#57625d',[[408,11],[428,10],[439,19],[437,36],[431,47],[411,48],[399,37],[400,22]]);
+  polygon(ctx,'#788078',[[405,21],[409,13],[427,13],[434,19],[425,20],[421,32],[407,34],[400,29]]);
+  polygon(ctx,'#465752',[[429,21],[438,20],[435,38],[428,46],[415,47],[418,37],[426,35]]);
+  box(ctx,'#263735',406,25,8,3);
+  box(ctx,'#283836',425,24,9,3);
+  box(ctx,'#88aa94',408,26,4,1);
+  box(ctx,'#86a991',427,25,4,1);
+  polygon(ctx,'#586762',[[412,43],[429,45],[445,43],[462,55],[455,69],[437,73],[423,83],[402,78],[379,66],[387,53]]);
+  polygon(ctx,'#374a47',[[428,46],[456,49],[466,59],[455,71],[433,74],[425,83],[410,77]]);
+  polygon(ctx,'#223f39',[[425,53],[434,61],[425,73],[416,63]]);
+  disk(ctx,'#6dc3a13b',425,62,11,9);
+  polygon(ctx,'#91c4a6',[[425,55],[429,61],[425,68],[421,62]]);
+  box(ctx,'#d8e6b7',424,58,2,6);
+  pathLine(ctx,[[342,25],[359,42],[362,53],[380,64]],1,'#4a5952');
+  pathLine(ctx,[[475,20],[460,29],[457,37],[442,40]],1,'#55615a');
+}
+function pond(ctx) {
+  polygon(ctx,'#172923',[[0,36],[30,28],[68,39],[81,52],[73,68],[54,82],[26,79],[0,91]]);
+  polygon(ctx,'#2c4038',[[0,39],[28,33],[65,42],[77,53],[69,67],[52,76],[25,74],[0,85]]);
+  polygon(ctx,'#1f3c3a',[[0,43],[26,36],[63,45],[72,54],[66,64],[50,72],[23,69],[0,81]]);
+  polygon(ctx,'#2c4c46',[[0,49],[27,40],[55,48],[64,54],[60,63],[48,68],[25,66],[0,76]]);
+  for(const [x,y,w] of [[12,50,15],[31,57,20],[6,68,17],[52,54,8],[29,46,6],[14,60,7]]) {
+    box(ctx,'#58736a',x,y,w,1);
+    box(ctx,'#38594e',x+4,y+2,w,1);
+  }
+}
+function makeLandscape(index) {
+  const map = MAPS[index];
+  const cold = index === 1;
+  const canvas = document.createElement('canvas');
+  canvas.width = WIDTH;
+  canvas.height = HEIGHT;
+  const ctx = canvas.getContext('2d');
+  const rng = seedRandom(map.seed);
+  const palette = cold ? ['#24312b','#28362e','#2d3a33','#324037','#39473d','#3a4940'] :
+    ['#283024','#30372a','#343b2b','#3b432e','#414731','#484a33'];
+  for(let y=0;y<HEIGHT;y+=4) {
+    for(let x=0;x<WIDTH;x+=4) {
+      const noise = 1.9 + 1.1*Math.sin(x*.025+y*.037) + 1.05*Math.cos(x*.048-y*.027) + rng()*1.7;
+      box(ctx,palette[Math.min(5,Math.max(0,Math.floor(noise)))],x,y,4,4);
+    }
+  }
+  for(let i=0;i<4500;i++) {
+    const x = rng()*WIDTH, y = rng()*HEIGHT;
+    box(ctx,rng()<.49 ? '#73805c26' : '#171f1840',x,y,rng()<.83?1:3,rng()<.9?1:2);
+  }
+  if (cold) colossus(ctx);
+  else pond(ctx);
+  for (const r of map.routes) pathLine(ctx,r.points,29,cold?'#1e2b26':'#262b20',3);
+  for (const r of map.routes) pathLine(ctx,r.points,25,cold?'#5f5e4d':'#5e5038',1);
+  for (const r of map.routes) pathLine(ctx,r.points,20,cold?'#817865':'#907554');
+  for(let i=0;i<4900;i++) {
+    const x = rng()*WIDTH, y = rng()*HEIGHT;
+    const {gap} = nearestRoad(map,x,y);
+    if (gap < 10) {
+      box(ctx,rng()<.55 ? '#cbb68b48' : '#55463055',x,y,1+Math.floor(rng()*4),1);
+      if(rng()<.12) box(ctx,'#544e40',x,y,2,2);
+    } else if (gap < 17 && rng()<.3) {
+      box(ctx,cold?'#93907b80':'#a18f6480',x,y,2,1);
+    }
+  }
+  for(const r of map.routes) {
+    for(let d=8;d<r.length-18;d+=7+rng()*7) {
+      const p=positionOnRoute(r,d);
+      box(ctx,'#c5ad7942',p.x+(rng()-.5)*7,p.y+(rng()-.5)*6,3,1);
+    }
+  }
+  const scenery = [];
+  for(let i=0;i<410;i++) {
+    const x = rng()*WIDTH, y = rng()*HEIGHT;
+    const edge = x<37 || x>453 || y<62 || y>251;
+    const size = .55 + rng()*.5;
+    if (nearestRoad(map,x,y).gap < 21 || map.sites.some(([sx,sy]) => Math.hypot(x-sx,y-sy)<23)) continue;
+    if (cold && x>323 && y<82 || !cold && x<82 && y>29 && y<90) continue;
+    if (Math.hypot(x-map.gate[0],y-map.gate[1]) < 41) continue;
+    if (rng() < (edge ? .43 : .12)) scenery.push({x,y,size,kind:'tree',variant:rng()<.48});
+    else if (rng()<.31) scenery.push({x,y,size:2+rng()*5,kind:'rock'});
+    else {
+      box(ctx,cold?'#526353':'#526141',x,y,3,1);
+      box(ctx,cold?'#627566':'#617044',x+1,y-2,1,2);
+      if(rng()<.10) box(ctx,cold?'#88ada1':'#b27c58',x+1,y-3,1,1);
+    }
+  }
+  if(cold) scenery.push({x:430,y:184,kind:'hut'},{x:452,y:204,kind:'hut'},{x:408,y:213,kind:'hut'});
+  else scenery.push({x:417,y:65,kind:'hut'},{x:459,y:181,kind:'hut'});
+  scenery.sort((a,b)=>a.y-b.y);
+  for (const item of scenery) {
+    if(item.kind==='tree') tree(ctx,item.x,item.y,item.size,cold,item.variant);
+    if(item.kind==='rock') rock(ctx,item.x,item.y,item.size,cold);
+    if(item.kind==='hut') hut(ctx,item.x,item.y,cold);
+  }
+  const vignette = ctx.createRadialGradient(WIDTH*.51,HEIGHT*.49,60,WIDTH*.51,HEIGHT*.49,277);
+  vignette.addColorStop(0,'#070f0e00');
+  vignette.addColorStop(.62,'#070f0e08');
+  vignette.addColorStop(1,'#070f0edb');
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0,0,WIDTH,HEIGHT);
+  citadel(ctx,...map.gate,cold);
+  for (const r of map.routes) {
+    const [x,y] = r.points[0];
+    torch(ctx,x+27,y-15);
+    torch(ctx,x+27,y+19);
+    pathLine(ctx,[[x+14,y-4],[x+20,y],[x+14,y+4]],2,'#d6a074');
+  }
+  return canvas;
+}
+
+function towerArt(ctx,kind,x,y,level,branch) {
+  ctx.save();
+  ctx.translate(Math.round(x),Math.round(y));
+  const color = TOWERS[kind].color;
+  disk(ctx,'#131610a0',2,1,15,6);
+  polygon(ctx,'#222820',[[-15,1],[-11,-6],[11,-6],[15,1],[10,5],[-11,5]]);
+  polygon(ctx,'#646457',[[-13,0],[-10,-5],[10,-5],[13,0],[8,3],[-9,3]]);
+  if (kind === 'bow') {
+    box(ctx,'#211c16',-10,-23,21,25);
+    box(ctx,'#79543b',-8,-22,16,22);
+    box(ctx,'#ad8255',-9,-21,3,22);
+    box(ctx,'#543c2d',5,-22,4,22);
+    box(ctx,'#231e19',-3,-12,6,11);
+    box(ctx,'#bf985d',-11,-19,22,3);
+    box(ctx,'#4f3928',-13,-26,26,6);
+    box(ctx,'#d0a677',-12,-27,24,2);
+    for (const p of [-12,-5,3,10]) box(ctx,'#9c7852',p,-30,3,6);
+    box(ctx,'#e2c491',-3,-33,3,7);
+    box(ctx,'#4f643f',-5,-30,7,4);
+    pathLine(ctx,[[3,-35],[7,-31],[4,-27]],1,'#e4c280');
+  } else if (kind === 'guard') {
+    box(ctx,'#292620',-11,-17,22,19);
+    box(ctx,'#747369',-10,-16,19,16);
+    box(ctx,'#989485',-10,-15,6,12);
+    box(ctx,'#4e514a',5,-14,5,13);
+    box(ctx,'#382a24',-3,-10,7,11);
+    roof(ctx,0,-20,27,'#9b5a49');
+    for (const p of [-10,10]) {
+      box(ctx,'#2d2b25',p-2,-3,4,6);
+      box(ctx,'#a8a99d',p-1,-7,3,4);
+      box(ctx,'#c17760',p-2,-2,4,4);
+    }
+  } else if (kind === 'rune') {
+    polygon(ctx,'#252926',[[-9,1],[-9,-10],[-6,-13],[-6,-24],[7,-24],[7,-14],[10,-9],[10,1]]);
+    polygon(ctx,'#747c72',[[-8,0],[-8,-9],[-4,-13],[-4,-22],[5,-22],[4,-12],[7,-8],[8,0]]);
+    box(ctx,'#b3aa91',-8,-3,16,2);
+    box(ctx,'#405850',-4,-13,7,9);
+    box(ctx,'#9ae3c1',-1,-12,2,7);
+    box(ctx,'#c7a477',-9,-24,18,3);
+    disk(ctx,'#7be6bb45',0,-31,11);
+    polygon(ctx,'#67b99f',[[0,-40],[7,-31],[2,-24],[-6,-29]]);
+    polygon(ctx,'#cfebc8',[[0,-39],[3,-33],[0,-28],[-4,-31]]);
+  } else {
+    box(ctx,'#2b2420',-11,-15,22,16);
+    box(ctx,'#8e7350',-10,-15,20,15);
+    box(ctx,'#b19a70',-9,-13,5,10);
+    box(ctx,'#2b2922',-2,-10,6,11);
+    roof(ctx,0,-18,27,'#756246');
+    box(ctx,'#67564b',5,-33,6,14);
+    box(ctx,'#bd9c72',4,-34,8,3);
+    box(ctx,'#5b3924',8,-4,6,5);
+    disk(ctx,'#fc9d494a',8,-8,7);
+    box(ctx,'#f3a555',6,-10,5,4);
+    box(ctx,'#ffe39b',8,-12,1,6);
+  }
+  if (level >= 2) {
+    box(ctx,'#191b18',-10,-17,7,12);
+    polygon(ctx,color,[[-9,-16],[-4,-16],[-4,-8],[-6,-6],[-9,-8]]);
+  }
+  if (level === 3) {
+    box(ctx,'#b8aa80',11,-30,1,23);
+    polygon(ctx,branch==='left'?color:'#c2abd2',[[12,-29],[21,-27],[17,-23],[12,-24]]);
+  }
+  ctx.restore();
+}
+function unitArt(ctx,kind,x,y,walk,flash,dx=1) {
+  const e = ENEMIES[kind];
+  const hero = kind === 'hero';
+  const big = e?.boss ? 1.8 : kind==='stone' ? 1.25 : 1;
+  const base = flash ? '#efe0bd' : e?.tint ?? '#b5c6ad';
+  ctx.save();
+  ctx.translate(Math.round(x),Math.round(y));
+  ctx.scale(big*(dx<0?-1:1),big);
+  disk(ctx,'#121813a0',1,0,7,3);
+  const foot = Math.sin(walk) > 0 ? 1 : 0;
+  if (kind === 'warg') {
+    polygon(ctx,'#342f3d',[[-11,-3],[-7,-10],[1,-10],[6,-8],[7,-12],[11,-8],[12,-4],[7,-2],[-5,-1]]);
+    box(ctx,base,-6,-9,9,4);
+    box(ctx,base,6,-8,5,5);
+    box(ctx,'#f0be7b',9,-7,2,1);
+    box(ctx,'#34313b',-6,-3+foot,3,4);
+    box(ctx,'#34313b',3,-2-foot,2,4);
+  } else if(kind === 'shade') {
+    const bob=Math.floor(Math.sin(walk)*2);
+    disk(ctx,'#8fbdd349',1,-7,10);
+    polygon(ctx,'#24454d',[[0,-17+bob],[6,-11+bob],[5,-5+bob],[8,1+bob],[-7,-1+bob],[-4,-11+bob]]);
+    box(ctx,base,-2,-14+bob,6,3);
+    box(ctx,'#c5e7d9',1,-13+bob,2,1);
+    box(ctx,'#698e9d',-3,-5+bob,7,2);
+  } else {
+    const armor = hero ? '#8e9b92' : kind==='stone'||kind==='warden' ? '#677770' : kind==='shaman' ? '#553d61' : '#655346';
+    box(ctx,'#242520',-4,-3+foot,3,4);
+    box(ctx,'#242520',2,-3-foot,3,4);
+    polygon(ctx,'#262620',[[-6,-4],[-6,-10],[-3,-12],[-4,-16],[3,-17],[6,-14],[5,-10],[7,-8],[6,-4]]);
+    box(ctx,armor,-5,-10,10,7);
+    box(ctx,base,-3,-16,8,6);
+    box(ctx,'#252e29',2,-14,3,1);
+    if(kind==='gob'||kind==='chief'||kind==='shaman') {
+      box(ctx,base,-6,-14,3,2);
+      box(ctx,base,5,-14,3,2);
+    }
+    if (hero) {
+      box(ctx,'#583f39',-6,-11,3,10);
+      box(ctx,'#b0865c',-5,-6,10,1);
+      pathLine(ctx,[[4,-5],[9,-14]],1,'#d8dcd1');
+      box(ctx,'#f0d694',5,-8,4,1);
+    }
+    if (kind==='shield'||kind==='chief') {
+      polygon(ctx,'#a69475',[[4,-11],[9,-11],[9,-5],[6,-2],[4,-5]]);
+      box(ctx,'#6e493b',6,-9,2,5);
+    }
+    if(kind==='shaman') {
+      box(ctx,'#957150',7,-16,1,13);
+      box(ctx,'#d5a2df',6,-18,3,3);
+    }
+    if(kind==='warden'||kind==='stone') {
+      box(ctx,'#a0d7ad',0,-9,2,4);
+      box(ctx,'#c9e7b8',0,-8,1,2);
+    }
+    if(kind==='chief') {
+      box(ctx,'#f1bb73',-3,-18,8,2);
+      for (const off of [-3,0,3]) box(ctx,'#f1bb73',off,-20,1,2);
+    }
+  }
+  ctx.restore();
+}
+
+function asset(canvas) {
+  const url = canvas.toDataURL('image/webp',.94);
+  const image = new Image();
+  image.src = url;
+  return { canvas, image, url };
+}
+function drawAsset(ctx,resource) {
+  ctx.drawImage(resource.image.complete && resource.image.naturalWidth ? resource.image : resource.canvas,0,0);
+}
+
+class BattlefieldView {
+  constructor(canvas) {
+    this.ctx = canvas.getContext('2d');
+    this.maps = MAPS.map((_,i)=>asset(makeLandscape(i)));
+    this.icons = {};
+    for (const kind of Object.keys(TOWERS)) {
+      const icon = document.createElement('canvas');
+      icon.width=56; icon.height=53;
+      towerArt(icon.getContext('2d'),kind,26,44,1);
+      this.icons[kind] = asset(icon).url;
+    }
+    this.effects = [];
+  }
+
+  animate(game, selected, hover, aim, dt, reducedMotion, planned) {
+    const ctx=this.ctx, t=game.time, map=game.map;
+    ctx.imageSmoothingEnabled=false;
+    drawAsset(ctx,this.maps[game.index]);
+    for (const fx of game.events) {
+      if (Object.hasOwn({build:1,kill:1,bow:1,guard:1,rune:1,brew:1,hero:1,heal:1,leak:1,rage:1},fx.kind)) {
+        this.effects.push({...fx,age:0});
+      }
+    }
+    for(const fx of this.effects) fx.age+=dt;
+    this.effects=this.effects.filter(fx=>fx.age<(fx.kind==='kill'?.64:.45));
+    const focus = selected ?? hover;
+    const inspected = game.towers[focus] ?? (planned ? {kind:planned,level:1} : null);
+    if (focus !== null && inspected && !aim) {
+      const [x,y]=map.sites[focus], {range}=towerStats(inspected,game.perks);
+      disk(ctx,'#d0c88821',x,y,range);
+      ctx.beginPath();
+      ctx.arc(x,y,range,0,Math.PI*2);
+      ctx.strokeStyle='#e4ce8caa';
+      ctx.setLineDash([3,3]);
+      ctx.lineWidth=1;
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    for(const [i,[x,y]] of map.sites.entries()) {
+      if (game.towers[i]) continue;
+      disk(ctx,'#141a14ac',x+2,y+3,12,5);
+      polygon(ctx,i===focus?'#bc9b5e':'#77745a',[[x-11,y],[x-7,y-5],[x+8,y-5],[x+11,y],[x+7,y+4],[x-7,y+4]]);
+      polygon(ctx,i===focus?'#5d4f35':'#484b3b',[[x-9,y],[x-5,y-4],[x+6,y-4],[x+9,y],[x+6,y+2],[x-6,y+2]]);
+      box(ctx,i===focus?'#f4d58a':'#c9b67b',x-3,y-1,7,1);
+      box(ctx,i===focus?'#f4d58a':'#c9b67b',x,y-4,1,7);
+    }
+    const items = game.enemies.map(e=>({x:e.x,y:e.y,enemy:e}));
+    items.push({...game.hero,hero:true});
+    for(const [i,tower] of game.towers.entries()) if(tower) {
+      const [x,y]=map.sites[i];
+      items.push({x,y,tower});
+    }
+    items.sort((a,b)=>a.y-b.y);
+    for(const item of items) {
+      const {x,y,tower,enemy}=item;
+      if (tower) {
+        towerArt(ctx,tower.kind,x,y,tower.level,tower.branch);
+      } else {
+        if (item.hero) disk(ctx,'#e1c37e72',x,y,9,4);
+        const walk = reducedMotion ? 0 : (enemy ? enemy.distance*.25 : t*2);
+        unitArt(ctx,enemy?.kind??'hero',x,y,walk,enemy?.hit>0,enemy?.dx??1);
+        if (enemy && (enemy.hp<enemy.maxHp || enemy.base.boss)) {
+          const w=enemy.base.boss?31:14;
+          const offset=enemy.base.boss?37:20;
+          box(ctx,'#1b1816',x-w/2-1,y-offset-1,w+2,4);
+          box(ctx,enemy.base.boss?'#d28a62':'#a9bd78',x-w/2,y-offset,Math.max(1,Math.round(w*enemy.hp/enemy.maxHp)),2);
+        }
+        if (item.hero) polygon(ctx,'#eac77b',[[x-3,y-24],[x+3,y-24],[x,y-20]]);
+      }
+    }
+    for(const fx of this.effects) this.effect(fx,reducedMotion);
+    if (aim) {
+      disk(ctx,'#e7bb6b27',aim.x,aim.y,37);
+      ctx.strokeStyle='#f2cd78';
+      ctx.lineWidth=1;
+      ctx.beginPath();
+      ctx.arc(aim.x,aim.y,37,0,Math.PI*2);
+      ctx.stroke();
+    }
+  }
+
+  effect(fx, reducedMotion) {
+    const ctx=this.ctx;
+    const p=Math.min(1,fx.age/.45);
+    const {x,y,tx,ty,kind}=fx;
+    ctx.save();
+    ctx.globalAlpha=1-p;
+    if (kind==='bow'||kind==='rune'||kind==='brew'||kind==='guard') {
+      const v=Math.min(1,p*2.5+.12);
+      const sy=y-(kind==='guard'?6:22);
+      const cx=x+(tx-x)*v, cy=sy+(ty-6-sy)*v;
+      if(kind==='bow'||kind==='rune') {
+        pathLine(ctx,[[cx-(tx-x)*.15,cy-(ty-6-sy)*.15],[cx,cy]],kind==='bow'?1:2,fx.tint);
+        box(ctx,'#fff1b9',cx,cy,2,2);
+      } else if(kind==='guard') {
+        pathLine(ctx,[[tx-5,ty-11],[tx+6,ty-3]],2,fx.tint);
+      } else {
+        if (v<1) box(ctx,fx.tint,cx,cy-Math.sin(v*Math.PI)*11,3,3);
+        else {
+          disk(ctx,'#f7a05368',tx,ty,fx.radius*(p+.3),fx.radius*(p+.3)*.6);
+          box(ctx,'#f6d89c',tx-2,ty-4,5,4);
+        }
+      }
+    } else if(kind==='kill') {
+      const rise=reducedMotion?0:fx.age*26;
+      ctx.globalAlpha=Math.max(0,1-fx.age/.65);
+      ctx.font='bold 7px system-ui';
+      ctx.fillStyle='#f3d996';
+      ctx.fillText('+'+fx.loot,x+4,y-11-rise);
+      for (let i=0;i<4;i++) box(ctx,fx.tint,x+(i-1.5)*(4+p*8),y-5-i%2*4-rise/3,2,2);
+    } else {
+      const color = {hero:'#efda9e',heal:'#b0aaea',build:'#e3ca90',rage:'#f3aa86',leak:'#e87f69'}[kind];
+      const radius = (kind==='hero'?37:kind==='heal'?39:17) * (.3+p*.7);
+      ctx.strokeStyle=color;
+      ctx.lineWidth=kind==='hero'?2:1;
+      ctx.beginPath();
+      ctx.ellipse(x,y,radius,radius*.64,0,0,Math.PI*2);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+}
+
+
+const element = id => document.getElementById(id);
+const towerKinds = ['bow','guard','rune','brew'];
+const storageKey = 'calion-tower-defence-records-v1';
+const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+const dialog = element('dialog');
+const stage = element('stage');
+const markerLayer = element('markers');
+const actions = element('actions');
+const view = new BattlefieldView(element('map'));
+const records = loadRecords();
+
+let battle;
+let selected = null;
+let hover = null;
+let planned = null;
+let paused = false;
+let aimMode = false;
+let cursor = null;
+let speed = 1;
+let modal = null;
+let bannerClock = 0;
+let audio = null;
+let audioEnabled = false;
+let phaseSeen = null;
+let lastTime = performance.now();
+let elapsed = 0;
+
+function recordKey(index,stars) {
+  return storageKey+'-'+index+'-'+stars;
+}
+
+function loadRecords() {
+  try {
+    return MAPS.map((_,index)=>[3,2,1].find(stars=>localStorage.getItem(recordKey(index,stars))==='1') ?? 0);
+  } catch {
+    return MAPS.map(()=>0);
+  }
+}
+
+function saveRecord() {
+  const stars = battle.stars();
+  records[battle.index] = Math.max(records[battle.index],stars);
+  try {
+    localStorage.setItem(recordKey(battle.index,stars),'1');
+  } catch {
+    // Progress remains available until the page closes.
+  }
+}
+
+function setText(id,value) {
+  const node = element(id);
+  if (node.textContent !== String(value)) node.textContent = value;
+}
+
+function status(message) {
+  setText('status',message);
+}
+
+function showBanner(message, danger=false) {
+  const banner = element('banner');
+  banner.hidden = false;
+  banner.textContent = message;
+  banner.classList.toggle('danger',danger);
+  bannerClock = 2.65;
+}
+
+function startMission(index) {
+  closeDialog();
+  battle = new Battle(index);
+  selected = hover = planned = null;
+  paused = false;
+  speed = 1;
+  phaseSeen = battle.phase;
+  elapsed = 0;
+  view.effects.length = 0;
+  element('banner').hidden = true;
+  bannerClock = 0;
+  cancelHero();
+  const { map } = battle;
+  setText('region','MISJA '+map.numeral+'  /  '+map.region);
+  setText('title',map.name);
+  setText('objective',map.goal);
+  setText('caption',map.region);
+  setText('speed','1×');
+  markerLayer.replaceChildren(...map.sites.map(([x,y],i)=>{
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'marker';
+    button.dataset.slot = i;
+    button.style.left = x/WIDTH*100+'%';
+    button.style.top = y/HEIGHT*100+'%';
+    button.addEventListener('pointerenter',()=>{ hover=i; });
+    button.addEventListener('pointerleave',()=>{ hover=null; });
+    button.addEventListener('focus',()=>{ hover=i; });
+    button.addEventListener('blur',()=>{ hover=null; });
+    return button;
+  }));
+  syncMarkers();
+  panel();
+  syncHud();
+  status(index === 0
+    ? 'Kliknij fundament z plusem, by zbudować pierwszą wieżę.'
+    : 'Oba trakty prowadzą do tej samej bramy. Zacznij od obrony skrzyżowania.');
+}
+
+function syncMarkers() {
+  for (const [i,button] of Array.from(markerLayer.children).entries()) {
+    const tower = battle.towers[i];
+    const label = tower ? TOWERS[tower.kind].name+', poziom '+tower.level : 'Fundament '+(i+1);
+    button.classList.toggle('built',Boolean(tower));
+    button.setAttribute('aria-label',label);
+    button.setAttribute('aria-pressed',String(selected === i));
+    button.title = label;
+  }
+}
+
+function showSelection(slot) {
+  if (paused || !battle.buildable()) return;
+  selected = slot;
+  if (slot !== null && planned && !battle.towers[slot]) {
+    place(planned);
+  } else {
+    planned = null;
+    syncMarkers();
+    panel();
+  }
+}
+
+function place(kind) {
+  if (paused || !battle.buildable()) return;
+  if (selected === null || battle.towers[selected]) {
+    selected = null;
+    planned = planned === kind ? null : kind;
+    syncMarkers();
+    panel();
+    status(planned ? 'Wybierz wolny fundament dla: '+TOWERS[kind].name+'.' : 'Wybierz fundament albo rodzaj wieży.');
+    return;
+  }
+  if (battle.build(selected,kind)) {
+    planned = null;
+    status('Zbudowano: '+TOWERS[kind].name+'.');
+    tone('build');
+  } else {
+    status('Potrzebujesz '+TOWERS[kind].cost+' monet, by zbudować tę wieżę.');
+  }
+  syncMarkers();
+  panel();
+  syncHud();
+}
+
+function panel() {
+  const tower = battle.towers[selected];
+  if (!tower) {
+    setText('panel-kicker',selected === null?'ROZKAZY GILDII':'FUNDAMENT '+(selected+1));
+    setText('panel-title',selected === null?'Budowa':'Wybierz wieżę');
+    setText('panel-hint',planned?'Wskaż wolny fundament.':selected === null?'Wybierz fundament na mapie albo rodzaj wieży poniżej.':'Zbuduj obronę na zaznaczonym fundamencie.');
+    actions.innerHTML = towerKinds.map((kind,index)=>{
+      const tower = TOWERS[kind];
+      return '<button class="tower-choice'+(planned===kind?' active':'')+'" type="button" data-build="'+kind+'" data-cost="'+tower.cost+'" title="'+tower.desc+'">'
+        +'<img alt="" src="'+view.icons[kind]+'"><span><b>'+tower.name+'</b><small>'+tower.role+'</small></span>'
+        +'<span class="price" aria-label="'+tower.cost+' monet">◈ '+tower.cost+'<em>'+(index+1)+'</em></span></button>';
+    }).join('');
+  } else {
+    const type = TOWERS[tower.kind];
+    const stats = towerStats(tower,battle.perks);
+    setText('panel-kicker','WIEŻA  /  POZIOM '+tower.level+' Z 3');
+    setText('panel-title',type[tower.branch]?.name ?? type.name);
+    setText('panel-hint',type[tower.branch]?.note ?? type.desc);
+    const statsLine = '<p class="tower-stats">Obrażenia '+Math.round(stats.damage)+' · zasięg '+stats.range+' · atak co '+stats.rate.toFixed(2).replace('.',',')+' s</p>';
+    let upgrades = '';
+    if (tower.level === 1) {
+      upgrades = actionButton('Ulepsz do poziomu 2','Większe obrażenia, zasięg i szybszy atak.',type.upgrade,'data-upgrade="base"');
+    } else if (tower.level === 2) {
+      upgrades = ['left','right'].map(branch=>{
+        const upgrade=type[branch];
+        return actionButton(upgrade.name,upgrade.note,upgrade.cost,'data-upgrade="'+branch+'"');
+      }).join('');
+    }
+    const refund = Math.floor(tower.spent*.65);
+    actions.innerHTML = statsLine+upgrades+'<button class="action sell" type="button" data-sell><span><b>Sprzedaj wieżę</b><small>Odzyskasz 65% wydanych monet.</small></span><span class="price">+◈ '+refund+'</span></button>';
+  }
+  updateActionAvailability();
+}
+
+function actionButton(name,note,cost,attribute) {
+  return '<button type="button" class="action" '+attribute+' data-cost="'+cost+'"><span><b>'+name+'</b><small>'+note+'</small></span><span class="price">◈ '+cost+'</span></button>';
+}
+
+function updateActionAvailability() {
+  for (const button of actions.querySelectorAll('button')) {
+    const affordable = !button.dataset.cost || Number(button.dataset.cost) <= battle.gold;
+    button.disabled = !battle.buildable() || paused || !affordable;
+  }
+}
+
+function wavePreview(index) {
+  const groups = battle.map.waves[index];
+  const types = [...new Set(groups.map(group=>group.kind))];
+  const count = groups.reduce((sum,group)=>sum+group.count,0);
+  const names = types.map(kind=>ENEMIES[kind].name);
+  return names.join(' · ')+' · '+count+' wrogów';
+}
+
+function syncHud() {
+  setText('life',battle.life);
+  setText('gold',battle.gold);
+  setText('wave',Math.max(0,battle.wave+1)+' / '+WAVE_COUNT);
+  const inWave = battle.phase === 'wave';
+  const ready = battle.phase === 'ready';
+  const next = Math.min(WAVE_COUNT-1,battle.wave+(ready?1:0));
+  let label = '', mix = '';
+  if (ready || inWave) {
+    label = (ready?'Następna fala ':'Natarcie ')+(next+1)+' / '+WAVE_COUNT;
+    mix = wavePreview(next);
+  } else if (battle.phase === 'cards') {
+    label = 'DOSTAWA Z KARCZMY';
+    mix = 'Wybierz wsparcie dla swojej załogi.';
+  } else {
+    label = battle.phase === 'won'?'Zwycięstwo':'Przegrana';
+    mix = battle.kills+' pokonanych wrogów';
+  }
+  setText('wave-label',label);
+  setText('wave-mix',mix);
+  const nextButton = element('next-wave');
+  nextButton.disabled = !ready || paused;
+  const buttonText = inWave?'Fala w toku':battle.wave === -1?'Rozpocznij falę':'Wezwij falę '+(next+1);
+  if (nextButton.lastChild.textContent !== ' '+buttonText) nextButton.lastChild.textContent=' '+buttonText;
+  const total = inWave ? battle.map.waves[battle.wave].reduce((sum,group)=>sum+group.count,0) : 1;
+  const progress = inWave ? 1-(battle.queue.length+battle.enemies.length)/total : battle.phase === 'won' ? 1 : 0;
+  element('wave-progress').style.width = (progress*100).toFixed(1)+'%';
+  const hero = element('hero');
+  hero.disabled = !inWave || battle.hero.cooldown>0 || paused;
+  hero.setAttribute('aria-pressed',String(aimMode));
+  const heroText = battle.hero.cooldown>0 ? 'Szarża · '+Math.ceil(battle.hero.cooldown)+' s' : 'Szarża Corina';
+  if (hero.firstElementChild.textContent !== heroText) hero.firstElementChild.textContent=heroText;
+  element('pause').disabled = !ready && !inWave;
+  updateActionAvailability();
+}
+
+function beginWave() {
+  if (!paused && !dialog.open && battle.startWave()) {
+    status('Fala '+(battle.wave+1)+' rozpoczęta.');
+    syncHud();
+  }
+}
+
+function togglePause() {
+  if (dialog.open || !battle.buildable()) return;
+  paused = true;
+  cancelHero();
+  openDialog('pause','OBÓZ GILDII','Bitwa wstrzymana',
+    '<p class="dialog-copy">Możesz wrócić do obrony albo rozpocząć misję od nowa.</p>'
+    +'<div class="dialog-actions"><button class="primary" data-close>Wróć do bitwy</button>'
+    +'<button class="secondary" data-restart>Zacznij od nowa</button></div>');
+}
+
+function cancelHero() {
+  aimMode = false;
+  cursor = null;
+  stage.classList.remove('aiming');
+  element('aim-label').hidden = true;
+}
+
+function toggleHero() {
+  if (aimMode) {
+    cancelHero();
+    syncHud();
+    return;
+  }
+  if (paused || battle.phase !== 'wave' || battle.hero.cooldown > 0 || dialog.open) return;
+  aimMode = true;
+  cursor = {x:battle.hero.x,y:battle.hero.y};
+  stage.classList.add('aiming');
+  element('aim-label').hidden = false;
+  status('Kliknij drogę, by Corin szarżował. Możesz też użyć strzałek i Entera.');
+  stage.focus({preventScroll:true});
+  syncHud();
+}
+
+function pointFromEvent(event) {
+  const rect = stage.getBoundingClientRect();
+  return {x:(event.clientX-rect.left)/rect.width*WIDTH,y:(event.clientY-rect.top)/rect.height*HEIGHT};
+}
+
+function castAt(point) {
+  if (!point || !aimMode || dialog.open || paused) return;
+  if (battle.cast(point.x,point.y)) {
+    cancelHero();
+    status('Corin uderzył na trakcie i został na nowej pozycji.');
+    syncHud();
+  } else {
+    status('Wskaż drogę, po której poruszają się wrogowie.');
+  }
+}
+
+function openDialog(kind,kicker,title,body) {
+  cancelHero();
+  modal = kind;
+  setText('dialog-kicker',kicker);
+  setText('dialog-title',title);
+  element('dialog-content').innerHTML = body;
+  element('dialog-close').hidden = kind === 'cards';
+  if (!dialog.open) dialog.showModal();
+  const first = kind === 'cards' ? dialog.querySelector('.order') : dialog.querySelector('.primary') ?? element('dialog-close');
+  first.focus();
+}
+
+function closeDialog() {
+  if (dialog.open) dialog.close();
+  modal = null;
+  paused = false;
+}
+
+function openCampaign() {
+  loadRecords().forEach((stars,i)=>{ records[i] = Math.max(records[i],stars); });
+  const missionCards = MAPS.map((map,i)=>{
+    const locked = i>0 && !records[i-1];
+    const stars = records[i] ? '★'.repeat(records[i])+'☆'.repeat(3-records[i]) : '';
+    return '<button class="mission-card" data-mission="'+i+'" '+(locked?'disabled':'')+'>'
+      +'<img alt="" src="'+view.maps[i].url+'"><span><small>MISJA '+map.numeral+' · '+map.region+'</small>'
+      +'<strong>'+map.name+'</strong><em>'+(locked?'Ukończ Strażnicę Południową.':stars || (i===battle.index?'Obecna misja':'Dostępna'))+'</em></span></button>';
+  }).join('');
+  openDialog('campaign','ROK 825','Kampania',missionCards
+    +'<p class="dialog-copy" style="margin:13px 0 0">Utrzymaj bramę przez osiem fal. Za 18 punktów bramy otrzymasz trzy gwiazdy, za 10 dwie, a za każdą inną wygraną jedną.</p>');
+}
+
+function openCodex() {
+  const notes = {
+    gob:'Piechota hordy. Łucznicy radzą sobie z nią na otwartym trakcie.',
+    warg:'Bardzo szybki. Koszary zatrzymają go, jeśli mają wolnego strażnika.',
+    shield:'Ciężka tarcza osłania przed ostrzałem fizycznym.',
+    shaman:'Co chwilę leczy pobliskich towarzyszy. Pomagają wybuchy i szarża.',
+    shade:'Szybki przeciwnik z osłoną przed magią.',
+    stone:'Powolny, ciężko opancerzony. Wrażliwy na wieże runiczne.'
+  };
+  const enemies = Object.keys(ENEMIES).map(kind=>'<div><dt>'+ENEMIES[kind].name+'</dt><dd>'+(ENEMIES[kind].note??notes[kind])+'</dd></div>').join('');
+  openDialog('codex','KRÓLEWSKA GILDIA POSZUKIWACZY','Kroniki obrony',
+    '<p class="dialog-copy">'+battle.map.intro+'</p>'
+    +'<p class="dialog-copy">Po trzeciej i szóstej fali karczma Pod Złamaną Kotwicą przysyła trzy karty wsparcia. Wybierasz jedną. Corin sam walczy na swoim odcinku traktu, a szarża przenosi go na nową pozycję.</p>'
+    +'<dl class="codex-list">'+enemies+'</dl>');
+}
+
+function openCards() {
+  const cards = Object.entries(CARDS).map(([id,card])=>
+    '<button class="order" data-card="'+id+'"><b><span aria-hidden="true">'+card.suit+'</span> '+card.name+'</b><small>'+card.note+'</small></button>').join('');
+  openDialog('cards','POD ZŁAMANĄ KOTWICĄ','Wsparcie z karczmy',
+    '<p class="dialog-copy">Załoga karczmy przesłała zapasy. Wybierz jedną premię przed następnym natarciem.</p><div class="requisitions">'+cards+'</div>');
+}
+
+function openResult(won) {
+  const stars = battle.stars();
+  if (won) saveRecord();
+  const next = won && battle.index+1 < MAPS.length
+    ? '<button class="primary" data-mission="'+(battle.index+1)+'">Dalej do '+MAPS[battle.index+1].name+'</button>'
+    : '';
+  openDialog('result',battle.map.name,won?'Brama ocalała':'Brama padła',
+    (won?'<div class="result-stars" aria-label="'+stars+' z 3 gwiazd">'+('★'.repeat(stars)+'☆'.repeat(3-stars))+'</div>':'')
+    +'<p class="dialog-copy">Pokonani wrogowie: '+battle.kills+' · Brama: '+battle.life+' / '+MAX_LIFE+'</p>'
+    +'<div class="dialog-actions">'+next+'<button class="'+(next?'secondary':'primary')+'" data-restart>Jeszcze raz</button>'
+    +'<button class="secondary" data-campaign>Kampania</button></div>');
+}
+
+function tone(kind) {
+  if (!audioEnabled || !audio || audio.state !== 'running') return;
+  const sound = {
+    build:[250,390,.09], wave:[148,102,.26], clear:[330,490,.17], hero:[390,140,.24], boss:[112,52,.38], leak:[190,78,.18]
+  }[kind];
+  if (!sound) return;
+  const time = audio.currentTime;
+  const osc = audio.createOscillator(), gain = audio.createGain();
+  osc.type = kind === 'boss' ? 'triangle' : 'sine';
+  osc.frequency.setValueAtTime(sound[0],time);
+  osc.frequency.exponentialRampToValueAtTime(sound[1],time+sound[2]);
+  gain.gain.setValueAtTime(.0001,time);
+  gain.gain.exponentialRampToValueAtTime(.10,time+.012);
+  gain.gain.exponentialRampToValueAtTime(.0001,time+sound[2]);
+  osc.connect(gain).connect(audio.destination);
+  osc.start(time);
+  osc.stop(time+sound[2]+.01);
+}
+
+function eventNotices() {
+  for (const e of battle.events) {
+    if (e.kind === 'clear') {
+      showBanner('Fala odparta · +'+e.bonus+' monet');
+      status('Fala '+(battle.wave+1)+' odparta. Zysk z obrony: '+e.bonus+' monet.');
+    } else if (e.kind === 'boss') {
+      showBanner(ENEMIES[e.enemy].name+' nadciąga',true);
+      status(ENEMIES[e.enemy].note);
+    } else if (e.kind === 'rage') {
+      showBanner(e.enemy==='chief'?'Wódz wpada w szał!':'Strażnik wzmacnia runy!',true);
+    } else if (e.kind === 'wave') {
+      showBanner('Fala '+(battle.wave+1)+' / '+WAVE_COUNT);
+    } else if (e.kind === 'leak') {
+      status('Wróg dotarł do bramy. Zostało '+battle.life+' punktów obrony.');
+    }
+    if (e.kind !== 'build') tone(e.kind);
+  }
+  if (phaseSeen !== battle.phase) {
+    phaseSeen = battle.phase;
+    if (battle.phase !== 'wave') cancelHero();
+    if (battle.phase === 'cards') openCards();
+    if (battle.phase === 'won' || battle.phase === 'lost') openResult(battle.phase==='won');
+    syncHud();
+  }
+}
+
+function tick(now) {
+  const dt = Math.min(.08,(now-lastTime)/1000);
+  lastTime = now;
+  const running = !dialog.open && !paused && !document.hidden;
+  if (running) {
+    elapsed += dt*speed;
+    while (elapsed >= 1/60) {
+      battle.step(1/60);
+      elapsed -= 1/60;
+    }
+    if (bannerClock > 0) {
+      bannerClock -= dt;
+      if (bannerClock <= 0) element('banner').hidden = true;
+    }
+  }
+  eventNotices();
+  const aim = aimMode && cursor ? nearestRoad(battle.map,cursor.x,cursor.y) : null;
+  view.animate(battle,selected,hover,aim?.gap<=23?aim:null,running?dt*speed:0,motionPreference.matches,planned);
+  battle.events.length=0;
+  if (running) syncHud();
+  requestAnimationFrame(tick);
+}
+
+element('campaign').addEventListener('click',openCampaign);
+element('codex').addEventListener('click',openCodex);
+element('pause').addEventListener('click',togglePause);
+element('next-wave').addEventListener('click',beginWave);
+element('hero').addEventListener('click',toggleHero);
+element('speed').addEventListener('click',()=>{
+  speed = speed === 1 ? 2 : speed === 2 ? 3 : 1;
+  setText('speed',speed+'×');
+});
+element('sound').addEventListener('click',async ()=>{
+  const button = element('sound');
+  try {
+    audio ??= new AudioContext();
+    audioEnabled = !audioEnabled;
+    if (audioEnabled) await audio.resume();
+    button.setAttribute('aria-pressed',String(audioEnabled));
+    button.setAttribute('aria-label',audioEnabled?'Wycisz dźwięk':'Włącz dźwięk');
+    if (audioEnabled) tone('clear');
+  } catch {
+    audioEnabled=false;
+    status('Ta przeglądarka nie udostępniła dźwięku.');
+  }
+});
+element('dialog-close').addEventListener('click',closeDialog);
+dialog.addEventListener('cancel',event=>{
+  event.preventDefault();
+  if (modal !== 'cards') closeDialog();
+});
+dialog.addEventListener('click',event=>{
+  const button=event.target.closest('button');
+  if (!button || button.disabled) return;
+  if (button.dataset.mission !== undefined) {
+    const index=Number(button.dataset.mission);
+    if (index===battle.index && battle.buildable()) {
+      closeDialog();
+    } else if (battle.buildable() && (battle.wave>=0 || battle.towers.some(Boolean))) {
+      openDialog('switch','KAMPANIA','Przejść do innej misji?',
+        '<p class="dialog-copy">Bieżąca bitwa zostanie zakończona. Zdobyte gwiazdy zostaną zachowane.</p>'
+        +'<div class="dialog-actions"><button class="primary" data-close>Wróć do bitwy</button>'
+        +'<button class="secondary" data-confirm-mission="'+index+'">Przejdź do '+MAPS[index].name+'</button></div>');
+    } else {
+      startMission(index);
+    }
+  } else if (button.dataset.confirmMission !== undefined) {
+    startMission(Number(button.dataset.confirmMission));
+  } else if (button.dataset.card) {
+    if (battle.takeCard(button.dataset.card)) {
+      closeDialog();
+      status('Premia z karczmy: '+CARDS[button.dataset.card].name+'.');
+      panel();
+      syncHud();
+    }
+  } else if ('restart' in button.dataset) {
+    startMission(battle.index);
+  } else if ('close' in button.dataset) {
+    closeDialog();
+  } else if ('campaign' in button.dataset) {
+    openCampaign();
+  }
+});
+actions.addEventListener('click',event=>{
+  const button=event.target.closest('button');
+  if (!button || button.disabled || paused || dialog.open) return;
+  if (button.dataset.build) {
+    place(button.dataset.build);
+  } else if (button.dataset.upgrade) {
+    if (battle.upgrade(selected,button.dataset.upgrade==='base'?undefined:button.dataset.upgrade)) {
+      status('Ulepszono wieżę do poziomu '+battle.towers[selected].level+'.');
+      tone('build');
+      syncMarkers();
+      panel();
+    }
+  } else if ('sell' in button.dataset && battle.sell(selected)) {
+    status('Wieża sprzedana. Fundament znów jest wolny.');
+    syncMarkers();
+    panel();
+  }
+});
+stage.addEventListener('pointermove',event=>{
+  if (aimMode) cursor = pointFromEvent(event);
+});
+stage.addEventListener('click',event=>{
+  if (dialog.open || paused) return;
+  const button=event.target.closest('.marker');
+  if (aimMode) castAt(pointFromEvent(event));
+  else if (button) showSelection(Number(button.dataset.slot));
+  else showSelection(null);
+});
+
+document.addEventListener('keydown',event=>{
+  if (dialog.open || event.altKey || event.ctrlKey || event.metaKey || event.repeat) return;
+  const key=event.key.toLowerCase();
+  if (aimMode && ['arrowup','arrowdown','arrowleft','arrowright','enter','escape'].includes(key)) {
+    event.preventDefault();
+    if (key==='enter') castAt(cursor);
+    else if (key==='escape') {
+      cancelHero();
+      status('Szarża anulowana.');
+    } else {
+      const delta = key==='arrowup'?[0,-6]:key==='arrowdown'?[0,6]:key==='arrowleft'?[-6,0]:[6,0];
+      cursor={x:Math.max(0,Math.min(WIDTH,cursor.x+delta[0])),y:Math.max(0,Math.min(HEIGHT,cursor.y+delta[1]))};
+    }
+  } else if (key===' ' && !event.target.closest('button')) {
+    event.preventDefault();
+    beginWave();
+  } else if (key==='q') {
+    toggleHero();
+  } else if (key==='p') {
+    togglePause();
+  } else if (/^[1-4]$/.test(key)) {
+    const kind=towerKinds[Number(key)-1];
+    if (battle.gold>=TOWERS[kind].cost) place(kind);
+  } else if (key==='escape') {
+    showSelection(null);
+  }
+});
+
+startMission(0);
+requestAnimationFrame(tick);
+
+
+
+</script>
+</body>
+</html>
