@@ -1,7 +1,7 @@
-/* Calion Survivors · prototype 0.0.12 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.13 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.12';
+  const VERSION = '0.0.13';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
   const MAX_ENEMIES = 58; // Slightly denser than v0.0.8, without flooding the arena.
   const MAX_PROJECTILES = 70;
@@ -56,7 +56,7 @@
     radius:19, contact:17, xp:8
   };
   const JUMP_DATA = {
-    'slime-blue':{range:155,travel:112,windup:.42,duration:.26,cooldown:3.6,radius:0,damage:8},
+    'slime-blue':{range:310,travel:224,windup:.42,duration:.26,cooldown:3.6,radius:0,damage:8},
     'slime-red':{range:160,travel:115,windup:.68,duration:.42,cooldown:4.7,radius:35,damage:11},
     'slime-elite':{range:190,travel:135,windup:.80,duration:.47,cooldown:4.1,radius:46,damage:16}
   };
@@ -70,7 +70,7 @@
     return {
       elapsed: 0, spawnClock: .95, enemyStage: 0, nextEliteAt: ELITE_SPAWN_INTERVAL, eliteSpawns: 0,
       shots: 0, kills: 0, nextEnemyId: 1,
-      player: { x: 0, y: 0, hp: 100, maxHp: 100, hitCooldown: 0, flashTimer: 0, shotCooldown: .45, face: 1 },
+      player: { x: 0, y: 0, motionX: 0, motionY: 0, hp: 100, maxHp: 100, hitCooldown: 0, flashTimer: 0, shotCooldown: .45, face: 1 },
       level: 1, xp: 0, upgrades: Object.fromEntries(UPGRADE_DEFS.map(u => [u.id, 0])),
       enemies: [], projectiles: [], enemyProjectiles: [], drops: [], particles: [], offered: []
     };
@@ -170,7 +170,11 @@
   }
   function toggleStats(){if(statsOpen)closeStats();else showStats();}
 
-  function visibleMode(next) { mode = next; overlay.classList.toggle('shown', next !== 'playing'); }
+  function visibleMode(next) {
+    mode=next;
+    overlay.classList.toggle('shown',next!=='playing');
+    overlay.classList.toggle('levelup-mode',next==='levelup');
+  }
   function button(label, action, secondary = false) {
     return `<button class="${secondary ? 'secondary-button' : 'primary-button'}" data-action="${action}">${label}</button>`;
   }
@@ -301,7 +305,12 @@
     for (const def of eligible) { roll -= def.weight; if (roll < 0) { kind = def; break; } }
     if (forcedType) kind = forcedType===ELITE_ENEMY.id
       ? ELITE_ENEMY : (ENEMY_ROSTER.find(def => def.id === forcedType) || kind);
-    const angle = rand(0,TAU);
+    const moving=Math.hypot(p.motionX,p.motionY)>10;
+    // Every third ordinary spawn approaches from in front of a moving player,
+    // instead of always feeding the trailing crowd at the center of a circular route.
+    const angle= !forcedType && moving && state.nextEnemyId%3===0
+      ? Math.atan2(p.motionY,p.motionX)+rand(-.85,.85)
+      : rand(0,TAU);
     // Limited distance keeps enemies participating on ultrawide monitors as well as phones.
     const radius = clamp(Math.min(screenW,screenH)/2 + 52, 225, 355);
     const x = p.x + Math.cos(angle) * radius;
@@ -549,8 +558,21 @@
   function moveEnemy(e, dt) {
     if(e.hp<=0)return;
     const p = state.player;
-    const vx = p.x-e.x, vy = p.y-e.y, d = Math.max(.0001,Math.hypot(vx,vy));
-    const ux = vx/d, uy = vy/d;
+    const vx=p.x-e.x,vy=p.y-e.y,d=Math.max(.0001,Math.hypot(vx,vy));
+    // Pursuit lanes: some monsters aim ahead of the moving player, others flank
+    // to either side. This breaks up the knot of enemies left in the center
+    // when the player runs in circles, without adding unavoidable attacks.
+    const movement=Math.hypot(p.motionX||0,p.motionY||0);
+    const lead=movement>1 ? clamp(d/145,.25,1.4) *
+      (e.type==='goblin-archer'?.35:e.type==='slime-green'?.60:.95) : 0;
+    const lane=(e.id%3)-1;
+    const flank=lane*Math.min(movement>1?46:17,d*.29);
+    const sideX=movement>1?-p.motionY/movement:-vy/d;
+    const sideY=movement>1?p.motionX/movement:vx/d;
+    const chaseX=vx+p.motionX*lead+sideX*flank;
+    const chaseY=vy+p.motionY*lead+sideY*flank;
+    const chaseDist=Math.max(.0001,Math.hypot(chaseX,chaseY));
+    const ux=chaseX/chaseDist,uy=chaseY/chaseDist;
     e.aiTime+=dt;e.wobble+=dt*(e.type==='slime-blue'?9:5);
     e.hit=Math.max(0,e.hit-dt);
     e.spawnAge+=dt;
@@ -566,6 +588,9 @@
     }
     if(beginEnemyJump(e,p,d))return;
     let forward=1, sideways=0, speed=e.speed;
+    // Catch-up burst far from the hero: base movement returns as they close.
+    // This is not used during committed blue sprints or red/elite jumps.
+    if(d>160 && e.type!=='goblin-archer')speed*=clamp(1+(d-160)/240,1,1.6);
     if(e.type==='slime-blue'){
       sideways=Math.sin(e.aiTime*6+e.id)*.21;
     } else if(e.type==='slime-red'||e.elite){
@@ -606,7 +631,13 @@
     let dx = Number(keys.has('d') || keys.has('arrowright')) - Number(keys.has('a') || keys.has('arrowleft')) + touchMove.x;
     let dy = Number(keys.has('s') || keys.has('arrowdown')) - Number(keys.has('w') || keys.has('arrowup')) + touchMove.y;
     const length = Math.hypot(dx,dy);
-    if (length > 0) { dx /= Math.max(1,length); dy /= Math.max(1,length); const movement = combatStats().speed * dt; p.x += dx * movement; p.y += dy * movement; if (Math.abs(dx) > .15) p.face = dx > 0 ? 1 : -1; }
+    if(length>0){
+      dx/=Math.max(1,length);dy/=Math.max(1,length);
+      const moveSpeed=combatStats().speed;
+      p.motionX=dx*moveSpeed;p.motionY=dy*moveSpeed;
+      p.x+=p.motionX*dt;p.y+=p.motionY*dt;
+      if(Math.abs(dx)>.15)p.face=dx>0?1:-1;
+    } else {p.motionX=0;p.motionY=0;}
     p.hitCooldown = Math.max(0,p.hitCooldown - dt);
     p.flashTimer = Math.max(0,p.flashTimer - dt);
     p.shotCooldown -= dt;

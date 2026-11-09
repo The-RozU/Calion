@@ -187,3 +187,86 @@
   .upgrade-progression{padding:3px;font-size:9px}
   .upgrade-conflict{font-size:9px}
 }
+
+/* v0.0.13: fit the entire upgrade selection in short browser windows.
+   Only level-up screens use this layout: menu and other dialogs keep their own sizing. */
+.overlay.levelup-mode{padding:10px 9px 25px}
+.overlay.levelup-mode .overlay-panel{
+  box-sizing:border-box;
+  width:min(96vw,665px);
+  height:min(700px,calc(100dvh - 43px));
+  max-height:calc(100dvh - 43px);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  padding:clamp(8px,1.8dvh,18px) clamp(9px,2.4vw,23px);
+}
+.overlay.levelup-mode .ornament{margin-bottom:clamp(2px,.6dvh,7px);flex-shrink:0}
+.overlay.levelup-mode .crest-mark{height:clamp(30px,6dvh,52px);flex-shrink:0}
+.overlay.levelup-mode .crest-shield{width:41px;height:48px}
+.overlay.levelup-mode .crest-shield span{font-size:26px}
+.overlay.levelup-mode h1{font-size:clamp(25px,4.5dvh,42px);margin:2px 0;flex-shrink:0}
+.overlay.levelup-mode .panel-subtitle{font-size:clamp(11px,1.7dvh,15px);margin-bottom:4px;flex-shrink:0}
+.overlay.levelup-mode #panel-content{
+  display:flex;flex-direction:column;flex:1;min-height:0;
+}
+.overlay.levelup-mode .level-header{margin:5px 0 6px;flex-shrink:0}
+.overlay.levelup-mode .level-headline{font-size:clamp(10px,1.5dvh,13px)}
+.overlay.levelup-mode .card-grid{
+  flex:1;min-height:0;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(4px,1vw,10px);margin:5px 0 4px;
+}
+.overlay.levelup-mode .upgrade-card{
+  min-height:0;min-width:0;
+  padding:clamp(4px,.9dvh,11px) clamp(3px,.8vw,9px);
+  box-sizing:border-box;
+  overflow:hidden;
+}
+.overlay.levelup-mode .upgrade-icon{font-size:clamp(20px,3.6dvh,30px);margin:clamp(1px,.6dvh,5px) 0 clamp(3px,1dvh,11px)}
+.overlay.levelup-mode .upgrade-title{font-size:clamp(10px,1.7dvh,14px);min-height:0;line-height:1.15}
+.overlay.levelup-mode .upgrade-desc{font-size:clamp(9px,1.2dvh,11px);line-height:1.28;margin-top:clamp(4px,.8dvh,8px)}
+.overlay.levelup-mode .upgrade-progression{margin-top:4px;padding:3px 4px;font-size:10px}
+.overlay.levelup-mode .upgrade-conflict{margin-top:3px;font-size:9px}
+.overlay.levelup-mode .upgrade-level{font-size:clamp(8px,1.2dvh,10px);padding-top:5px}
+.overlay.levelup-mode .upgrade-choice{margin-top:5px;padding:3px 3px;font-size:clamp(9px,1.3dvh,11px)}
+.overlay.levelup-mode .upgrade-choice kbd{height:clamp(21px,3.5dvh,28px);min-width:clamp(21px,3.5dvh,28px);font-size:clamp(13px,2.2dvh,18px)}
+.overlay.levelup-mode .build-summary{flex-shrink:0;margin:5px 0 0;padding:5px 6px;gap:3px 9px}
+.overlay.levelup-mode .build-summary-label{font-size:9px}
+.overlay.levelup-mode .build-summary strong{font-size:11px}
+.overlay.levelup-mode .build-details{padding:4px 7px}
+.overlay.levelup-mode .hint{margin:4px 0 0;font-size:10px;line-height:1.2;flex-shrink:0}
+@media(max-height:620px){
+  .overlay.levelup-mode .crest-mark{display:none}
+  .overlay.levelup-mode .ornament{letter-spacing:2px}
+  .overlay.levelup-mode .level-header{margin:2px 0 3px}
+  .overlay.levelup-mode .card-grid{margin:3px 0}
+  .overlay.levelup-mode .upgrade-icon{margin:1px 0 3px}
+  .overlay.levelup-mode .upgrade-desc{
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:4;
+    overflow:hidden;
+  }
+  .overlay.levelup-mode .build-summary{padding:3px 5px}
+}
+@media(max-height:480px){
+  .overlay.levelup-mode .ornament{display:none}
+  .overlay.levelup-mode .level-header{display:none}
+  .overlay.levelup-mode h1{font-size:23px}
+  .overlay.levelup-mode .panel-subtitle{margin-bottom:2px}
+  .overlay.levelup-mode .upgrade-icon{font-size:18px}
+  .overlay.levelup-mode .upgrade-desc{-webkit-line-clamp:3}
+  .overlay.levelup-mode .upgrade-choice{margin-top:2px}
+  .overlay.levelup-mode .build-summary-label{display:none}
+  .overlay.levelup-mode .hint{display:none}
+}
+@media(max-width:420px){
+  .overlay.levelup-mode .overlay-panel{padding:8px 6px}
+  .overlay.levelup-mode .card-grid{gap:4px}
+  .overlay.levelup-mode .upgrade-card{padding:5px 3px}
+  .overlay.levelup-mode .upgrade-title{font-size:10px}
+  .overlay.levelup-mode .upgrade-desc{font-size:9px}
+  .overlay.levelup-mode .upgrade-choice{gap:3px;padding:3px 0}
+  .overlay.levelup-mode .upgrade-conflict{font-size:8px}
+}

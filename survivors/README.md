@@ -1,6 +1,6 @@
-# Calion Survivors · prototyp 0.0.12
+# Calion Survivors · prototyp 0.0.13
 
-Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.12** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
+Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.13** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
 
 ## Uruchomienie
 
@@ -23,6 +23,16 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Limity poziomów kart, **2 sloty modyfikatorów**; odbijanie i dzielenie strzał **wzajemnie się wykluczają**. Podział ma tylko jedno pokolenie, a odbicia są limitowane.
 - Pięciominutowa próba przetrwania; ekran wygranej lub porażki oraz statystyki.
 - Proceduralne proste grafiki pixel art w odcieniach ciemnego drewna, stali, kamienia i mchu. Docelowe sprite'y WebP i animacje zastąpią te tymczasowe rysunki.
+
+## Zmiany w 0.0.13
+
+- Ekran awansu automatycznie dopasowuje wysokość panelu i **trzech kart ulepszeń** do okna przeglądarki. Skrócono odstępy i zmieniono rozmiary ikon, tytułów oraz nagłówka. W niższych oknach ukrywany jest dekoracyjny herb, a na bardzo małych ekranach najdłuższe opisy są skracane. Panel wyboru nie ma wewnętrznego paska przewijania.
+- Pozostałe okna, w tym statystyki postaci i menu, zachowują dotychczasowe zasady przewijania.
+- Wrogowie przestają gonić wyłącznie bieżące współrzędne bohatera. Część próbuje **wyprzedzić kierunek jego ruchu**, a pozostałe wybierają boczne tory pościgu, rozdzielając grupę zamiast pozostawać w środku zataczanego przez gracza kręgu.
+- Gdy bohater się porusza, mniej więcej co trzeci zwykły przeciwnik pojawia się przed nim (w dotychczasowej odległości od gracza), dzięki czemu samo bieganie w kółko nie pozwala ignorować wszystkich wrogów.
+- Zwykli przeciwnicy wręcz, którzy zostają daleko w tyle, dostają lekki bonus prędkości pościgu (maksymalnie 60%). Łucznicy, skoki i sprinty zachowują własne reguły.
+- Niebieski slime: **zasięg rozpoczęcia sprintu 155 → 310 jednostek**, dystans sprintu **112 → 224 jednostki**. Ostrzeżenie, obrażenia, czas i grubość linii pozostają bez zmian.
+- Bez zmian HP gracza, HP wrogów, ich obrażeń i kart ulepszeń.
 
 ## Zmiany w 0.0.12
 
@@ -114,7 +124,7 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Przełączanie aktywnego joysticka przez dotknięcie, sterowanie wyłącznie jednym joystickiem naraz.
 - Kamera oddalona do 82% poprzedniego przybliżenia, widać większy obszar areny.
 
-## Świadomie poza wersją 0.0.12
+## Świadomie poza wersją 0.0.13
 
 Brak pozostałych klas, ruletki startowej, konta, monet, sklepu, zapisywania postępu, rzadkości kart, kooperacji i gotowych animowanych assetów. To osobny prototyp, nie zmienia istniejącej strony świata Calionu.
 
