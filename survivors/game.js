@@ -1,7 +1,7 @@
-/* Calion Survivors · prototype 0.0.4 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.5 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.4';
+  const VERSION = '0.0.5';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
   const MAX_ENEMIES = 48;
   const MAX_PROJECTILES = 70;
@@ -20,15 +20,16 @@
   const panelSubtitle = $('panel-subtitle');
   const panelContent = $('panel-content');
   const toastEl = $('toast');
+  const statsOverlay = $('stats-overlay');
   const keys = new Set();
   const touchMove = { x: 0, y: 0 };
   let activeJoystick = null;
   let screenW = 480, screenH = 270;
-  let state = null, mode = 'menu', lastTimestamp = 0, toastLeft = 0;
+  let state = null, mode = 'menu', lastTimestamp = 0, toastLeft = 0, statsOpen = false;
   let worldTile = null;
 
   const UPGRADE_DEFS = [
-    { id: 'damage', title: 'Mocniejsze strzały', icon: '⚔', max: 3, type: 'stat', desc: 'Każdy poziom zwiększa obrażenia strzał o 5.' },
+    { id: 'damage', title: 'Mocniejsze strzały', icon: '⚔', max: 3, type: 'stat', desc: 'Każdy poziom zwiększa obrażenia strzał o 2.' },
     { id: 'speed', title: 'Sprawne dłonie', icon: '➶', max: 3, type: 'stat', desc: 'Każdy poziom skraca czas między strzałami o 11%.' },
     { id: 'reach', title: 'Sokoli wzrok', icon: '◎', max: 2, type: 'stat', desc: 'Każdy poziom zwiększa zasięg ataku o 40.' },
     { id: 'feet', title: 'Lekki krok', icon: '✦', max: 2, type: 'stat', desc: 'Każdy poziom zwiększa prędkość ruchu o 10%.' },
@@ -60,11 +61,67 @@
     };
   }
   function neededXp(level) { return 8 + (level - 1) * 9; }
+
+  const BASE_DAMAGE=17, DAMAGE_PER_LEVEL=2, BASE_INTERVAL=.80, INTERVAL_FACTOR=.11;
+  const BASE_RANGE=205, RANGE_STEP=40, BASE_SPEED=89, SPEED_FACTOR=.10;
+  function combatStats(){
+    const u=state.upgrades,p=state.player;
+    const damage=BASE_DAMAGE+u.damage*DAMAGE_PER_LEVEL;
+    const interval=BASE_INTERVAL*(1-u.speed*INTERVAL_FACTOR);
+    return {damage,interval,rate:1/interval,dps:damage/interval,
+      range:BASE_RANGE+u.reach*RANGE_STEP,speed:BASE_SPEED*(1+u.feet*SPEED_FACTOR),
+      hp:p.hp,maxHp:p.maxHp,bounce:u.bounce,split:u.split,
+      splitCount:u.split?u.split+1:0,usedMods:Number(u.bounce>0)+Number(u.split>0)};
+  }
+  const fmt=(x,n=1)=>x.toFixed(n).replace('.',',');
+  function buildSummary(){
+    const s=combatStats();
+    return `<div class="build-summary"><span>AKTUALNY BUILD</span>
+      <strong>${s.damage} obr. · ${fmt(s.rate,2)} strz./s · ${Math.ceil(s.hp)}/${s.maxHp} HP</strong>
+      <button class="build-details" data-action="stats" type="button">Szczegóły (C)</button></div>`;
+  }
+  function renderStats(){
+    const s=combatStats();
+    const rows=[
+      ['Poziom',state.level],
+      ['HP',`${Math.ceil(s.hp)} / ${s.maxHp}`],
+      ['EXP',`${state.xp} / ${neededXp(state.level)}`],
+      ['Obrażenia strzały',s.damage],
+      ['Czas między strzałami',`${fmt(s.interval,3)} s`],
+      ['Strzały na sekundę',fmt(s.rate,2)],
+      ['DPS na jednym celu (teor.)',fmt(s.dps,2)],
+      ['Zasięg',`${s.range} jedn.`],
+      ['Prędkość ruchu',`${fmt(s.speed)} jedn./s`],
+      ['Odbicia',s.bounce],
+      ['Rozdzielenie',s.splitCount?`${s.splitCount} strzały po trafieniu`:'Brak'],
+      ['Obrażenia dzielonych strzał',s.splitCount?'58% głównej':'Brak'],
+      ['Sloty modyfikatorów',`${s.usedMods} / ${MOD_SLOTS}`]
+    ];
+    $('stats-content').innerHTML=`<p class="stats-section">ŁOTRZYK · ŁUK</p>
+      <div class="stats-grid">${rows.map(([title,value])=>`<div class="stats-item"><span>${title}</span><strong>${value}</strong></div>`).join('')}</div>
+      <p class="stats-section">ULEPSZENIA</p>
+      <div class="stats-upgrades">${UPGRADE_DEFS.map(u=>`<div><span>${u.title}</span><strong>${state.upgrades[u.id]}/${u.max}</strong></div>`).join('')}</div>
+      <p class="stats-note">Teoretyczny DPS: jeden cel, bez odbić, podziałów i przerw między walkami.</p>`;
+  }
+  function closeStats(){
+    if(!statsOpen)return;
+    statsOpen=false;statsOverlay.classList.remove('shown');
+    statsOverlay.setAttribute('aria-hidden','true');keys.clear();
+  }
+  function showStats(){
+    if(statsOpen)return;
+    renderStats();statsOpen=true;resetJoystick();
+    statsOverlay.classList.add('shown');
+    statsOverlay.setAttribute('aria-hidden','false');
+  }
+  function toggleStats(){if(statsOpen)closeStats();else showStats();}
+
   function visibleMode(next) { mode = next; overlay.classList.toggle('shown', next !== 'playing'); }
   function button(label, action, secondary = false) {
     return `<button class="${secondary ? 'secondary-button' : 'primary-button'}" data-action="${action}">${label}</button>`;
   }
   function showMenu() {
+    closeStats();
     state = newState();
     visibleMode('menu');
     panelTitle.textContent = 'SURVIVORS';
@@ -73,10 +130,11 @@
       <div class="info-trio"><div class="info-box"><b>05:00</b><span>CZAS PRÓBY</span></div><div class="info-box"><b>1</b><span>BROŃ NA RUN</span></div><div class="info-box"><b>3</b><span>KARTY WYBORU</span></div></div>
       ${button('Rozpocznij wyprawę', 'start')}
       ${button('Pełny ekran', 'fullscreen', true)}
-      <p class="hint">PC: WASD / strzałki · P: pauza · 1, 2, 3: wybór karty<br>Telefon: joystick po lewej lub prawej stronie</p>`;
+      <p class="hint">PC: WASD / strzałki · P: pauza · C: statystyki · 1, 2, 3: wybór karty<br>Telefon: joystick po lewej lub prawej stronie</p>`;
     updateHud();
   }
   function startGame() {
+    closeStats();
     state = newState();
     keys.clear(); touchMove.x = touchMove.y = 0; resetJoystick();
     visibleMode('playing');
@@ -88,7 +146,7 @@
       resetJoystick();
       visibleMode('paused');
       panelTitle.textContent = 'PAUZA'; panelSubtitle.textContent = 'Odpoczynek na trakcie';
-      panelContent.innerHTML = `<p class="pause-text">Walka zatrzymana. Możesz wrócić do wyprawy lub zacząć od początku.</p>${button('Wróć do walki', 'resume')}${button('Nowa wyprawa', 'restart', true)}`;
+      panelContent.innerHTML = `<p class="pause-text">Walka zatrzymana. Możesz wrócić do wyprawy lub zacząć od początku.</p>${button('Wróć do walki', 'resume')}${button('Statystyki postaci', 'stats', true)}${button('Nowa wyprawa', 'restart', true)}`;
     } else if (mode === 'paused') visibleMode('playing');
   }
   function endRun(won) {
@@ -97,7 +155,7 @@
     panelSubtitle.textContent = won ? 'Trakt oczyszczony' : 'Mrok zwyciężył tym razem';
     panelContent.innerHTML = `<p class="end-text">${won ? 'Udało Ci się przetrwać pięciominutową próbę.' : 'Potwory otoczyły łotrzyka. Następnym razem spróbuj innego zestawu ulepszeń.'}</p>
       <div class="info-trio"><div class="info-box"><b>${formatTime(state.elapsed)}</b><span>CZAS</span></div><div class="info-box"><b>${state.kills}</b><span>POKONANI</span></div><div class="info-box"><b>${state.level}</b><span>POZIOM</span></div></div>
-      ${button('Zagraj ponownie', 'restart')}${button('Menu', 'menu', true)}`;
+      ${button('Zagraj ponownie', 'restart')}${button('Statystyki postaci', 'stats', true)}${button('Menu', 'menu', true)}`;
   }
   function getEligible() {
     const levels = state.upgrades;
@@ -116,7 +174,9 @@
       <div class="card-grid">${state.offered.map((u, i) => `<button class="upgrade-card ${u.type === 'modifier' ? 'modifier' : ''}" data-card="${i}">
       <span class="upgrade-icon">${u.icon}</span><span class="upgrade-title">${u.title}</span>
       <span class="upgrade-desc">${u.desc}</span>
-      <span class="upgrade-level">POZIOM ${state.upgrades[u.id]} / ${u.max}</span></button>`).join('')}</div>
+      <span class="upgrade-level">POZIOM ${state.upgrades[u.id]} / ${u.max}</span>
+      <span class="upgrade-choice"><kbd>${i+1}</kbd><span>WYBIERZ</span></span></button>`).join('')}</div>
+      ${buildSummary()}
       <p class="hint">Walka jest wstrzymana. Wybierz kartę kliknięciem lub klawiszem 1–3.</p>`;
   }
   function selectCard(index) {
@@ -208,14 +268,14 @@
   }
   function fireArrow() {
     const p = state.player, levels = state.upgrades;
-    const range = 205 + levels.reach * 40;
+    const range = combatStats().range;
     const enemy = nearestEnemy(p.x,p.y,range);
     if (!enemy || state.projectiles.length >= MAX_PROJECTILES) return;
     const a = Math.atan2(enemy.y - p.y, enemy.x - p.x);
     p.face = Math.cos(a) >= 0 ? 1 : -1;
     state.shots++;
     state.projectiles.push({ x:p.x + Math.cos(a)*11, y:p.y - 4 + Math.sin(a)*11, vx:Math.cos(a)*235, vy:Math.sin(a)*235,
-      angle:a, life:1.5, damage:17 + levels.damage*5, visited:new Set(), bounces:0, generation:0, splitUsed:false });
+      angle:a, life:1.5, damage:combatStats().damage, visited:new Set(), bounces:0, generation:0, splitUsed:false });
     addParticles(p.x + Math.cos(a)*13, p.y - 4 + Math.sin(a)*11, 1, '#d3b988');
   }
   function addParticles(x,y,count,color) {
@@ -318,10 +378,10 @@
     let dx = Number(keys.has('d') || keys.has('arrowright')) - Number(keys.has('a') || keys.has('arrowleft')) + touchMove.x;
     let dy = Number(keys.has('s') || keys.has('arrowdown')) - Number(keys.has('w') || keys.has('arrowup')) + touchMove.y;
     const length = Math.hypot(dx,dy);
-    if (length > 0) { dx /= Math.max(1,length); dy /= Math.max(1,length); const movement = 89 * (1 + levels.feet * .10) * dt; p.x += dx * movement; p.y += dy * movement; if (Math.abs(dx) > .15) p.face = dx > 0 ? 1 : -1; }
+    if (length > 0) { dx /= Math.max(1,length); dy /= Math.max(1,length); const movement = combatStats().speed * dt; p.x += dx * movement; p.y += dy * movement; if (Math.abs(dx) > .15) p.face = dx > 0 ? 1 : -1; }
     p.hitCooldown = Math.max(0,p.hitCooldown - dt);
     p.shotCooldown -= dt;
-    if (p.shotCooldown <= 0) { fireArrow(); p.shotCooldown += .80 * (1 - levels.speed * .11); }
+    if (p.shotCooldown <= 0) { fireArrow(); p.shotCooldown += combatStats().interval; }
     // Unlock order: 0 s green, 30 s blue, 60 s red, 90 s goblin, 120 s archer.
     const stage = Math.min(ENEMY_ROSTER.length-1, int(s.elapsed/ENEMY_UNLOCK_INTERVAL));
     while (s.enemyStage < stage) {
@@ -495,7 +555,7 @@
   }
   function tick(ts) {
     const dt=Math.min((ts-lastTimestamp)/1000||0,.04);lastTimestamp=ts;
-    if(mode==='playing')update(dt);
+    if(mode==='playing' && !statsOpen)update(dt);
     if(toastLeft>0){toastLeft-=dt;if(toastLeft<=0)toastEl.classList.remove('active');}
     draw();requestAnimationFrame(tick);
   }
@@ -581,6 +641,9 @@
     document.addEventListener('keydown',e=>{
       const key=e.key.toLowerCase();
       if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(key))e.preventDefault();
+      if(key==='c'&&!e.repeat&&!e.altKey&&!e.ctrlKey&&!e.metaKey){e.preventDefault();toggleStats();return;}
+      if(key==='escape'&&statsOpen){e.preventDefault();closeStats();return;}
+      if(statsOpen)return;
       if(key==='f'&&!e.repeat&&!e.altKey&&!e.ctrlKey&&!e.metaKey){e.preventDefault();toggleFullscreen();return;}
       if(key==='escape'&&isFullscreen()) return; // Browser handles Esc to exit full screen.
       if(key==='p'||key==='escape'){pauseGame();return;}
@@ -588,15 +651,19 @@
       keys.add(key);
     });
     document.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
-    window.addEventListener('blur',()=>{keys.clear();touchMove.x=touchMove.y=0;resetJoystick();if(mode==='playing')pauseGame();});
+    window.addEventListener('blur',()=>{keys.clear();touchMove.x=touchMove.y=0;resetJoystick();if(mode==='playing'&&!statsOpen)pauseGame();});
     overlay.addEventListener('click',e=>{
       const card=e.target.closest('[data-card]');if(card){selectCard(Number(card.dataset.card));return;}
       const action=e.target.closest('[data-action]')?.dataset.action;
       if(action==='start'||action==='restart')startGame();
       else if(action==='menu')showMenu();else if(action==='resume')visibleMode('playing');
       else if(action==='fullscreen')toggleFullscreen();
+      else if(action==='stats')showStats();
     });
     $('pause-btn').addEventListener('click',pauseGame);
+    $('stats-btn').addEventListener('click',toggleStats);
+    $('stats-close').addEventListener('click',closeStats);
+    statsOverlay.addEventListener('click',e=>{if(e.target===statsOverlay)closeStats();});
     $('fullscreen-btn').addEventListener('click',toggleFullscreen);
     document.addEventListener('fullscreenchange',syncFullscreen);
     document.addEventListener('webkitfullscreenchange',syncFullscreen);
@@ -605,6 +672,6 @@
   }
   setupInput();resizeCanvas();showMenu();requestAnimationFrame(tick);
   // Stable read-only debug bridge to inspect the prototype in browser tests.
-  window.CalionPrototype={version:VERSION,getSnapshot:()=>({mode,elapsed:state.elapsed,level:state.level,xp:state.xp,kills:state.kills,hp:state.player.hp,upgrades:{...state.upgrades},enemies:state.enemies.length,enemyTypes:state.enemies.map(e=>e.type),enemyStage:state.enemyStage,enemyShots:state.enemyProjectiles.length}),start:startGame};
+  window.CalionPrototype={version:VERSION,getSnapshot:()=>({mode,statsOpen,stats:combatStats(),elapsed:state.elapsed,level:state.level,xp:state.xp,kills:state.kills,hp:state.player.hp,upgrades:{...state.upgrades},enemies:state.enemies.length,enemyTypes:state.enemies.map(e=>e.type),enemyStage:state.enemyStage,enemyShots:state.enemyProjectiles.length}),start:startGame};
 })();
 

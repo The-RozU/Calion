@@ -1,6 +1,6 @@
-# Calion Survivors · prototyp 0.0.4
+# Calion Survivors · prototyp 0.0.5
 
-Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.4** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
+Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.5** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
 
 ## Uruchomienie
 
@@ -11,6 +11,7 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - PC: `WASD` lub strzałki; łuk automatycznie strzela do najbliższego wroga.
 - `P` / `Esc`: pauza i wznowienie (Esc w pełnym ekranie wychodzi z trybu pełnoekranowego).
 - `F`: przełączenie pełnego ekranu; także przycisk obok pauzy i przycisk w menu startowym.
+- `C`: panel statystyk na HUD oraz pod kartami (wstrzymuje walkę), zamykanie C, Esc lub ✕.
 - Podczas awansu: kliknij jedną z trzech kart lub naciśnij `1`, `2`, `3`.
 - Telefon: dwa joysticki dotykowe. Domyślnie prawy jest widoczny w pełni, a lewy w 10%; dotknięcie dowolnego joysticka zamienia ich widoczność i aktywuje sterowanie.
 
@@ -22,6 +23,14 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Limity poziomów kart, **2 sloty modyfikatorów**; odbijanie i dzielenie strzał można łączyć. Podział ma tylko jedno pokolenie, a odbicia są limitowane.
 - Pięciominutowa próba przetrwania; ekran wygranej lub porażki oraz statystyki.
 - Proceduralne proste grafiki pixel art w odcieniach ciemnego drewna, stali, kamienia i mchu. Docelowe sprite'y WebP i animacje zastąpią te tymczasowe rysunki.
+
+## Zmiany w 0.0.5
+
+- Karty wyraźnie pokazują numer wyboru 1, 2 albo 3 na dole.
+- Pod kartami skrócone statystyki buildu oraz otwieranie szczegółowego panelu.
+- Panel statystyk postaci pokazuje żywotność, EXP, obrażenia, interwał, szybkość strzelania, teoretyczny DPS, zasięg, szybkość ruchu, modyfikatory i ulepszenia.
+- Statystyki liczone z tych samych parametrów co walka, otwarcie panelu zatrzymuje czas.
+- Mocniejsze strzały: +2 obrażenia na poziom zamiast +5. Postęp 17 → 19 → 21 → 23.
 
 ## Zmiany w 0.0.4
 
@@ -50,7 +59,7 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Przełączanie aktywnego joysticka przez dotknięcie, sterowanie wyłącznie jednym joystickiem naraz.
 - Kamera oddalona do 82% poprzedniego przybliżenia, widać większy obszar areny.
 
-## Świadomie poza wersją 0.0.4
+## Świadomie poza wersją 0.0.5
 
 Brak pozostałych klas, ruletki startowej, konta, monet, sklepu, zapisywania postępu, rzadkości kart, kooperacji i gotowych animowanych assetów. To osobny prototyp, nie zmienia istniejącej strony świata Calionu.
 
