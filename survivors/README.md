@@ -1,6 +1,6 @@
-# Calion Survivors · prototyp 0.0.6
+# Calion Survivors · prototyp 0.0.7
 
-Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.6** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
+Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.7** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
 
 ## Uruchomienie
 
@@ -23,6 +23,12 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Limity poziomów kart, **2 sloty modyfikatorów**; odbijanie i dzielenie strzał można łączyć. Podział ma tylko jedno pokolenie, a odbicia są limitowane.
 - Pięciominutowa próba przetrwania; ekran wygranej lub porażki oraz statystyki.
 - Proceduralne proste grafiki pixel art w odcieniach ciemnego drewna, stali, kamienia i mchu. Docelowe sprite'y WebP i animacje zastąpią te tymczasowe rysunki.
+
+## Zmiany w 0.0.7
+
+- Panel statystyk postaci: trzy kolumny obok siebie na PC dla statystyk i ulepszeń. Bardziej kompaktowe kafelki, mniejsze odstępy i większa maksymalna szerokość panelu. Na mniejszych ekranach automatycznie przechodzi do dwóch kolumn, żeby liczby i etykiety pozostały czytelne.
+- Zielone i niebieskie slime’y wyświetlają teraz paski HP po otrzymaniu obrażeń, tak samo jak pozostali przeciwnicy. Kolorowe paski pokazują również ostatni 1 HP.
+- Bez zmian w statystykach i sile przeciwników.
 
 ## Zmiany w 0.0.6
 
@@ -65,7 +71,7 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Przełączanie aktywnego joysticka przez dotknięcie, sterowanie wyłącznie jednym joystickiem naraz.
 - Kamera oddalona do 82% poprzedniego przybliżenia, widać większy obszar areny.
 
-## Świadomie poza wersją 0.0.6
+## Świadomie poza wersją 0.0.7
 
 Brak pozostałych klas, ruletki startowej, konta, monet, sklepu, zapisywania postępu, rzadkości kart, kooperacji i gotowych animowanych assetów. To osobny prototyp, nie zmienia istniejącej strony świata Calionu.
 

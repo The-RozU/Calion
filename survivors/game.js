@@ -1,7 +1,7 @@
-/* Calion Survivors · prototype 0.0.6 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.7 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.6';
+  const VERSION = '0.0.7';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
   const MAX_ENEMIES = 48;
   const MAX_PROJECTILES = 70;
@@ -532,10 +532,17 @@
       if(e.hit>0){ctx.globalAlpha=.55;rect('#f2d7aa',x-10,y-16,20,27);}
     }
     ctx.restore();
-    if (e.hp < e.maxHp && (e.type==='slime-red' || e.type==='goblin' || e.type==='goblin-archer')) {
-      const width = e.type==='slime-red' ? 30 : 21;
-      rect('#211f1d',x-int(width/2),y-(e.type==='slime-red'?24:21),width,3);
-      rect('#c17962',x-int(width/2),y-(e.type==='slime-red'?24:21),width*(e.hp/e.maxHp),2);
+    // Every enemy, including green and blue slimes, reveals HP after taking damage.
+    // Keep it small and legible over moving sprites without flooding the arena with full bars.
+    if (e.hp > 0 && e.hp < e.maxHp) {
+      const red = e.type === 'slime-red';
+      const slime = e.type.startsWith('slime-');
+      const width = red ? 30 : slime ? 22 : 21;
+      const barX = x-int(width/2), barY = y-(red ? 26 : 23);
+      const fill = Math.max(1, int((width - 2)*clamp(e.hp/e.maxHp,0,1)));
+      rect('#100f0d',barX-1,barY-1,width+2,5);
+      rect('#5d3a35',barX,barY,width,3);
+      rect('#a9c279',barX+1,barY+1,fill,2);
     }
   }
   function drawHero(p,cx,cy,animated) {
