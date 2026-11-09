@@ -1,7 +1,7 @@
-/* Calion Survivors · prototype 0.0.5 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.6 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.5';
+  const VERSION = '0.0.6';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
   const MAX_ENEMIES = 48;
   const MAX_PROJECTILES = 70;
@@ -40,7 +40,7 @@
 
   // Every 30 seconds one more enemy kind joins the spawn pool.
   const ENEMY_ROSTER = [
-    { id:'slime-green', name:'Zielony slime', weight:6, hp:14, speed:24, radius:8, contact:5, xp:1 },
+    { id:'slime-green', name:'Zielony slime', weight:6, hp:18, speed:24, radius:8, contact:5, xp:1 },
     { id:'slime-blue', name:'Niebieski slime', weight:4, hp:20, speed:39, radius:8, contact:7, xp:1 },
     { id:'slime-red', name:'Czerwony slime', weight:3, hp:83, speed:21, radius:15, contact:15, xp:3 },
     { id:'goblin', name:'Goblin', weight:3, hp:36, speed:35, radius:10, contact:11, xp:2 },
@@ -80,27 +80,53 @@
       <strong>${s.damage} obr. · ${fmt(s.rate,2)} strz./s · ${Math.ceil(s.hp)}/${s.maxHp} HP</strong>
       <button class="build-details" data-action="stats" type="button">Szczegóły (C)</button></div>`;
   }
+
+  // Lightweight, local vector pictograms: consistent medieval UI instead of OS-dependent emoji.
+  const STAT_ICONS = {
+    level:'<path d="M12 2l7 4v6c0 5-3.5 7.5-7 10-3.5-2.5-7-5-7-10V6z"/><path d="M9 12h6m-3-3v6"/>',
+    hp:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/>',
+    xp:'<path d="M12 2l2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5z"/>',
+    damage:'<path d="M14 4l6 6-9 9-5 1 1-5z"/><path d="M13 5l5 5M4 20l5-5"/>',
+    interval:'<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/>',
+    rate:'<path d="M4 8h11l-3-3m3 3-3 3M4 16h16m-5-3 5 3-5 3"/>',
+    dps:'<path d="M3 19V5M3 19h18M6 15l4-5 3 2 6-7"/><path d="M15 5h4v4"/>',
+    range:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+    movement:'<path d="M4 18l4-7 4 2-4 7H4zM13 9l3-7 4 2-3 7-4-2z"/><path d="M5 7l3 2m6 8 3 2"/>',
+    bounce:'<path d="M4 18h7c4 0 5-2 5-6V6"/><path d="M12 10l4-4 4 4"/><circle cx="5" cy="18" r="2"/>',
+    split:'<path d="M4 12h7m0 0 7-7m-7 7 7 7"/><path d="M15 5h3v3m-3 11h3v-3"/>',
+    splitDamage:'<path d="M6 18L18 6M6 6h.01M18 18h.01"/><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/>',
+    slots:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'
+  };
+  const UPGRADE_STAT_ICONS = {
+    damage:'damage', speed:'rate', reach:'range', feet:'movement',
+    health:'hp', bounce:'bounce', split:'split'
+  };
+  function statIcon(name) {
+    const shape = STAT_ICONS[name] || STAT_ICONS.level;
+    return `<span class="stats-icon stats-icon--${name}" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">${shape}</svg></span>`;
+  }
+
   function renderStats(){
     const s=combatStats();
     const rows=[
-      ['Poziom',state.level],
-      ['HP',`${Math.ceil(s.hp)} / ${s.maxHp}`],
-      ['EXP',`${state.xp} / ${neededXp(state.level)}`],
-      ['Obrażenia strzały',s.damage],
-      ['Czas między strzałami',`${fmt(s.interval,3)} s`],
-      ['Strzały na sekundę',fmt(s.rate,2)],
-      ['DPS na jednym celu (teor.)',fmt(s.dps,2)],
-      ['Zasięg',`${s.range} jedn.`],
-      ['Prędkość ruchu',`${fmt(s.speed)} jedn./s`],
-      ['Odbicia',s.bounce],
-      ['Rozdzielenie',s.splitCount?`${s.splitCount} strzały po trafieniu`:'Brak'],
-      ['Obrażenia dzielonych strzał',s.splitCount?'58% głównej':'Brak'],
-      ['Sloty modyfikatorów',`${s.usedMods} / ${MOD_SLOTS}`]
+      ['level','Poziom',state.level],
+      ['hp','HP',`${Math.ceil(s.hp)} / ${s.maxHp}`],
+      ['xp','EXP',`${state.xp} / ${neededXp(state.level)}`],
+      ['damage','Obrażenia strzały',s.damage],
+      ['interval','Czas między strzałami',`${fmt(s.interval,3)} s`],
+      ['rate','Strzały na sekundę',fmt(s.rate,2)],
+      ['dps','DPS na jednym celu (teor.)',fmt(s.dps,2)],
+      ['range','Zasięg',`${s.range} jedn.`],
+      ['movement','Prędkość ruchu',`${fmt(s.speed)} jedn./s`],
+      ['bounce','Odbicia',s.bounce],
+      ['split','Rozdzielenie',s.splitCount?`${s.splitCount} strzały po trafieniu`:'Brak'],
+      ['splitDamage','Obrażenia dzielonych strzał',s.splitCount?'58% głównej':'Brak'],
+      ['slots','Sloty modyfikatorów',`${s.usedMods} / ${MOD_SLOTS}`]
     ];
     $('stats-content').innerHTML=`<p class="stats-section">ŁOTRZYK · ŁUK</p>
-      <div class="stats-grid">${rows.map(([title,value])=>`<div class="stats-item"><span>${title}</span><strong>${value}</strong></div>`).join('')}</div>
+      <div class="stats-grid">${rows.map(([icon,title,value])=>`<div class="stats-item"><div class="stats-item-heading">${statIcon(icon)}<span>${title}</span></div><strong>${value}</strong></div>`).join('')}</div>
       <p class="stats-section">ULEPSZENIA</p>
-      <div class="stats-upgrades">${UPGRADE_DEFS.map(u=>`<div><span>${u.title}</span><strong>${state.upgrades[u.id]}/${u.max}</strong></div>`).join('')}</div>
+      <div class="stats-upgrades">${UPGRADE_DEFS.map(u=>`<div><span class="stats-upgrade-heading">${statIcon(UPGRADE_STAT_ICONS[u.id])}<span>${u.title}</span></span><strong>${state.upgrades[u.id]}/${u.max}</strong></div>`).join('')}</div>
       <p class="stats-note">Teoretyczny DPS: jeden cel, bez odbić, podziałów i przerw między walkami.</p>`;
   }
   function closeStats(){

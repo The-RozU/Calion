@@ -62,3 +62,30 @@
 .pause-button,.fullscreen-button,.stats-button{min-width:31px;padding:2px 4px}
 .timer-panel{min-width:65px}
 }
+
+/* v0.0.6: readable pictograms for combat stats and acquired upgrades */
+.stats-item-heading,.stats-upgrade-heading{
+  display:flex;align-items:center;gap:9px;min-width:0;
+  font:11px/1.4 system-ui,sans-serif;color:#bac3b2;
+}
+.stats-item-heading>span:last-child,.stats-upgrade-heading>span:last-child{min-width:0}
+.stats-icon{
+  display:inline-flex;align-items:center;justify-content:center;flex:0 0 28px;
+  width:28px;height:28px;background:#28352c;border:1px solid #5c6b5a;
+  box-shadow:inset 0 0 0 1px #17221a;color:#c6b68b;
+}
+.stats-icon svg{display:block;flex:none}
+.stats-icon--hp{color:#dd897c;border-color:#785046;background:#392620}
+.stats-icon--xp{color:#88d9bf;border-color:#456c60;background:#203c36}
+.stats-icon--damage,.stats-icon--dps{color:#e4be7b;border-color:#75613d;background:#3b3224}
+.stats-icon--rate,.stats-icon--interval{color:#b0cbe0}
+.stats-icon--range,.stats-icon--bounce,.stats-icon--split,.stats-icon--splitDamage{color:#99d3b3}
+.stats-item{gap:8px}
+.stats-upgrade-heading{gap:7px}
+.stats-upgrade-heading .stats-icon{width:24px;height:24px;flex-basis:24px}
+.stats-upgrade-heading .stats-icon svg{width:17px;height:17px}
+@media(max-width:600px){
+  .stats-item-heading,.stats-upgrade-heading{gap:6px;font-size:10px}
+  .stats-icon{width:25px;height:25px;flex-basis:25px}
+  .stats-icon svg{width:17px;height:17px}
+}
