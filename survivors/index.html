@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#101412">
+  <meta name="description" content="Calion Survivors: pierwszy grywalny prototyp dark fantasy pixel art.">
+  <title>Calion Survivors | Prototyp 0.0.1</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-shell">
+    <canvas id="arena" aria-label="Arena walki Calion Survivors"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="hud">
+      <div class="hud-top">
+        <div class="hud-panel identity"><span class="mini-kicker">CALION SURVIVORS</span><strong>ŁOTRZYK <span class="bullet">✦</span> ŁUK</strong></div>
+        <div class="hud-panel timer-panel"><span class="mini-kicker">PRZETRWAJ</span><strong id="timer">05:00</strong></div>
+        <button class="hud-panel pause-button" id="pause-btn" aria-label="Pauza" title="Pauza (P)">Ⅱ</button>
+      </div>
+      <div class="hud-bottom">
+        <div class="hud-panel status-panel">
+          <div class="stat-row"><span>ŻYCIE</span><strong id="hp-text">120 / 120</strong></div>
+          <div class="bar hp-bar"><div id="hp-fill"></div></div>
+          <div class="stat-row xp-row"><span id="level-text">POZIOM 1</span><strong id="xp-text">0 / 8 EXP</strong></div>
+          <div class="bar xp-bar"><div id="xp-fill"></div></div>
+        </div>
+        <div class="hud-panel mod-panel"><span class="mini-kicker">MODYFIKATORY BRONI</span><strong id="mods-text">◇ PUSTE · ◇ PUSTE</strong><small id="kills-text">Pokonani: 0</small></div>
+      </div>
+    </div>
+    <div class="touch-controls" id="touch-controls" aria-label="Sterowanie dotykowe">
+      <div class="joystick" id="joystick"><div id="joystick-knob"></div></div>
+      <div class="touch-help">PRZESUŃ, BY IŚĆ</div>
+    </div>
+    <div id="overlay" class="overlay shown" role="dialog" aria-modal="true" aria-labelledby="panel-title">
+      <div class="overlay-panel">
+        <div class="ornament">✦ &nbsp; C A L I O N &nbsp; ✦</div>
+        <div class="crest-mark"><div class="crest-shield"><span>♜</span></div></div>
+        <h1 id="panel-title">SURVIVORS</h1>
+        <p class="panel-subtitle" id="panel-subtitle">Zapomniany Trakt</p>
+        <div id="panel-content"></div>
+      </div>
+      <div class="game-version">PROTOTYP v0.0.1 · DARK FANTASY PIXEL ART</div>
+    </div>
+    <div class="toast" id="toast" aria-live="polite"></div>
+  </div>
+  <script src="game.js" defer></script>
+</body>
+</html>
