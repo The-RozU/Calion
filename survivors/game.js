@@ -1,13 +1,15 @@
-/* Calion Survivors · prototype 0.0.2 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.3 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.2';
+  const VERSION = '0.0.3';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
-  const MAX_ENEMIES = 38;
+  const MAX_ENEMIES = 48;
   const MAX_PROJECTILES = 70;
+  const MAX_HOSTILE_PROJECTILES = 26;
+  const ENEMY_UNLOCK_INTERVAL = 30;
   const MAX_DROPS = 100;
   const MOD_SLOTS = 2;
-  const CAMERA_ZOOM = 0.82; // Camera shows around 22% more arena in each direction.
+  const CAMERA_ZOOM = 0.74; // v0.0.3: wider view without shrinking player hitboxes.
   const TAU = Math.PI * 2;
   const $ = id => document.getElementById(id);
   const canvas = $('arena');
@@ -26,13 +28,22 @@
   let worldTile = null;
 
   const UPGRADE_DEFS = [
-    { id: 'damage', title: 'Mocniejsze strzały', icon: '⚔', max: 3, type: 'stat', desc: l => `Obrażenia strzał +5 (${l}/3).` },
-    { id: 'speed', title: 'Sprawne dłonie', icon: '➶', max: 3, type: 'stat', desc: l => `Czas między strzałami −11% (${l}/3).` },
-    { id: 'reach', title: 'Sokoli wzrok', icon: '◎', max: 2, type: 'stat', desc: l => `Zasięg ataku +40 (${l}/2).` },
-    { id: 'feet', title: 'Lekki krok', icon: '✦', max: 2, type: 'stat', desc: l => `Prędkość ruchu +10% (${l}/2).` },
-    { id: 'health', title: 'Hart ducha', icon: '✚', max: 2, type: 'stat', desc: l => `Maks. życie +20 i leczenie 20 (${l}/2).` },
-    { id: 'bounce', title: 'Odbijająca strzała', icon: '↗', max: 2, type: 'modifier', desc: l => `Strzała trafia kolejny cel. Odbicia: ${l}/2.` },
-    { id: 'split', title: 'Rozdzielenie', icon: '⋔', max: 2, type: 'modifier', desc: l => `Po trafieniu powstają ${l + 1} słabsze strzały. (${l}/2)` }
+    { id: 'damage', title: 'Mocniejsze strzały', icon: '⚔', max: 3, type: 'stat', desc: 'Każdy poziom zwiększa obrażenia strzał o 5.' },
+    { id: 'speed', title: 'Sprawne dłonie', icon: '➶', max: 3, type: 'stat', desc: 'Każdy poziom skraca czas między strzałami o 11%.' },
+    { id: 'reach', title: 'Sokoli wzrok', icon: '◎', max: 2, type: 'stat', desc: 'Każdy poziom zwiększa zasięg ataku o 40.' },
+    { id: 'feet', title: 'Lekki krok', icon: '✦', max: 2, type: 'stat', desc: 'Każdy poziom zwiększa prędkość ruchu o 10%.' },
+    { id: 'health', title: 'Hart ducha', icon: '✚', max: 2, type: 'stat', desc: 'Zwiększa maksymalne życie o 20 i leczy 20 HP.' },
+    { id: 'bounce', title: 'Odbijająca strzała', icon: '↗', max: 2, type: 'modifier', desc: 'Strzała odbija się od trafionego wroga do kolejnego celu. Kolejny poziom dodaje odbicie.' },
+    { id: 'split', title: 'Rozdzielenie', icon: '⋔', max: 2, type: 'modifier', desc: 'Po trafieniu strzała dzieli się na 2 słabsze pociski, a na drugim poziomie na 3.' }
+  ];
+
+  // Every 30 seconds one more enemy kind joins the spawn pool.
+  const ENEMY_ROSTER = [
+    { id:'slime-green', name:'Zielony slime', weight:6, hp:14, speed:24, radius:8, contact:5, xp:1 },
+    { id:'slime-blue', name:'Niebieski slime', weight:4, hp:20, speed:39, radius:8, contact:7, xp:1 },
+    { id:'slime-red', name:'Czerwony slime', weight:3, hp:83, speed:21, radius:15, contact:15, xp:3 },
+    { id:'goblin', name:'Goblin', weight:3, hp:36, speed:35, radius:10, contact:11, xp:2 },
+    { id:'goblin-archer', name:'Goblin łucznik', weight:2, hp:29, speed:31, radius:10, contact:7, xp:2 }
   ];
   const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
   const rand = (min, max) => Math.random() * (max - min) + min;
@@ -42,10 +53,10 @@
 
   function newState() {
     return {
-      elapsed: 0, spawnClock: 1.1, shots: 0, kills: 0, nextEnemyId: 1,
+      elapsed: 0, spawnClock: 1.1, enemyStage: 0, shots: 0, kills: 0, nextEnemyId: 1,
       player: { x: 0, y: 0, hp: 120, maxHp: 120, hitCooldown: 0, shotCooldown: .45, face: 1 },
       level: 1, xp: 0, upgrades: Object.fromEntries(UPGRADE_DEFS.map(u => [u.id, 0])),
-      enemies: [], projectiles: [], drops: [], particles: [], offered: []
+      enemies: [], projectiles: [], enemyProjectiles: [], drops: [], particles: [], offered: []
     };
   }
   function neededXp(level) { return 8 + (level - 1) * 9; }
@@ -58,7 +69,7 @@
     visibleMode('menu');
     panelTitle.textContent = 'SURVIVORS';
     panelSubtitle.textContent = 'Zapomniany Trakt';
-    panelContent.innerHTML = `<p class="intro-text">Ciemny trakt zaroił się od goblinów. Przetrwaj 5 minut. Łotrzyk sam strzela w najbliższe zagrożenie, a Ty wybierasz, jak rozwinąć jego łuk.</p>
+    panelContent.innerHTML = `<p class="intro-text">Na Zapomniany Trakt wpełzły slime’y. Co 30 sekund dołączają kolejne potwory, a na końcu gobliny. Przetrwaj 5 minut. Łotrzyk sam strzela w najbliższe zagrożenie, a Ty wybierasz, jak rozwinąć jego łuk.</p>
       <div class="info-trio"><div class="info-box"><b>05:00</b><span>CZAS PRÓBY</span></div><div class="info-box"><b>1</b><span>BROŃ NA RUN</span></div><div class="info-box"><b>3</b><span>KARTY WYBORU</span></div></div>
       ${button('Rozpocznij wyprawę', 'start')}
       <p class="hint">PC: WASD / strzałki · P: pauza · 1, 2, 3: wybór karty<br>Telefon: joystick po lewej lub prawej stronie</p>`;
@@ -83,7 +94,7 @@
     visibleMode('result');
     panelTitle.textContent = won ? 'PRZETRWANO!' : 'WYPRAWA ZAKOŃCZONA';
     panelSubtitle.textContent = won ? 'Trakt oczyszczony' : 'Mrok zwyciężył tym razem';
-    panelContent.innerHTML = `<p class="end-text">${won ? 'Udało Ci się przetrwać pięciominutową próbę.' : 'Gobliny otoczyły łotrzyka. Następnym razem spróbuj innego zestawu ulepszeń.'}</p>
+    panelContent.innerHTML = `<p class="end-text">${won ? 'Udało Ci się przetrwać pięciominutową próbę.' : 'Potwory otoczyły łotrzyka. Następnym razem spróbuj innego zestawu ulepszeń.'}</p>
       <div class="info-trio"><div class="info-box"><b>${formatTime(state.elapsed)}</b><span>CZAS</span></div><div class="info-box"><b>${state.kills}</b><span>POKONANI</span></div><div class="info-box"><b>${state.level}</b><span>POZIOM</span></div></div>
       ${button('Zagraj ponownie', 'restart')}${button('Menu', 'menu', true)}`;
   }
@@ -103,8 +114,8 @@
     panelContent.innerHTML = `<div class="level-header"><span class="level-headline">TRZY DROGI · JEDEN WYBÓR</span></div>
       <div class="card-grid">${state.offered.map((u, i) => `<button class="upgrade-card ${u.type === 'modifier' ? 'modifier' : ''}" data-card="${i}">
       <span class="upgrade-icon">${u.icon}</span><span class="upgrade-title">${u.title}</span>
-      <span class="upgrade-desc">${u.desc(state.upgrades[u.id] + 1)}</span>
-      <span class="upgrade-level">POZIOM ${state.upgrades[u.id] + 1} / ${u.max}</span></button>`).join('')}</div>
+      <span class="upgrade-desc">${u.desc}</span>
+      <span class="upgrade-level">POZIOM ${state.upgrades[u.id]} / ${u.max}</span></button>`).join('')}</div>
       <p class="hint">Walka jest wstrzymana. Wybierz kartę kliknięciem lub klawiszem 1–3.</p>`;
   }
   function selectCard(index) {
@@ -164,15 +175,26 @@
     }
     return tile;
   }
-  function spawnEnemy() {
+  function spawnEnemy(forcedType = null) {
     const p = state.player;
-    const side = int(Math.random() * 4);
-    const margin = 23;
-    let x, y;
-    if (side < 2) { x = p.x + (side === 0 ? -screenW/2 - margin : screenW/2 + margin); y = p.y + rand(-screenH/2, screenH/2); }
-    else { x = p.x + rand(-screenW/2, screenW/2); y = p.y + (side === 2 ? -screenH/2 - margin : screenH/2 + margin); }
+    const eligible = ENEMY_ROSTER.slice(0, Math.min(ENEMY_ROSTER.length, state.enemyStage + 1));
+    const weightSum = eligible.reduce((sum, def) => sum + def.weight, 0);
+    let roll = Math.random() * weightSum, kind = eligible[eligible.length - 1];
+    for (const def of eligible) { roll -= def.weight; if (roll < 0) { kind = def; break; } }
+    if (forcedType) kind = ENEMY_ROSTER.find(def => def.id === forcedType) || kind;
+    const angle = rand(0,TAU);
+    // Limited distance keeps enemies participating on ultrawide monitors as well as phones.
+    const radius = clamp(Math.min(screenW,screenH)/2 + 52, 225, 355);
+    const x = p.x + Math.cos(angle) * radius;
+    const y = p.y + Math.sin(angle) * radius;
     const factor = state.elapsed / RUN_DURATION;
-    state.enemies.push({ id: state.nextEnemyId++, x, y, hp: 27 + 30 * factor, maxHp: 27 + 30 * factor, speed: 27 + rand(0,8) + 12 * factor, hit: 0, attackTimer: 0, wobble: rand(0,TAU), radius: 9 });
+    const hp = Math.round(kind.hp * (1 + .28 * factor));
+    state.enemies.push({
+      id:state.nextEnemyId++, type:kind.id, x, y, hp, maxHp:hp, xp:kind.xp,
+      speed:kind.speed*(1 + .13*factor) + rand(-1.8,1.8),
+      contact:kind.contact, hit:0, attackTimer:rand(1.1,2.4),
+      aiTime:rand(0,TAU), wobble:rand(0,TAU), radius:kind.radius, spawnAge:0
+    });
   }
   function nearestEnemy(x,y,range,excluded=new Set()) {
     let best = null, min = range * range;
@@ -206,7 +228,7 @@
     if (enemy.hp <= 0) {
       state.kills++;
       addParticles(enemy.x,enemy.y,5,'#677a53');
-      if (state.drops.length < MAX_DROPS) state.drops.push({x:enemy.x,y:enemy.y,amount:state.kills%8===0?2:1,phase:rand(0,TAU)});
+      if (state.drops.length < MAX_DROPS) state.drops.push({x:enemy.x,y:enemy.y,amount:enemy.xp+(state.kills%8===0?1:0),phase:rand(0,TAU)});
     }
   }
   function processArrowHit(arrow, enemy) {
@@ -238,6 +260,56 @@
     state.xp += drop.amount;
     addParticles(drop.x,drop.y - 5,3,'#7dd3b4');
   }
+  function hurtPlayer(damage) {
+    const p = state.player;
+    if (p.hitCooldown > 0) return;
+    p.hp = Math.max(0, p.hp - damage);
+    p.hitCooldown = .85;
+    addParticles(p.x,p.y,6,'#bc6353');
+    if (p.hp <= 0) endRun(false);
+  }
+
+  function moveEnemy(e, dt) {
+    const p = state.player;
+    const vx = p.x-e.x, vy = p.y-e.y, d = Math.max(.0001,Math.hypot(vx,vy));
+    const ux = vx/d, uy = vy/d;
+    e.aiTime += dt; e.wobble += dt*(e.type==='slime-blue'?9:5);
+    e.hit = Math.max(0,e.hit-dt);
+    e.spawnAge += dt;
+    let forward=1, sideways=0, speed=e.speed;
+    if(e.type==='slime-blue') {
+      // Rapid sideways hops and a short burst every couple of seconds.
+      sideways = Math.sin(e.aiTime*6 + e.id)*.27;
+      if(e.aiTime%2.4<.40) speed *= 1.55;
+    } else if(e.type==='slime-red') {
+      // Heavy slime is slow, then briefly surges forward.
+      if(e.aiTime%3.5<.32) speed *= 1.5;
+    } else if(e.type==='goblin') {
+      sideways = Math.sin(e.aiTime*3.6 + e.id)*.42;
+    } else if(e.type==='goblin-archer') {
+      // Keep range and strafe rather than behaving like another melee goblin.
+      forward = d > 198 ? 1 : d < 128 ? -1 : 0;
+      sideways = d < 280 ? Math.sin(e.aiTime*1.65+e.id) * .68 : 0;
+      e.attackTimer -= dt;
+      if(e.spawnAge > .5 && d < 275 && e.attackTimer <= 0 && state.enemyProjectiles.length < MAX_HOSTILE_PROJECTILES) {
+        const angle = Math.atan2(vy,vx);
+        state.enemyProjectiles.push({
+          x:e.x, y:e.y-5, vx:Math.cos(angle)*128, vy:Math.sin(angle)*128,
+          angle, life:2.6, damage:9
+        });
+        e.attackTimer=rand(2.1,2.9);
+        addParticles(e.x,e.y-6,3,'#bd8c55');
+      }
+    }
+    const dirX = ux*forward - uy*sideways, dirY = uy*forward + ux*sideways;
+    const mag = Math.max(1,Math.hypot(dirX,dirY));
+    if(d > e.radius+5 || forward<0) {
+      e.x += dirX/mag * speed * dt;
+      e.y += dirY/mag * speed * dt;
+    }
+    if(e.spawnAge > .40 && Math.hypot(e.x-p.x,e.y-p.y) < e.radius+8) hurtPlayer(e.contact);
+  }
+
   function update(dt) {
     const s = state, p = s.player, levels = s.upgrades;
     s.elapsed += dt;
@@ -249,19 +321,21 @@
     p.hitCooldown = Math.max(0,p.hitCooldown - dt);
     p.shotCooldown -= dt;
     if (p.shotCooldown <= 0) { fireArrow(); p.shotCooldown += .80 * (1 - levels.speed * .11); }
+    // Unlock order: 0 s green, 30 s blue, 60 s red, 90 s goblin, 120 s archer.
+    const stage = Math.min(ENEMY_ROSTER.length-1, int(s.elapsed/ENEMY_UNLOCK_INTERVAL));
+    while (s.enemyStage < stage) {
+      s.enemyStage++;
+      const newcomer = ENEMY_ROSTER[s.enemyStage];
+      if (s.enemies.length < MAX_ENEMIES) spawnEnemy(newcomer.id);
+      toast('Nowy przeciwnik: ' + newcomer.name);
+    }
     s.spawnClock -= dt;
     const interval = 1.85 - (s.elapsed / RUN_DURATION) * .93;
     while (s.spawnClock <= 0) { if (s.enemies.length < MAX_ENEMIES) spawnEnemy(); s.spawnClock += interval; }
 
     for (const e of s.enemies) {
-      const vx = p.x - e.x, vy = p.y - e.y, d = Math.max(.0001, Math.hypot(vx,vy));
-      if (d > 12) { e.x += vx/d * e.speed*dt; e.y += vy/d * e.speed*dt; }
-      e.wobble += dt * 5; e.hit = Math.max(0,e.hit - dt);
-      if (d < 15 && p.hitCooldown <= 0) {
-        p.hp = Math.max(0,p.hp - 12); p.hitCooldown = .85;
-        addParticles(p.x,p.y,6,'#bc6353');
-        if (p.hp <= 0) { endRun(false); updateHud(); return; }
-      }
+      moveEnemy(e,dt);
+      if (p.hp <= 0) { updateHud(); return; }
     }
     for (let i = s.projectiles.length-1; i >= 0; i--) {
       const a = s.projectiles[i]; a.x += a.vx*dt; a.y += a.vy*dt; a.life -= dt;
@@ -271,6 +345,16 @@
         if ((e.x-a.x)**2+(e.y-a.y)**2 < (e.radius+3)**2) { keep = processArrowHit(a,e); break; }
       }
       if (!keep) s.projectiles.splice(i,1);
+    }
+    for (let i=s.enemyProjectiles.length-1;i>=0;i--) {
+      const a=s.enemyProjectiles[i];
+      a.x += a.vx*dt; a.y += a.vy*dt; a.life -= dt;
+      if (Math.hypot(a.x-p.x,a.y-p.y) < 11) {
+        hurtPlayer(a.damage);
+        a.life = 0; // Consume the shot even while the hero is invulnerable.
+      }
+      if (a.life <= 0) s.enemyProjectiles.splice(i,1);
+      if (p.hp <= 0) { updateHud(); return; }
     }
     s.enemies = s.enemies.filter(e=>e.hp > 0 && dist2(e,p) < Math.max(screenW,screenH)**2*5);
     for (let i=s.drops.length-1;i>=0;i--) {
@@ -319,14 +403,53 @@
     rect('#132a25',x-5,y+1,10,6);rect('#77cab0',x-2,y-5,5,8);rect('#b3e8cc',x-1,y-6,2,5);rect('#378878',x-3,y-1,3,5);
   }
   function drawEnemy(e,cx,cy) {
-    const x=int(e.x-cx),y=int(e.y-cy), w=int(Math.sin(e.wobble)*1.5);
-    ctx.fillStyle='#101a13b8';ctx.beginPath();ctx.ellipse(x,y+8,11,4,0,0,TAU);ctx.fill();
-    rect('#171d15',x-8,y-10+w,17,14);rect('#556b42',x-7,y-9+w,15,11);
-    rect('#7b8c51',x-11,y-7+w,5,4);rect('#7b8c51',x+7,y-7+w,5,4);
-    rect('#39482f',x-6,y+2,13,5);rect('#483c2d',x-7,y+5,6,5);rect('#483c2d',x+2,y+5,6,5);
-    rect('#9b5141',x-5,y-5+w,3,2);rect('#9b5141',x+3,y-5+w,3,2);
-    rect('#b1a97d',x-2,y-1+w,5,2);rect('#333b2d',x-7,y-12+w,15,3);
-    if(e.hit>0){ctx.globalAlpha=.55;rect('#f2d7aa',x-10,y-12,20,23);ctx.globalAlpha=1;}
+    const x=int(e.x-cx), y=int(e.y-cy), w=int(Math.sin(e.wobble)*1.5);
+    ctx.save();
+    if (e.spawnAge < .35) ctx.globalAlpha = Math.max(.22,e.spawnAge/.35);
+    const slime = e.type.startsWith('slime-');
+    if (slime) {
+      const red = e.type==='slime-red', blue = e.type==='slime-blue';
+      const size = red ? 16 : 10;
+      const base = red ? '#9d493c' : blue ? '#427da2' : '#5e9750';
+      const light = red ? '#d7775c' : blue ? '#76b9dd' : '#97c576';
+      const dark = red ? '#542a2c' : blue ? '#224c6c' : '#315737';
+      const jump = Math.abs(Math.sin(e.wobble))*(blue?3:1.3);
+      const top = y - Math.round(jump);
+      ctx.fillStyle='#101811a8';ctx.beginPath();ctx.ellipse(x,y+7,size+2,4,0,0,TAU);ctx.fill();
+      rect(dark,x-size,top-4,size*2,size+9);
+      rect(base,x-size-2,top+1,size*2+4,size+2);
+      rect(base,x-size+3,top-9,size*2-6,11);
+      rect(light,x-size+4,top-8,size-2,4);
+      rect(light,x-size-1,top-5,4,3);
+      rect(dark,x-size+2,top+size-3,size*2-4,4);
+      const eyeY=top+1;
+      rect('#15231e',x-5,eyeY,3,4); rect('#15231e',x+3,eyeY,3,4);
+      rect('#e1ead0',x-4,eyeY,1,2); rect('#e1ead0',x+4,eyeY,1,2);
+      if(red) {rect('#b75849',x-14,top-12,9,5);rect('#e39a72',x-11,top-11,4,2);}
+      if(e.hit>0){ctx.globalAlpha=.45;rect('#fff0cc',x-size-2,top-10,size*2+4,size+19);}
+    } else {
+      const archer=e.type==='goblin-archer';
+      ctx.fillStyle='#101a13b8';ctx.beginPath();ctx.ellipse(x,y+8,11,4,0,0,TAU);ctx.fill();
+      rect('#171d15',x-8,y-10+w,17,14);rect(archer?'#49613e':'#556b42',x-7,y-9+w,15,11);
+      rect('#7b8c51',x-11,y-7+w,5,4);rect('#7b8c51',x+7,y-7+w,5,4);
+      rect('#39482f',x-6,y+2,13,5);rect('#483c2d',x-7,y+5,6,5);rect('#483c2d',x+2,y+5,6,5);
+      rect('#9b5141',x-5,y-5+w,3,2);rect('#9b5141',x+3,y-5+w,3,2);
+      rect('#b1a97d',x-2,y-1+w,5,2);rect(archer?'#283b2d':'#333b2d',x-7,y-12+w,15,3);
+      if(archer){
+        // Dark hood, small quiver and visible bow distinguish the ranged goblin.
+        rect('#303d30',x-8,y-15+w,16,4);rect('#4f6048',x-6,y-16+w,12,3);
+        rect('#48392b',x-11,y-1,4,12);rect('#a68b5c',x-10,y-5,1,7);
+        rect('#8c663b',x+11,y-14,2,25);rect('#d5c7a5',x+10,y-11,1,20);
+        rect('#b18b53',x+9,y-15,3,3);rect('#b18b53',x+9,y+10,3,3);
+      }
+      if(e.hit>0){ctx.globalAlpha=.55;rect('#f2d7aa',x-10,y-16,20,27);}
+    }
+    ctx.restore();
+    if (e.hp < e.maxHp && (e.type==='slime-red' || e.type==='goblin' || e.type==='goblin-archer')) {
+      const width = e.type==='slime-red' ? 30 : 21;
+      rect('#211f1d',x-int(width/2),y-(e.type==='slime-red'?24:21),width,3);
+      rect('#c17962',x-int(width/2),y-(e.type==='slime-red'?24:21),width*(e.hp/e.maxHp),2);
+    }
   }
   function drawHero(p,cx,cy,animated) {
     const x=int(p.x-cx),y=int(p.y-cy), bounce=animated?int(Math.sin(state.elapsed*12)*1.2):0;
@@ -348,6 +471,13 @@
     const x=a.x-cx,y=a.y-cy;
     ctx.save();ctx.translate(Math.round(x),Math.round(y));ctx.rotate(a.angle);rect('#e9d5a6',-9,-1,18,2);rect('#826747',-9,1,12,1);rect('#d2d0bc',7,-3,6,5);rect('#587563',-8,-4,5,2);rect('#587563',-8,2,5,2);ctx.restore();
   }
+  function drawEnemyArrow(a,cx,cy) {
+    ctx.save();ctx.translate(Math.round(a.x-cx),Math.round(a.y-cy));ctx.rotate(a.angle);
+    rect('#704735',-8,-1,16,2);rect('#dda96a',3,-1,6,2);
+    rect('#e0c1a0',7,-2,3,4);rect('#aa614c',-8,-3,4,2);rect('#aa614c',-8,2,4,2);
+    ctx.restore();
+  }
+
   function draw() {
     if (!state) return;
     const cx=state.player.x-screenW/2,cy=state.player.y-screenH/2;
@@ -357,6 +487,7 @@
     entities.push({y:state.player.y,draw:()=>drawHero(state.player,cx,cy,mode==='playing')});
     entities.sort((a,b)=>a.y-b.y);for(const e of entities)e.draw();
     for(const a of state.projectiles)drawArrow(a,cx,cy);
+    for(const a of state.enemyProjectiles)drawEnemyArrow(a,cx,cy);
     for(const a of state.particles){ctx.globalAlpha=clamp(a.life/a.max,0,1);rect(a.color,a.x-cx,a.y-cy,2,2);}ctx.globalAlpha=1;
     // Atmospheric subtle boundary illumination, no screen-filling combat effects.
     ctx.fillStyle='#0b100d30';ctx.fillRect(0,0,screenW,2);ctx.fillRect(0,screenH-2,screenW,2);
@@ -435,6 +566,6 @@
   }
   setupInput();resizeCanvas();showMenu();requestAnimationFrame(tick);
   // Stable read-only debug bridge to inspect the prototype in browser tests.
-  window.CalionPrototype={version:VERSION,getSnapshot:()=>({mode,elapsed:state.elapsed,level:state.level,xp:state.xp,kills:state.kills,hp:state.player.hp,upgrades:{...state.upgrades},enemies:state.enemies.length}),start:startGame};
+  window.CalionPrototype={version:VERSION,getSnapshot:()=>({mode,elapsed:state.elapsed,level:state.level,xp:state.xp,kills:state.kills,hp:state.player.hp,upgrades:{...state.upgrades},enemies:state.enemies.length,enemyTypes:state.enemies.map(e=>e.type),enemyStage:state.enemyStage,enemyShots:state.enemyProjectiles.length}),start:startGame};
 })();
 
