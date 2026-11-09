@@ -1,6 +1,6 @@
-# Calion Survivors · prototyp 0.0.15
+# Calion Survivors · prototyp 0.0.16
 
-Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.15** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
+Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.16** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
 
 ## Uruchomienie
 
@@ -21,9 +21,17 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Jedna klasa (Łotrzyk), trzy bronie (Łuk, Sztylety, Łańcuch) losowane ruletką przed wyprawą, jedna arena (Zapomniany Trakt), pięć podstawowych typów wrogów (3 slime’y i 2 gobliny) oraz elitarny Spaczony slime.
 - Ruch w czterech kierunkach, kamera śledząca postać, automatyczne celowanie, kolizje, punkty życia.
 - Zdobywanie EXP i **powolniejsze** poziomowanie o rosnącym koszcie, zatrzymanie gry na wybór jednej z **3 losowych kart**.
-- Limity poziomów kart, **2 sloty modyfikatorów**; odbijanie i dzielenie strzał **wzajemnie się wykluczają**. Podział ma tylko jedno pokolenie, a odbicia są limitowane.
+- Limity poziomów kart, **2 sloty modyfikatorów**; pary specjalizacji każdej broni **wzajemnie się wykluczają**. Podział strzał ma tylko jedno pokolenie, a odbicia są limitowane.
 - Pięciominutowa próba przetrwania; ekran wygranej lub porażki oraz statystyki.
 - Proceduralne proste grafiki pixel art w odcieniach ciemnego drewna, stali, kamienia i mchu. Docelowe sprite'y WebP i animacje zastąpią te tymczasowe rysunki.
+
+## Zmiany w 0.0.16
+
+- Sztylety mają teraz **8 bazowych obrażeń**, poprzednio 9.
+- Ruletka ma teraz postać **animowanego okrągłego koła** z rzeczywistymi segmentami, wskaźnikiem u góry i płynnym wyhamowaniem. Zatrzymuje się na losowej broni.
+- Szanse na kole i w legendzie są zgodne z losowaniem: **33,3% każda** przy pierwszym losowaniu (dokładnie 1/3), a przy jedynym ponownym losowaniu **50% dla każdej z dwóch pozostałych**, **0% dla poprzedniej**. Wtedy koło składa się z dwóch równych połówek.
+- Karty specjalne **Szerokie cięcie / Krwawiące ostrza** oraz **Długi łańcuch / Podwójny łańcuch** wzajemnie się wykluczają. Pierwszy wybór blokuje rywala na resztę wyprawy, także przy następnych poziomach. Zablokowane karty nie są oferowane przy awansie i są oznaczone jako BLOKADA w statystykach.
+- Pozostaje jedno ponowne losowanie i potwierdzanie broni przed runem; walka, pięciominutowy czas i maksymalnie 80 przeciwników bez zmian.
 
 ## Zmiany w 0.0.15
 

@@ -1,7 +1,7 @@
-/* Calion Survivors · prototype 0.0.15 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.16 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.15';
+  const VERSION = '0.0.16';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
   const MAX_ENEMIES = 80; // Requested population cap for the denser arena.
   const MAX_PROJECTILES = 70;
@@ -14,7 +14,11 @@
   const MOD_SLOTS = 2;
   const BOUNCE_CHANCE_STEP = .20; // Every card level grants +20 percentage points.
   const BOUNCE_MAX_HITS = 2; // Chance is checked separately for each possible ricochet.
-  const MODIFIER_EXCLUDES = Object.freeze({ bounce:'split', split:'bounce' });
+  const MODIFIER_EXCLUDES = Object.freeze({
+    bounce:'split',split:'bounce',
+    wideSlash:'bleed',bleed:'wideSlash',
+    longChain:'doubleChain',doubleChain:'longChain'
+  });
   const WEAPONS=[
     {id:'bow',name:'Łuk',symbol:'➶',desc:'Strzały, odbicia i rozdzielenie.'},
     {id:'daggers',name:'Sztylety',symbol:'⚔',desc:'Szybkie cięcia i krwawienie.'},
@@ -93,7 +97,7 @@
   const BASE_RANGE=205, RANGE_STEP=40, BASE_SPEED=99, SPEED_FACTOR=.10;
   function combatStats(){
     const u=state.upgrades,p=state.player,w=state.weapon;
-    const damage=(w==='daggers'?9:w==='chain'?17:BASE_DAMAGE)+u.damage*DAMAGE_PER_LEVEL;
+    const damage=(w==='daggers'?8:w==='chain'?17:BASE_DAMAGE)+u.damage*DAMAGE_PER_LEVEL;
     let interval,range,chainCount=0,chainRate=0,arc=0;
     if(w==='daggers'){
       interval=.32*(1-u.speed*INTERVAL_FACTOR);range=58+u.reach*14;
@@ -181,8 +185,8 @@
     rows.push(['slots','Sloty modyfikatorów',`${s.usedMods} / ${MOD_SLOTS}`]);
     const list=UPGRADE_DEFS.filter(u=>!u.weapon||u.weapon===w);
     const note=w==='bow'?'Odbijająca strzała i Rozdzielenie wzajemnie się wykluczają.':
-      w==='daggers'?'Krwawienie odświeża czas trwania, ale nie kumuluje się.':
-      'Każdy łańcuch może zranić tego samego wroga tylko raz na pełny obrót.';
+      w==='daggers'?'Szerokie cięcie i Krwawiące ostrza wzajemnie się wykluczają. Krwawienie nie kumuluje się.':
+      'Długi łańcuch i Podwójny łańcuch wzajemnie się wykluczają. Łańcuch trafia wroga raz na obrót.';
     $('stats-content').innerHTML=`<p class="stats-section">ŁOTRZYK · ${s.weaponName.toUpperCase()}</p>
       <div class="stats-grid">${rows.map(([icon,title,value])=>`<div class="stats-item"><div class="stats-item-heading">${statIcon(icon)}<span>${title}</span></div><strong>${value}</strong></div>`).join('')}</div>
       <p class="stats-section">ULEPSZENIA</p>
@@ -238,32 +242,82 @@
       if(roulette.rerollsLeft<=0||!roulette.selection)return;
       roulette.rerollsLeft--;
     }else if(roulette.selection!==null)return;
-    const choices=WEAPONS.map((w,i)=>i).filter(i=>!reroll||WEAPONS[i].id!==roulette.selection);
-    roulette.target=choices[int(Math.random()*choices.length)];
-    roulette.start=roulette.index;roulette.steps=21+((roulette.target-roulette.start+3)%3);
-    roulette.elapsed=0;roulette.spinning=true;roulette.lastStep=-1;roulette.selection=null;
+    // The sectors and RNG are equally weighted: 1/3 at first, 1/2 on reroll.
+    const excluded=reroll?roulette.selection:null;
+    const r=roulette;
+    r.options=WEAPONS.map((w,i)=>i).filter(i=>WEAPONS[i].id!==excluded);
+    r.targetIndex=int(Math.random()*r.options.length);
+    r.target=r.options[r.targetIndex];
+    r.angle=0;
+    r.endAngle=360*6-(360/r.options.length)*r.targetIndex;
+    r.elapsed=0;r.spinning=true;r.selection=null;
     renderRoulette();
   }
   function updateRoulette(dt){
     if(mode!=='roulette'||!roulette||!roulette.spinning)return;
-    roulette.elapsed=Math.min(roulette.duration,roulette.elapsed+dt);
-    const progress=clamp(roulette.elapsed/roulette.duration,0,1);
-    const step=Math.min(roulette.steps,int((1-(1-progress)**3)*roulette.steps));
-    if(step!==roulette.lastStep){roulette.index=(roulette.start+step)%3;roulette.lastStep=step;renderRoulette();}
+    const r=roulette;
+    r.elapsed=Math.min(r.duration,r.elapsed+dt);
+    const progress=clamp(r.elapsed/r.duration,0,1);
+    r.angle=r.endAngle*(1-(1-progress)**4);
+    const wheel=$('roulette-wheel');
+    if(wheel)wheel.style.transform='rotate('+r.angle+'deg)';
     if(progress>=1){
-      roulette.index=roulette.target;roulette.spinning=false;
-      roulette.selection=WEAPONS[roulette.target].id;renderRoulette();
+      r.spinning=false;
+      r.selection=WEAPONS[r.target].id;
+      renderRoulette();
     }
   }
+  function wheelSlicePath(startAngle,endAngle){
+    const radius=146,cx=160,cy=160;
+    const a=(startAngle-90)*DEG,b=(endAngle-90)*DEG;
+    const x1=cx+Math.cos(a)*radius,y1=cy+Math.sin(a)*radius;
+    const x2=cx+Math.cos(b)*radius,y2=cy+Math.sin(b)*radius;
+    const large=endAngle-startAngle>180?1:0;
+    return 'M '+cx+' '+cy+' L '+x1.toFixed(2)+' '+y1.toFixed(2)+
+      ' A '+radius+' '+radius+' 0 '+large+' 1 '+x2.toFixed(2)+' '+y2.toFixed(2)+' Z';
+  }
   function renderRoulette(){
-    const r=roulette;
-    const cards=WEAPONS.map((w,i)=>'<div class="roulette-weapon '+(i===r.index?'selected':'')+'"><span class="roulette-symbol">'+w.symbol+'</span><strong>'+w.name+'</strong><small>'+w.desc+'</small></div>').join('');
-    const outcome=r.spinning?'Ruletka wiruje…':'Wylosowano: <strong>'+WEAPONS[r.target].name+'</strong>';
-    const buttons=r.spinning?'<p class="hint">Losowanie trwa…</p>':
-      (r.rerollsLeft?button('Losuj ponownie (1 raz)','reroll',true):'<p class="roulette-spent">Ponowne losowanie wykorzystane</p>')+
+    const r=roulette,n=r.options.length,sectorAngle=360/n;
+    const palette=['#385243','#6b4b34','#3c5263'];
+    const sectors=r.options.map((id,i)=>{
+      const weapon=WEAPONS[id],centerAngle=i*sectorAngle;
+      const theta=(centerAngle-90)*DEG;
+      const x=(160+Math.cos(theta)*96).toFixed(1);
+      const y=160+Math.sin(theta)*96;
+      const odds=n===3?'33,3%':'50%';
+      return '<path d="'+wheelSlicePath(centerAngle-sectorAngle/2,centerAngle+sectorAngle/2)+
+        '" fill="'+palette[id]+'" stroke="#121a16" stroke-width="4" />'+
+        '<g text-anchor="middle" fill="#f5e9c7" font-family="Georgia,serif">'+
+        '<text x="'+x+'" y="'+(y-19)+'" class="wheel-weapon-symbol">'+weapon.symbol+'</text>'+
+        '<text x="'+x+'" y="'+(y+2)+'" class="wheel-weapon-name">'+weapon.name+'</text>'+
+        '<text x="'+x+'" y="'+(y+24)+'" class="wheel-weapon-percent">'+odds+'</text></g>';
+    }).join('');
+    const legend=WEAPONS.map((w,i)=>{
+      const included=r.options.includes(i),pct=included?(n===3?'33,3%':'50%'):'0%';
+      return '<div class="roulette-odd'+(included?'':' excluded')+'">'+
+        '<span class="roulette-odd-name">'+w.symbol+' '+w.name+'</span><strong>'+pct+'</strong></div>';
+    }).join('');
+    const outcome=r.spinning?'Koło losuje broń…':
+      'Wylosowano: <strong>'+WEAPONS[r.target].name+'</strong>';
+    const controls=r.spinning?'<p class="roulette-spinning-hint">Losowanie trwa…</p>':
+      (r.rerollsLeft?button('Losuj ponownie (1 raz)','reroll',true):
+      '<p class="roulette-spent">Ponowne losowanie wykorzystane</p>')+
       button('Ruszaj w drogę','confirm');
-    panelContent.innerHTML='<div class="roulette-track">'+cards+'</div><p class="roulette-outcome" aria-live="polite">'+outcome+'</p>'+buttons+
-      '<p class="hint">Wylosowana broń zostaje do końca wyprawy. '+(r.rerollsLeft?'Możesz raz ponowić losowanie.':'Ostateczny wynik.')+'</p>';
+    panelContent.innerHTML='<div class="roulette-wheel-stage">'+
+      '<span class="roulette-pointer" aria-hidden="true"></span>'+
+      '<div class="roulette-wheel" id="roulette-wheel" style="transform:rotate('+r.angle+'deg)">'+
+      '<svg viewBox="0 0 320 320" class="roulette-wheel-art" role="img" aria-label="Koło losujące broń">'+
+      '<circle cx="160" cy="160" r="155" fill="#1b251e" stroke="#c9a66a" stroke-width="8"/>'+
+      sectors+
+      '<circle cx="160" cy="160" r="21" fill="#1b2923" stroke="#d2ae70" stroke-width="5"/>'+
+      '<circle cx="160" cy="160" r="7" fill="#cbb17e"/></svg></div></div>'+
+      '<p class="roulette-outcome" aria-live="polite">'+outcome+'</p>'+
+      '<div class="roulette-odds">'+legend+'</div>'+
+      '<p class="roulette-odds-note">'+(n===3?'Każda broń ma równą szansę.':
+        'Poprzednia broń ma 0% szans. Pozostałe mają po 50%.')+'</p>'+
+      controls+
+      '<p class="hint">Jedna broń na całą wyprawę. '+(r.rerollsLeft?
+        'Możesz raz ponowić losowanie.':'Wynik jest ostateczny.')+'</p>';
   }
   function startGame(){
     if(mode!=='roulette'||!roulette||roulette.spinning||!roulette.selection)return;

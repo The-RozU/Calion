@@ -271,17 +271,45 @@
   .overlay.levelup-mode .upgrade-conflict{font-size:8px}
 }
 
-/* v0.0.15: weapon roulette */
-.overlay.roulette-mode .overlay-panel{width:min(96vw,710px);max-height:calc(100dvh - 40px)}
-.overlay.roulette-mode .crest-mark{height:48px}
-.roulette-track{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:19px 0 13px}
-.roulette-weapon{min-width:0;min-height:160px;display:flex;flex-direction:column;gap:7px;align-items:center;justify-content:flex-start;padding:15px 8px 10px;border:3px solid #526354;background:linear-gradient(150deg,#30372d,#1a211c);opacity:.56;transform:scale(.95);transition:transform .09s,border-color .09s,opacity .09s,box-shadow .09s}
-.roulette-weapon.selected{opacity:1;transform:scale(1);border-color:#e5c888;background:linear-gradient(160deg,#4c4832,#223a30 75%,#222b25);box-shadow:inset 0 0 0 2px #8d754e,0 0 22px #cfad5b70}
-.roulette-symbol{font-size:34px;line-height:1.2;color:#e6d3a1}
-.roulette-weapon strong{font-size:16px;color:#e9dcbd}
-.roulette-weapon small{font:11px/1.35 system-ui,sans-serif;color:#c5cbb8}
-.roulette-outcome{font:700 15px/1.5 system-ui,sans-serif;color:#e7d5b0;min-height:24px}
-.roulette-outcome strong{color:#f6d68b}
-.roulette-spent{font:700 11px system-ui,sans-serif;color:#aaa68f}
-@media(max-width:600px){.overlay.roulette-mode .overlay-panel{padding:12px 9px}.roulette-track{gap:5px;margin:12px 0}.roulette-weapon{min-height:135px;padding:9px 4px;gap:5px}.roulette-symbol{font-size:25px}.roulette-weapon strong{font-size:12px}.roulette-weapon small{font-size:9px;line-height:1.25}}
-@media(max-height:520px){.overlay.roulette-mode .crest-mark{display:none}.overlay.roulette-mode h1{font-size:26px}.roulette-track{margin:7px 0}.roulette-weapon{min-height:105px;padding:5px;gap:3px}.roulette-symbol{font-size:23px}.roulette-weapon small{font-size:9px}.roulette-outcome{margin:5px 0;font-size:12px}}
+
+/* v0.0.16: animated medieval roulette wheel with real per-weapon odds */
+.overlay.roulette-mode .overlay-panel{width:min(96vw,680px);max-height:calc(100dvh - 42px);padding:clamp(9px,1.5dvh,20px) clamp(10px,2vw,23px)}
+.overlay.roulette-mode .crest-mark{height:34px}
+.overlay.roulette-mode h1{font-size:clamp(25px,4dvh,39px);margin:3px 0}
+.overlay.roulette-mode .panel-subtitle{margin-bottom:4px}
+.roulette-wheel-stage{position:relative;width:clamp(168px,min(44vw,43dvh),310px);max-width:100%;aspect-ratio:1;margin:9px auto 6px;filter:drop-shadow(0 9px 13px #0009)}
+.roulette-wheel{width:100%;height:100%;will-change:transform;transform-origin:50% 50%}
+.roulette-wheel-art{display:block;width:100%;height:100%;overflow:visible}
+.roulette-pointer{position:absolute;z-index:2;top:-10px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:25px solid #f0ca83;filter:drop-shadow(0 3px 2px #10170e);pointer-events:none}
+.wheel-weapon-symbol{font-size:30px;font-weight:bold}
+.wheel-weapon-name{font-size:17px;font-weight:bold;paint-order:stroke;stroke:#111a15;stroke-width:3px;stroke-linejoin:round}
+.wheel-weapon-percent{font-size:16px;font-weight:bold;fill:#ffe4a1;paint-order:stroke;stroke:#111a15;stroke-width:3px;stroke-linejoin:round}
+.roulette-outcome{font:700 15px/1.4 system-ui,sans-serif;color:#e7d5b0;min-height:21px;text-align:center;margin:4px 0 7px}
+.roulette-outcome strong{color:#f4d189}
+.roulette-odds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:5px auto 0;max-width:510px}
+.roulette-odd{padding:6px 4px;background:#1e2922;border:1px solid #6d765d;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.roulette-odd-name{font:700 11px/1.3 system-ui,sans-serif;color:#d4d6c6;text-align:center}
+.roulette-odd strong{font:800 17px system-ui,sans-serif;color:#f0ce8a}
+.roulette-odd.excluded{opacity:.48;border-style:dashed}
+.roulette-odds-note{font:10px/1.35 system-ui,sans-serif;color:#abb4a1;text-align:center;margin:6px 0 3px}
+.roulette-spent{font:700 11px system-ui,sans-serif;color:#aaa68f;margin:7px 0}
+.roulette-spinning-hint{font:700 12px system-ui,sans-serif;color:#c4b48f;margin:9px 0}
+.overlay.roulette-mode .hint{margin:7px 0 0}
+@media(max-width:600px){
+ .overlay.roulette-mode .overlay-panel{padding:8px}
+ .roulette-wheel-stage{width:clamp(166px,min(67vw,39dvh),270px);margin:5px auto}
+ .roulette-odds{gap:4px}
+ .roulette-odd{padding:5px 2px}
+ .roulette-odd-name{font-size:9px}
+ .roulette-odd strong{font-size:13px}
+ .roulette-odds-note{font-size:9px}
+}
+@media(max-height:550px){
+ .overlay.roulette-mode .ornament,.overlay.roulette-mode .crest-mark{display:none}
+ .overlay.roulette-mode h1{font-size:23px}
+ .roulette-wheel-stage{width:clamp(150px,min(32vw,38dvh),235px);margin:2px auto}
+ .roulette-odds{margin-top:3px}
+ .roulette-odd{padding:3px 2px}
+ .roulette-outcome{margin:2px 0}
+ .overlay.roulette-mode .hint{font-size:10px;margin:3px 0}
+}
