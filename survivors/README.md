@@ -1,6 +1,6 @@
-# Calion Survivors · prototyp 0.0.14
+# Calion Survivors · prototyp 0.0.15
 
-Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.14** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
+Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.15** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
 
 ## Uruchomienie
 
@@ -17,12 +17,20 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 
 ## Zakres prototypu
 
-- Jedna klasa (Łotrzyk), jedna broń (Łuk), jedna arena (Zapomniany Trakt), pięć podstawowych typów wrogów (3 slime’y i 2 gobliny) oraz elitarny Spaczony slime.
+- Jedna klasa (Łotrzyk), trzy bronie (Łuk, Sztylety, Łańcuch) losowane ruletką przed wyprawą, jedna arena (Zapomniany Trakt), pięć podstawowych typów wrogów (3 slime’y i 2 gobliny) oraz elitarny Spaczony slime.
 - Ruch w czterech kierunkach, kamera śledząca postać, automatyczne celowanie, kolizje, punkty życia.
 - Zdobywanie EXP i **powolniejsze** poziomowanie o rosnącym koszcie, zatrzymanie gry na wybór jednej z **3 losowych kart**.
 - Limity poziomów kart, **2 sloty modyfikatorów**; odbijanie i dzielenie strzał **wzajemnie się wykluczają**. Podział ma tylko jedno pokolenie, a odbicia są limitowane.
 - Pięciominutowa próba przetrwania; ekran wygranej lub porażki oraz statystyki.
 - Proceduralne proste grafiki pixel art w odcieniach ciemnego drewna, stali, kamienia i mchu. Docelowe sprite'y WebP i animacje zastąpią te tymczasowe rysunki.
+
+## Zmiany w 0.0.15
+
+- **Ruletka broni** przed wyprawą losuje Łuk, Sztylety lub Łańcuch z jednakową szansą. Po zakończeniu animacji można zaakceptować wynik albo **raz ponowić losowanie**. Ponowne losowanie zawsze daje inną broń. Bez potwierdzenia wynik nie rozpocznie rozgrywki.
+- **Łuk** zachowuje dotychczasowe strzały, odbicia i rozdzielenie. Jego dwa ulepszenia specjalne wzajemnie się wykluczają.
+- **Sztylety:** 9 obrażeń na zamach, 0,32 s między cięciami, 58 jednostek zasięgu i bazowy kąt 40°. **Szerokie cięcie (0/3)** zwiększa zamach do 60° / 90° / 120°. **Krwawiące ostrza (0/3)** zadają przez 3 s 2 / 4 / 6 HP obrażeń na sekundę, a ponowne trafienie odświeża czas krwawienia bez kumulowania efektu. Krwawiących wrogów oznaczają czerwone kropelki.
+- **Łańcuch:** 17 obrażeń, promień 64 jednostek i szybkość obrotu 4,3 radiana/s. **Długi łańcuch (0/3)** zwiększa długość o 20% / 40% / 60%. **Podwójny łańcuch (0/3)** dodaje drugi łańcuch po przeciwnej stronie bohatera; poziomy 2 i 3 przyspieszają oba o 20% / 40%. Każdy łańcuch może trafić konkretnego przeciwnika maksymalnie raz na pełny obrót.
+- Karty awansu, HUD i statystyki uwzględniają aktualnie wylosowaną broń. Ulepszenia wspólne (obrażenia, szybkość, zasięg, ruch, HP) pozostają dostępne niezależnie od broni.
 
 ## Zmiany w 0.0.14
 
@@ -131,7 +139,7 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Przełączanie aktywnego joysticka przez dotknięcie, sterowanie wyłącznie jednym joystickiem naraz.
 - Kamera oddalona do 82% poprzedniego przybliżenia, widać większy obszar areny.
 
-## Świadomie poza wersją 0.0.14
+## Świadomie poza wersją 0.0.15
 
 Brak pozostałych klas, ruletki startowej, konta, monet, sklepu, zapisywania postępu, rzadkości kart, kooperacji i gotowych animowanych assetów. To osobny prototyp, nie zmienia istniejącej strony świata Calionu.
 

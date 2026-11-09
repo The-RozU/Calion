@@ -270,3 +270,18 @@
   .overlay.levelup-mode .upgrade-choice{gap:3px;padding:3px 0}
   .overlay.levelup-mode .upgrade-conflict{font-size:8px}
 }
+
+/* v0.0.15: weapon roulette */
+.overlay.roulette-mode .overlay-panel{width:min(96vw,710px);max-height:calc(100dvh - 40px)}
+.overlay.roulette-mode .crest-mark{height:48px}
+.roulette-track{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:19px 0 13px}
+.roulette-weapon{min-width:0;min-height:160px;display:flex;flex-direction:column;gap:7px;align-items:center;justify-content:flex-start;padding:15px 8px 10px;border:3px solid #526354;background:linear-gradient(150deg,#30372d,#1a211c);opacity:.56;transform:scale(.95);transition:transform .09s,border-color .09s,opacity .09s,box-shadow .09s}
+.roulette-weapon.selected{opacity:1;transform:scale(1);border-color:#e5c888;background:linear-gradient(160deg,#4c4832,#223a30 75%,#222b25);box-shadow:inset 0 0 0 2px #8d754e,0 0 22px #cfad5b70}
+.roulette-symbol{font-size:34px;line-height:1.2;color:#e6d3a1}
+.roulette-weapon strong{font-size:16px;color:#e9dcbd}
+.roulette-weapon small{font:11px/1.35 system-ui,sans-serif;color:#c5cbb8}
+.roulette-outcome{font:700 15px/1.5 system-ui,sans-serif;color:#e7d5b0;min-height:24px}
+.roulette-outcome strong{color:#f6d68b}
+.roulette-spent{font:700 11px system-ui,sans-serif;color:#aaa68f}
+@media(max-width:600px){.overlay.roulette-mode .overlay-panel{padding:12px 9px}.roulette-track{gap:5px;margin:12px 0}.roulette-weapon{min-height:135px;padding:9px 4px;gap:5px}.roulette-symbol{font-size:25px}.roulette-weapon strong{font-size:12px}.roulette-weapon small{font-size:9px;line-height:1.25}}
+@media(max-height:520px){.overlay.roulette-mode .crest-mark{display:none}.overlay.roulette-mode h1{font-size:26px}.roulette-track{margin:7px 0}.roulette-weapon{min-height:105px;padding:5px;gap:3px}.roulette-symbol{font-size:23px}.roulette-weapon small{font-size:9px}.roulette-outcome{margin:5px 0;font-size:12px}}

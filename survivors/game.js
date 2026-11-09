@@ -113,9 +113,9 @@
   }
   const fmt=(x,n=1)=>x.toFixed(n).replace('.',',');
   function buildSummary(){
-    const s=combatStats();
-    return `<div class="build-summary"><span>AKTUALNY BUILD</span>
-      <strong>${s.damage} obr. · ${fmt(s.rate,2)} strz./s · ${Math.ceil(s.hp)}/${s.maxHp} HP</strong>
+    const s=combatStats(),unit=s.weapon==='chain'?'traf./s':s.weapon==='daggers'?'cięć/s':'strz./s';
+    return `<div class="build-summary"><span>${s.weaponName.toUpperCase()} · BUILD</span>
+      <strong>${s.damage} obr. · ${fmt(s.rate,2)} ${unit} · ${Math.ceil(s.hp)}/${s.maxHp} HP</strong>
       <button class="build-details" data-action="stats" type="button">Szczegóły (C)</button></div>`;
   }
 
@@ -137,7 +137,7 @@
   };
   const UPGRADE_STAT_ICONS = {
     damage:'damage', speed:'rate', reach:'range', feet:'movement',
-    health:'hp', bounce:'bounce', split:'split'
+    health:'hp', bounce:'bounce', split:'split', wideSlash:'range', bleed:'damage', longChain:'range', doubleChain:'rate'
   };
   function statIcon(name) {
     const shape = STAT_ICONS[name] || STAT_ICONS.level;
@@ -157,28 +157,38 @@
   }
 
   function renderStats(){
-    const s=combatStats();
+    const s=combatStats(),w=s.weapon;
     const rows=[
-      ['level','Poziom',state.level],
-      ['hp','HP',`${Math.ceil(s.hp)} / ${s.maxHp}`],
+      ['level','Poziom',state.level],['hp','HP',`${Math.ceil(s.hp)} / ${s.maxHp}`],
       ['xp','EXP',`${state.xp} / ${neededXp(state.level)}`],
-      ['damage','Obrażenia strzały',s.damage],
-      ['interval','Czas między strzałami',`${fmt(s.interval,3)} s`],
-      ['rate','Strzały na sekundę',fmt(s.rate,2)],
+      ['damage',w==='bow'?'Obrażenia strzały':w==='daggers'?'Obrażenia cięcia':'Obrażenia łańcucha',s.damage],
+      ['interval',w==='chain'?'Czas pełnego obrotu':'Czas między atakami',`${fmt(s.interval,3)} s`],
+      ['rate',w==='chain'?'Trafienia/s na cel':'Ataki/s',fmt(s.rate,2)],
       ['dps','DPS na jednym celu (teor.)',fmt(s.dps,2)],
-      ['range','Zasięg',`${s.range} jedn.`],
-      ['movement','Prędkość ruchu',`${fmt(s.speed)} jedn./s`],
-      ['bounce','Szansa na odbicie',s.bounceChance ? `${s.bounceChance}% · maks. ${BOUNCE_MAX_HITS}` : '0%'],
-      ['split','Rozdzielenie',s.splitCount?`${s.splitCount} strzały po trafieniu`:'Brak'],
-      ['splitDamage','Obrażenia dzielonych strzał',s.splitCount?'58% głównej':'Brak'],
-      ['slots','Sloty modyfikatorów',`${s.usedMods} / ${MOD_SLOTS}`]
+      ['range',w==='chain'?'Długość łańcucha':'Zasięg',`${fmt(s.range)} jedn.`],
+      ['movement','Prędkość ruchu',`${fmt(s.speed)} jedn./s`]
     ];
-    $('stats-content').innerHTML=`<p class="stats-section">ŁOTRZYK · ŁUK</p>
+    if(w==='bow'){
+      rows.push(['bounce','Szansa na odbicie',s.bounceChance?`${s.bounceChance}%`:'0%']);
+      rows.push(['split','Rozdzielenie',s.splitCount?`${s.splitCount} strzały`:'Brak']);
+    }else if(w==='daggers'){
+      rows.push(['range','Kąt cięcia',`${s.arc}°`]);
+      rows.push(['damage','Krwawienie',s.bleedDps?`${s.bleedDps} HP/s przez 3 s`:'Brak']);
+    }else{
+      rows.push(['rate','Obroty/s',fmt(s.chainRate/TAU,2)]);
+      rows.push(['slots','Liczba łańcuchów',s.chainCount]);
+    }
+    rows.push(['slots','Sloty modyfikatorów',`${s.usedMods} / ${MOD_SLOTS}`]);
+    const list=UPGRADE_DEFS.filter(u=>!u.weapon||u.weapon===w);
+    const note=w==='bow'?'Odbijająca strzała i Rozdzielenie wzajemnie się wykluczają.':
+      w==='daggers'?'Krwawienie odświeża czas trwania, ale nie kumuluje się.':
+      'Każdy łańcuch może zranić tego samego wroga tylko raz na pełny obrót.';
+    $('stats-content').innerHTML=`<p class="stats-section">ŁOTRZYK · ${s.weaponName.toUpperCase()}</p>
       <div class="stats-grid">${rows.map(([icon,title,value])=>`<div class="stats-item"><div class="stats-item-heading">${statIcon(icon)}<span>${title}</span></div><strong>${value}</strong></div>`).join('')}</div>
       <p class="stats-section">ULEPSZENIA</p>
-      <div class="stats-upgrades">${UPGRADE_DEFS.map(u=>`<div class="${excludedModifier(u.id)?'is-locked':''}" title="${modifierNote(u.id)}"><span class="stats-upgrade-heading">${statIcon(UPGRADE_STAT_ICONS[u.id])}<span>${u.title}${u.type==='modifier'? `<small class="upgrade-rule">${modifierNote(u.id)}</small>` : ''}</span></span><strong>${excludedModifier(u.id)?'BLOKADA':`${state.upgrades[u.id]}/${u.max}`}</strong></div>`).join('')}</div>
-      <p class="stats-exclusion-note">Odbijająca strzała i Rozdzielenie wzajemnie się wykluczają. Raz wybrany modyfikator pozostaje na tę wyprawę.</p>
-      <p class="stats-note">Teoretyczny DPS: jeden cel, bez odbić, podziałów i przerw między walkami.</p>`;
+      <div class="stats-upgrades">${list.map(u=>`<div class="${excludedModifier(u.id)?'is-locked':''}"><span class="stats-upgrade-heading">${statIcon(UPGRADE_STAT_ICONS[u.id])}<span>${u.title}${modifierNote(u.id)?`<small class="upgrade-rule">${modifierNote(u.id)}</small>`:''}</span></span><strong>${excludedModifier(u.id)?'BLOKADA':`${state.upgrades[u.id]}/${u.max}`}</strong></div>`).join('')}</div>
+      <p class="stats-exclusion-note">${note}</p>
+      <p class="stats-note">Teoretyczny DPS na jednym celu, bez dodatkowych efektów.</p>`;
   }
   function closeStats(){
     if(!statsOpen)return;
@@ -330,7 +340,10 @@
     $('level-text').textContent = `POZIOM ${state.level}`;
     $('xp-text').textContent = `${state.xp} / ${neededXp(state.level)} EXP`;
     $('xp-fill').style.width = `${clamp(state.xp / neededXp(state.level) * 100,0,100)}%`;
-    const m = ['bounce','split'].filter(id => state.upgrades[id] > 0).map(id => id === 'bounce' ? `↗ ${state.upgrades.bounce*20}%` : `⋔ ${state.upgrades.split}/2`);
+    $('weapon-name').textContent=combatStats().weaponName.toUpperCase();
+    const icons={bounce:'↗',split:'⋔',wideSlash:'◡',bleed:'♠',longChain:'⛓',doubleChain:'⟲'};
+    const m=UPGRADE_DEFS.filter(u=>u.type==='modifier'&&u.weapon===state.weapon&&state.upgrades[u.id]>0)
+      .map(u=>`${icons[u.id]} ${u.title} ${state.upgrades[u.id]}/${u.max}`);
     while (m.length < MOD_SLOTS) m.push('◇ PUSTE');
     $('mods-text').textContent = m.join(' · ');
     $('kills-text').textContent = `Pokonani: ${state.kills}`;
@@ -904,6 +917,9 @@
       if(e.hit>0){ctx.globalAlpha=.55;rect('#f2d7aa',x-10,y-16,20,27);}
     }
     ctx.restore();
+    if(e.bleed&&e.bleed.time>0){
+      rect('#a53c3c',x-3,y-20,3,4);rect('#e06a58',x+3,y-24,3,4);
+    }
     // Every enemy, including green and blue slimes, reveals HP after taking damage.
     // Keep it small and legible over moving sprites without flooding the arena with full bars.
     if (e.hp > 0 && (e.hp < e.maxHp || e.elite)) {
@@ -929,18 +945,23 @@
     rect('#1b3229',x-9,y-16+bounce,19,13);rect('#2f5341',x-7,y-17+bounce,15,10);rect('#132720',x-6,y-10+bounce,13,7);
     rect('#c4a27e',x-4,y-11+bounce,10,7);rect('#dfba8b',x-2,y-10+bounce,7,4);rect('#171f19',x+2*p.face,y-8+bounce,2,2);
     rect('#1b2921',x-9,y-15+bounce,4,10);rect('#3b6550',x-7,y-16+bounce,3,8);
-    // Bow faces forward: wooden limbs curve toward the target, string stays
-    // behind them on the hero's side. Mirror the whole assembly when facing left.
-    ctx.save();ctx.translate(x + p.face*10,y-4+bounce);ctx.scale(p.face,1);
-    rect('#9b7851',-6,1,9,3); // Holding arm.
-    rect('#e4d7af',4,-12,1,25); // Bowstring, nearest the archer.
-    rect('#bc8c53',4,-14,4,3); // Upper tip.
-    rect('#ad7d45',6,-11,3,4);
-    rect('#9d7044',8,-7,3,6);
-    rect('#b5844b',9,-1,3,4); // Grip at the farthest point.
-    rect('#9d7044',8,3,3,6);
-    rect('#ad7d45',6,9,3,4);
-    rect('#bc8c53',4,12,4,3); // Lower tip.
+    ctx.save();ctx.translate(x+p.face*10,y-4+bounce);ctx.scale(p.face,1);
+    if(state.weapon==='daggers'){
+      rect('#9b7851',-5,1,7,3);
+      rect('#7d8184',2,-8,4,12);rect('#e7e6db',3,-12,2,6);
+      rect('#9b7851',-20,1,7,3);
+      rect('#838b8c',-24,-9,4,12);rect('#e7e6db',-23,-13,2,6);
+    }else if(state.weapon==='chain'){
+      rect('#9b7851',-6,1,9,3);
+      rect('#a2a198',3,0,8,4);rect('#c0a66c',9,-1,4,6);
+    }else{
+      rect('#9b7851',-6,1,9,3);
+      rect('#e4d7af',4,-12,1,25);
+      rect('#bc8c53',4,-14,4,3);rect('#ad7d45',6,-11,3,4);
+      rect('#9d7044',8,-7,3,6);rect('#b5844b',9,-1,3,4);
+      rect('#9d7044',8,3,3,6);rect('#ad7d45',6,9,3,4);
+      rect('#bc8c53',4,12,4,3);
+    }
     ctx.restore();
     if(p.flashTimer>0){
       // Silhouette highlights reproduce the monsters' hit flash, without a box over the player.
@@ -956,11 +977,40 @@
       rect('#fff1df',x+2,y+7+bounce,6,6);
       ctx.save();
       ctx.translate(x+p.face*10,y-4+bounce);ctx.scale(p.face,1);
-      rect('#ffddb1',4,-13,8,27); // Flash follows the bow on either side.
+      if(state.weapon==='bow')rect('#ffddb1',4,-13,8,27);
+      else if(state.weapon==='daggers'){rect('#ffddb1',2,-13,4,18);rect('#ffddb1',-24,-13,4,18);}
+      else rect('#ffddb1',3,-1,10,6);
       ctx.restore();
       ctx.restore();
     }
     ctx.globalAlpha=1;
+  }
+  function drawChains(cx,cy){
+    const p=state.player,s=combatStats(),x=p.x-cx,y=p.y-cy;
+    for(let chain=0;chain<s.chainCount;chain++){
+      const angle=state.chainAngle+chain*Math.PI;
+      const ex=x+Math.cos(angle)*s.range,ey=y+Math.sin(angle)*s.range;
+      ctx.save();ctx.lineCap='square';
+      ctx.strokeStyle='#151a19';ctx.lineWidth=6;
+      ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();
+      ctx.strokeStyle='#a4a39b';ctx.lineWidth=3;ctx.setLineDash([5,4]);
+      ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='#d5b37c';ctx.fillRect(ex-5,ey-5,10,10);
+      ctx.fillStyle='#626c6b';ctx.fillRect(ex-3,ey-3,6,6);
+      ctx.restore();
+    }
+  }
+  function drawSlash(cx,cy){
+    const slash=state.slash;
+    if(!slash)return;
+    const x=state.player.x-cx,y=state.player.y-cy;
+    ctx.save();ctx.globalAlpha=clamp(slash.time/slash.full,0,1)*.85;
+    ctx.strokeStyle='#e0d7b5';ctx.lineWidth=5;
+    ctx.beginPath();ctx.arc(x,y,slash.range,slash.angle-slash.half,slash.angle+slash.half);ctx.stroke();
+    ctx.strokeStyle='#87a6a0';ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(x,y,slash.range-5,slash.angle-slash.half,slash.angle+slash.half);ctx.stroke();
+    ctx.restore();
   }
   function drawArrow(a,cx,cy) {
     const x=a.x-cx,y=a.y-cy;
@@ -1034,6 +1084,8 @@
     const entities = state.enemies.map(e=>({y:e.y,draw:()=>drawEnemy(e,cx,cy)}));
     entities.push({y:state.player.y,draw:()=>drawHero(state.player,cx,cy,mode==='playing')});
     entities.sort((a,b)=>a.y-b.y);for(const e of entities)e.draw();
+    if(state.weapon==='chain')drawChains(cx,cy);
+    if(state.weapon==='daggers')drawSlash(cx,cy);
     for(const a of state.projectiles)drawArrow(a,cx,cy);
     for(const a of state.enemyProjectiles)drawEnemyArrow(a,cx,cy);
     for(const a of state.particles){ctx.globalAlpha=clamp(a.life/a.max,0,1);rect(a.color,a.x-cx,a.y-cy,2,2);}ctx.globalAlpha=1;
@@ -1163,6 +1215,10 @@
   }
   setupInput();resizeCanvas();showMenu();requestAnimationFrame(tick);
   // Stable read-only debug bridge to inspect the prototype in browser tests.
-  window.CalionPrototype={version:VERSION,getSnapshot:()=>({mode,statsOpen,stats:combatStats(),elapsed:state.elapsed,level:state.level,xp:state.xp,kills:state.kills,hp:state.player.hp,upgrades:{...state.upgrades},enemies:state.enemies.length,enemyTypes:state.enemies.map(e=>e.type),enemyStage:state.enemyStage,enemyShots:state.enemyProjectiles.length,eliteSpawns:state.eliteSpawns,nextEliteAt:state.nextEliteAt}),start:startGame};
+  window.CalionPrototype={version:VERSION,getSnapshot:()=>({mode,statsOpen,weapon:state.weapon,
+    roulette:roulette?{spinning:roulette.spinning,selection:roulette.selection,rerollsLeft:roulette.rerollsLeft}:null,
+    stats:combatStats(),elapsed:state.elapsed,level:state.level,xp:state.xp,kills:state.kills,hp:state.player.hp,
+    upgrades:{...state.upgrades},enemies:state.enemies.length,enemyTypes:state.enemies.map(e=>e.type),
+    enemyStage:state.enemyStage,enemyShots:state.enemyProjectiles.length,eliteSpawns:state.eliteSpawns,nextEliteAt:state.nextEliteAt}),start:beginRoulette};
 })();
 
