@@ -1,7 +1,7 @@
-/* Calion Survivors · prototype 0.0.3 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.4 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.3';
+  const VERSION = '0.0.4';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
   const MAX_ENEMIES = 48;
   const MAX_PROJECTILES = 70;
@@ -72,6 +72,7 @@
     panelContent.innerHTML = `<p class="intro-text">Na Zapomniany Trakt wpełzły slime’y. Co 30 sekund dołączają kolejne potwory, a na końcu gobliny. Przetrwaj 5 minut. Łotrzyk sam strzela w najbliższe zagrożenie, a Ty wybierasz, jak rozwinąć jego łuk.</p>
       <div class="info-trio"><div class="info-box"><b>05:00</b><span>CZAS PRÓBY</span></div><div class="info-box"><b>1</b><span>BROŃ NA RUN</span></div><div class="info-box"><b>3</b><span>KARTY WYBORU</span></div></div>
       ${button('Rozpocznij wyprawę', 'start')}
+      ${button('Pełny ekran', 'fullscreen', true)}
       <p class="hint">PC: WASD / strzałki · P: pauza · 1, 2, 3: wybór karty<br>Telefon: joystick po lewej lub prawej stronie</p>`;
     updateHud();
   }
@@ -544,10 +545,44 @@
       stick.addEventListener('lostpointercapture',end);
     }
   }
+  function isFullscreen() {
+    return document.fullscreenElement === shell || document.webkitFullscreenElement === shell;
+  }
+
+  function syncFullscreen() {
+    const active = isFullscreen();
+    const btn = $('fullscreen-btn');
+    btn.classList.toggle('is-fullscreen',active);
+    btn.setAttribute('aria-pressed',String(active));
+    btn.setAttribute('aria-label',active?'Wyłącz pełny ekran':'Włącz pełny ekran');
+    btn.title = active ? 'Wyłącz pełny ekran (F)' : 'Pełny ekran (F)';
+    resizeCanvas();
+  }
+
+  async function toggleFullscreen() {
+    try {
+      if (isFullscreen()) {
+        if (document.exitFullscreen) await document.exitFullscreen();
+        else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
+      } else if (shell.requestFullscreen) {
+        await shell.requestFullscreen();
+      } else if (shell.webkitRequestFullscreen) {
+        await shell.webkitRequestFullscreen();
+      } else {
+        toast('Ta przeglądarka nie obsługuje pełnego ekranu');
+      }
+    } catch (error) {
+      toast('Nie udało się włączyć pełnego ekranu');
+    }
+    syncFullscreen();
+  }
+
   function setupInput(){
     document.addEventListener('keydown',e=>{
       const key=e.key.toLowerCase();
       if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(key))e.preventDefault();
+      if(key==='f'&&!e.repeat&&!e.altKey&&!e.ctrlKey&&!e.metaKey){e.preventDefault();toggleFullscreen();return;}
+      if(key==='escape'&&isFullscreen()) return; // Browser handles Esc to exit full screen.
       if(key==='p'||key==='escape'){pauseGame();return;}
       if(mode==='levelup'&&['1','2','3'].includes(key)){selectCard(Number(key)-1);return;}
       keys.add(key);
@@ -559,8 +594,12 @@
       const action=e.target.closest('[data-action]')?.dataset.action;
       if(action==='start'||action==='restart')startGame();
       else if(action==='menu')showMenu();else if(action==='resume')visibleMode('playing');
+      else if(action==='fullscreen')toggleFullscreen();
     });
     $('pause-btn').addEventListener('click',pauseGame);
+    $('fullscreen-btn').addEventListener('click',toggleFullscreen);
+    document.addEventListener('fullscreenchange',syncFullscreen);
+    document.addEventListener('webkitfullscreenchange',syncFullscreen);
     window.addEventListener('resize',resizeCanvas);
     setupJoystick();
   }
