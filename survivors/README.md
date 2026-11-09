@@ -1,6 +1,6 @@
-# Calion Survivors · prototyp 0.0.10
+# Calion Survivors · prototyp 0.0.11
 
-Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.10** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
+Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.11** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
 
 ## Uruchomienie
 
@@ -23,6 +23,14 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Limity poziomów kart, **2 sloty modyfikatorów**; odbijanie i dzielenie strzał **wzajemnie się wykluczają**. Podział ma tylko jedno pokolenie, a odbicia są limitowane.
 - Pięciominutowa próba przetrwania; ekran wygranej lub porażki oraz statystyki.
 - Proceduralne proste grafiki pixel art w odcieniach ciemnego drewna, stali, kamienia i mchu. Docelowe sprite'y WebP i animacje zastąpią te tymczasowe rysunki.
+
+## Zmiany w 0.0.11
+
+- Przeciwnicy mają teraz osobne promienie zajmowanego miejsca, oparte o szerokość sprite'ów. Goblińscy łucznicy zostawiają więcej miejsca na swoje łuki.
+- Fizyczna separacja po ruchu rozpycha wrogów, którzy weszli w siebie. Powtarzana korekta potrafi rozdzielić kilka nałożonych na siebie potworów, nawet gdy zaczynają w identycznych współrzędnych.
+- Delikatne omijanie sąsiadów podczas chodzenia zapobiega ponownemu gromadzeniu się w jednym punkcie, szczególnie u łuczników trzymających dystans.
+- Elity są cięższe i trudniej je przepchnąć. Kiedy odsuwany jest wróg przygotowujący skok lub sprint, jego ostrzeżenie pozostaje zgodne z trajektorią.
+- Bez zmian ilości przeciwników, obrażeń, HP i umiejętności.
 
 ## Zmiany w 0.0.10
 
@@ -99,7 +107,7 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Przełączanie aktywnego joysticka przez dotknięcie, sterowanie wyłącznie jednym joystickiem naraz.
 - Kamera oddalona do 82% poprzedniego przybliżenia, widać większy obszar areny.
 
-## Świadomie poza wersją 0.0.9
+## Świadomie poza wersją 0.0.11
 
 Brak pozostałych klas, ruletki startowej, konta, monet, sklepu, zapisywania postępu, rzadkości kart, kooperacji i gotowych animowanych assetów. To osobny prototyp, nie zmienia istniejącej strony świata Calionu.
 

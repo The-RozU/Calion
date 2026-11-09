@@ -1,7 +1,7 @@
-/* Calion Survivors · prototype 0.0.10 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.11 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.10';
+  const VERSION = '0.0.11';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
   const MAX_ENEMIES = 58; // Slightly denser than v0.0.8, without flooding the arena.
   const MAX_PROJECTILES = 70;
@@ -471,6 +471,81 @@
     toast('ELITA: Spaczony slime!');
   }
 
+
+  function enemyBodyRadius(e) {
+    // Space taken by the visible sprite, wider than its damage hitbox.
+    if(e.elite)return 22;
+    if(e.type==='slime-red')return 18;
+    if(e.type==='goblin-archer')return 14; // Bow extends beyond the torso.
+    if(e.type==='goblin')return 12;
+    return 11;
+  }
+
+  function nudgeEnemy(e,dx,dy) {
+    e.x+=dx;e.y+=dy;
+    if(e.jump) {
+      // Keep telegraphs and trajectories aligned while passing through a crowd.
+      e.jump.startX+=dx;e.jump.startY+=dy;
+      e.jump.targetX+=dx;e.jump.targetY+=dy;
+    }
+  }
+
+  function crowdAvoidance(e) {
+    let rx=0,ry=0;
+    const personal=enemyBodyRadius(e);
+    for(const other of state.enemies) {
+      if(other===e||other.hp<=0)continue;
+      let dx=e.x-other.x,dy=e.y-other.y;
+      const area=personal+enemyBodyRadius(other)+12;
+      if(Math.abs(dx)>=area||Math.abs(dy)>=area)continue;
+      const sq=dx*dx+dy*dy;
+      if(sq>=area*area)continue;
+      let len=Math.sqrt(sq);
+      if(len<.001) {
+        const a=(e.id*2.3999632+other.id*.6180339)%TAU;
+        dx=Math.cos(a);dy=Math.sin(a);len=1;
+      }
+      const strength=(area-Math.sqrt(sq))/area;
+      rx+=dx/len*strength;ry+=dy/len*strength;
+    }
+    return {x:rx,y:ry};
+  }
+
+  function resolveEnemyCrowding() {
+    const enemies=state.enemies;
+    // The 58-enemy cap keeps repeated circle separation affordable.
+    for(let pass=0;pass<12;pass++) {
+      let found=false;
+      for(let i=0;i<enemies.length;i++) {
+        const a=enemies[i];if(a.hp<=0)continue;
+        for(let j=i+1;j<enemies.length;j++) {
+          const b=enemies[j];if(b.hp<=0)continue;
+          const gap=enemyBodyRadius(a)+enemyBodyRadius(b);
+          let dx=b.x-a.x,dy=b.y-a.y;
+          if(Math.abs(dx)>=gap||Math.abs(dy)>=gap)continue;
+          const sq=dx*dx+dy*dy;
+          if(sq>=gap*gap)continue;
+          let nx,ny;
+          if(sq<.000001) {
+            // Deterministic direction even if five archers share one pixel.
+            const angle=(a.id*2.3999632+b.id*.6180339)%TAU;
+            nx=Math.cos(angle);ny=Math.sin(angle);
+          } else {
+            const length=Math.sqrt(sq);nx=dx/length;ny=dy/length;
+          }
+          const overlap=gap-Math.sqrt(sq)+.02;
+          const massA=a.jump?18:(a.elite?4:1);
+          const massB=b.jump?18:(b.elite?4:1);
+          const shareA=massB/(massA+massB);
+          nudgeEnemy(a,-nx*overlap*shareA,-ny*overlap*shareA);
+          nudgeEnemy(b,nx*overlap*(1-shareA),ny*overlap*(1-shareA));
+          found=true;
+        }
+      }
+      if(!found)break;
+    }
+  }
+
   function moveEnemy(e, dt) {
     if(e.hp<=0)return;
     const p = state.player;
@@ -512,7 +587,10 @@
         addParticles(e.x,e.y-6,3,'#bd8c55');
       }
     }
-    const dirX=ux*forward-uy*sideways, dirY=uy*forward+ux*sideways;
+    // Soft steering prevents archers from walking back into the same spot.
+    const avoid=crowdAvoidance(e);
+    const dirX=ux*forward-uy*sideways+avoid.x*.95;
+    const dirY=uy*forward+ux*sideways+avoid.y*.95;
     const mag=Math.max(1,Math.hypot(dirX,dirY));
     if(d>e.radius+5||forward<0){
       e.x+=dirX/mag*speed*dt;
@@ -556,6 +634,7 @@
       moveEnemy(e,dt);
       if (p.hp <= 0) { updateHud(); return; }
     }
+    resolveEnemyCrowding();
     for (let i = s.projectiles.length-1; i >= 0; i--) {
       const a = s.projectiles[i]; a.x += a.vx*dt; a.y += a.vy*dt; a.life -= dt;
       let keep = a.life > 0;
