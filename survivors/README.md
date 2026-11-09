@@ -1,6 +1,6 @@
-# Calion Survivors · prototyp 0.0.13
+# Calion Survivors · prototyp 0.0.14
 
-Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.13** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
+Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.14** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
 
 ## Uruchomienie
 
@@ -23,6 +23,13 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Limity poziomów kart, **2 sloty modyfikatorów**; odbijanie i dzielenie strzał **wzajemnie się wykluczają**. Podział ma tylko jedno pokolenie, a odbicia są limitowane.
 - Pięciominutowa próba przetrwania; ekran wygranej lub porażki oraz statystyki.
 - Proceduralne proste grafiki pixel art w odcieniach ciemnego drewna, stali, kamienia i mchu. Docelowe sprite'y WebP i animacje zastąpią te tymczasowe rysunki.
+
+## Zmiany w 0.0.14
+
+- **Naprawa szarży niebieskiego slime’a:** poprzednio rozpoczynał sprint nawet 310 jednostek od gracza, lecz mógł przejechać tylko 224 i zatrzymać się za wcześnie. Teraz kończy szarżę **30 jednostek za zapamiętaną pozycją gracza** (dystans szarży zależy od początkowej odległości, maksymalnie 340 jednostek). Przy bezruchu gracza linia sprintu przecina jego hitbox i zadaje 8 obrażeń; gracz wciąż może uniknąć ataku, schodząc z ostrzeżonej linii. Obrażenia występują tylko raz na sprint, a wskazówka pokazuje pełną trasę.
+- Maksymalna liczba zwykłych wrogów i elit na arenie wzrosła z **58 do 80**.
+- Lekko przyspieszono rozgrywkę bez skracania pięciominutowego czasu rundy: prędkość bohatera **89 → 99**, prędkość podstawowych wrogów **+8%**, szybkostrzelność bohatera **0,80 → 0,75 s między strzałami**, prędkość strzał **235 → 258**, prędkość pocisków goblinich łuczników **128 → 138**.
+- Nieznacznie częstszy spawn: odstęp od **1,47 s** na początku do **0,73 s** pod koniec (wcześniej 1,60–0,80 s). Pozostały przyrost HP, obrażenia wrogów, rozwój ulepszeń i reguły kolizji nie zmieniły się.
 
 ## Zmiany w 0.0.13
 
@@ -124,7 +131,7 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Przełączanie aktywnego joysticka przez dotknięcie, sterowanie wyłącznie jednym joystickiem naraz.
 - Kamera oddalona do 82% poprzedniego przybliżenia, widać większy obszar areny.
 
-## Świadomie poza wersją 0.0.13
+## Świadomie poza wersją 0.0.14
 
 Brak pozostałych klas, ruletki startowej, konta, monet, sklepu, zapisywania postępu, rzadkości kart, kooperacji i gotowych animowanych assetów. To osobny prototyp, nie zmienia istniejącej strony świata Calionu.
 

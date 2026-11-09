@@ -1,14 +1,15 @@
-/* Calion Survivors · prototype 0.0.13 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.14 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.13';
+  const VERSION = '0.0.14';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
-  const MAX_ENEMIES = 58; // Slightly denser than v0.0.8, without flooding the arena.
+  const MAX_ENEMIES = 80; // Requested population cap for the denser arena.
   const MAX_PROJECTILES = 70;
   const MAX_HOSTILE_PROJECTILES = 26;
   const ENEMY_UNLOCK_INTERVAL = 30;
   const ELITE_SPAWN_INTERVAL = 60;
   const PLAYER_HIT_FLASH = .23; // Warm white hit feedback; separate from immunity blinking.
+  const SLIME_BLUE_OVERSHOOT = 30; // Dash must pass beyond a stationary target.
   const MAX_DROPS = 100;
   const MOD_SLOTS = 2;
   const BOUNCE_CHANCE_STEP = .20; // Every card level grants +20 percentage points.
@@ -77,8 +78,8 @@
   }
   function neededXp(level) { return 8 + (level - 1) * 9; }
 
-  const BASE_DAMAGE=17, DAMAGE_PER_LEVEL=2, BASE_INTERVAL=.80, INTERVAL_FACTOR=.11;
-  const BASE_RANGE=205, RANGE_STEP=40, BASE_SPEED=89, SPEED_FACTOR=.10;
+  const BASE_DAMAGE=17, DAMAGE_PER_LEVEL=2, BASE_INTERVAL=.75, INTERVAL_FACTOR=.11;
+  const BASE_RANGE=205, RANGE_STEP=40, BASE_SPEED=99, SPEED_FACTOR=.10;
   function combatStats(){
     const u=state.upgrades,p=state.player;
     const damage=BASE_DAMAGE+u.damage*DAMAGE_PER_LEVEL;
@@ -320,7 +321,7 @@
     state.enemies.push({
       id:state.nextEnemyId++, type:kind.id, x, y, hp, maxHp:hp, xp:kind.xp,
       elite:kind.id===ELITE_ENEMY.id,
-      speed:kind.speed*(1 + .13*factor) + rand(-1.8,1.8),
+      speed:kind.speed*1.08*(1 + .13*factor) + rand(-1.8,1.8),
       contact:kind.contact, hit:0, attackTimer:rand(1.1,2.4),
       skillCooldown:kind.id===ELITE_ENEMY.id?1.5:rand(1.8,3.0),
       jump:null, impact:null, recovery:0,
@@ -344,7 +345,7 @@
     const a = Math.atan2(enemy.y - p.y, enemy.x - p.x);
     p.face = Math.cos(a) >= 0 ? 1 : -1;
     state.shots++;
-    state.projectiles.push({ x:p.x + Math.cos(a)*11, y:p.y - 4 + Math.sin(a)*11, vx:Math.cos(a)*235, vy:Math.sin(a)*235,
+    state.projectiles.push({ x:p.x + Math.cos(a)*11, y:p.y - 4 + Math.sin(a)*11, vx:Math.cos(a)*258, vy:Math.sin(a)*258,
       angle:a, life:1.5, damage:combatStats().damage, visited:new Set(), bounces:0, generation:0, splitUsed:false });
     addParticles(p.x + Math.cos(a)*13, p.y - 4 + Math.sin(a)*11, 1, '#d3b988');
   }
@@ -406,7 +407,11 @@
     if(!info || e.jump || e.skillCooldown>0 || e.spawnAge<.85 ||
         distance > info.range || distance<28) return false;
     // Target locks in during the tell. A moving player can dodge the landing zone.
-    const fraction=Math.min(1,info.travel/distance);
+    // The previous 224-unit blue dash could activate from 310 units away and
+    // stop short. It now always goes 30 units PAST the player's locked position,
+    // while keeping the 310-unit activation range and same dodgable telegraph.
+    const dashDistance=e.type==='slime-blue' ? distance+SLIME_BLUE_OVERSHOOT : Math.min(distance,info.travel);
+    const fraction=dashDistance/distance;
     e.jump={
       phase:'warning',time:info.windup,windup:info.windup,
       duration:info.duration,elapsed:0,
@@ -522,7 +527,7 @@
 
   function resolveEnemyCrowding() {
     const enemies=state.enemies;
-    // The 58-enemy cap keeps repeated circle separation affordable.
+    // Broad-phase distance checks keep separation manageable at the 80-enemy cap.
     for(let pass=0;pass<12;pass++) {
       let found=false;
       for(let i=0;i<enemies.length;i++) {
@@ -605,7 +610,7 @@
       if(e.spawnAge>.5&&d<275&&e.attackTimer<=0&&state.enemyProjectiles.length<MAX_HOSTILE_PROJECTILES){
         const angle=Math.atan2(vy,vx);
         state.enemyProjectiles.push({
-          x:e.x,y:e.y-5,vx:Math.cos(angle)*128,vy:Math.sin(angle)*128,
+          x:e.x,y:e.y-5,vx:Math.cos(angle)*138,vy:Math.sin(angle)*138,
           angle,life:2.6,damage:9
         });
         e.attackTimer=rand(2.1,2.9);
@@ -655,7 +660,7 @@
       s.nextEliteAt+=ELITE_SPAWN_INTERVAL;
     }
     s.spawnClock-=dt;
-    const interval=1.60-(s.elapsed/RUN_DURATION)*.80;
+    const interval=1.47-(s.elapsed/RUN_DURATION)*.74;
     while(s.spawnClock<=0){
       if(s.enemies.length<MAX_ENEMIES)spawnEnemy();
       s.spawnClock+=interval;
