@@ -1,6 +1,6 @@
-# Calion Survivors · prototyp 0.0.11
+# Calion Survivors · prototyp 0.0.12
 
-Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.11** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
+Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.12** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
 
 ## Uruchomienie
 
@@ -23,6 +23,13 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Limity poziomów kart, **2 sloty modyfikatorów**; odbijanie i dzielenie strzał **wzajemnie się wykluczają**. Podział ma tylko jedno pokolenie, a odbicia są limitowane.
 - Pięciominutowa próba przetrwania; ekran wygranej lub porażki oraz statystyki.
 - Proceduralne proste grafiki pixel art w odcieniach ciemnego drewna, stali, kamienia i mchu. Docelowe sprite'y WebP i animacje zastąpią te tymczasowe rysunki.
+
+## Zmiany w 0.0.12
+
+- Pogrubiono **niebieską linię ostrzegawczą sprintu**. Ma teraz 28 jednostek szerokości w grze (trochę więcej niż szerokość niebieskiego slime’a), z jaśniejszym środkiem i delikatnym obrysem.
+- Zmieniono **kierunek naciągnięcia łuku bohatera**: cięciwa znajduje się bliżej postaci, a wygięte drewniane ramiona są zwrócone w stronę celu. Wygląd jest odbijany podczas zwrotu postaci w lewo/prawo.
+- Dostosowano rozbłysk łuku po trafieniu, aby pasował do jego nowego ułożenia.
+- Nie zmieniono trajektorii sprintu ani hitboxa obrażeń, parametrów walki, kolizji, spawnu czy ulepszeń.
 
 ## Zmiany w 0.0.11
 
@@ -107,7 +114,7 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Przełączanie aktywnego joysticka przez dotknięcie, sterowanie wyłącznie jednym joystickiem naraz.
 - Kamera oddalona do 82% poprzedniego przybliżenia, widać większy obszar areny.
 
-## Świadomie poza wersją 0.0.11
+## Świadomie poza wersją 0.0.12
 
 Brak pozostałych klas, ruletki startowej, konta, monet, sklepu, zapisywania postępu, rzadkości kart, kooperacji i gotowych animowanych assetów. To osobny prototyp, nie zmienia istniejącej strony świata Calionu.
 

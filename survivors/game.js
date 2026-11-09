@@ -1,7 +1,7 @@
-/* Calion Survivors · prototype 0.0.11 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.12 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.11';
+  const VERSION = '0.0.12';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
   const MAX_ENEMIES = 58; // Slightly denser than v0.0.8, without flooding the arena.
   const MAX_PROJECTILES = 70;
@@ -776,9 +776,18 @@
     rect('#1b3229',x-9,y-16+bounce,19,13);rect('#2f5341',x-7,y-17+bounce,15,10);rect('#132720',x-6,y-10+bounce,13,7);
     rect('#c4a27e',x-4,y-11+bounce,10,7);rect('#dfba8b',x-2,y-10+bounce,7,4);rect('#171f19',x+2*p.face,y-8+bounce,2,2);
     rect('#1b2921',x-9,y-15+bounce,4,10);rect('#3b6550',x-7,y-16+bounce,3,8);
-    // Bow and arm swap sides according to orientation.
+    // Bow faces forward: wooden limbs curve toward the target, string stays
+    // behind them on the hero's side. Mirror the whole assembly when facing left.
     ctx.save();ctx.translate(x + p.face*10,y-4+bounce);ctx.scale(p.face,1);
-    rect('#9b7851',-6,1,8,3);rect('#9d7044',3,-12,2,22);rect('#cc9c5d',4,-14,2,4);rect('#dbd0b2',3,-11,1,19);rect('#b4864e',4,7,2,4);
+    rect('#9b7851',-6,1,9,3); // Holding arm.
+    rect('#e4d7af',4,-12,1,25); // Bowstring, nearest the archer.
+    rect('#bc8c53',4,-14,4,3); // Upper tip.
+    rect('#ad7d45',6,-11,3,4);
+    rect('#9d7044',8,-7,3,6);
+    rect('#b5844b',9,-1,3,4); // Grip at the farthest point.
+    rect('#9d7044',8,3,3,6);
+    rect('#ad7d45',6,9,3,4);
+    rect('#bc8c53',4,12,4,3); // Lower tip.
     ctx.restore();
     if(p.flashTimer>0){
       // Silhouette highlights reproduce the monsters' hit flash, without a box over the player.
@@ -792,7 +801,10 @@
       rect('#fff1df',x+7,y+1+bounce,5,9);
       rect('#fff1df',x-7,y+7+bounce,6,6); // Boots
       rect('#fff1df',x+2,y+7+bounce,6,6);
-      rect('#ffddb1',x+p.face*13,y-16+bounce,3,23); // Bow
+      ctx.save();
+      ctx.translate(x+p.face*10,y-4+bounce);ctx.scale(p.face,1);
+      rect('#ffddb1',4,-13,8,27); // Flash follows the bow on either side.
+      ctx.restore();
       ctx.restore();
     }
     ctx.globalAlpha=1;
@@ -819,17 +831,22 @@
           // Luminous blue telegraph shows the exact path, not just the endpoint.
           const ax=j.startX-cx,ay=j.startY-cy;
           const bx=j.targetX-cx,by=j.targetY-cy;
+          const dashWidth=enemyBodyRadius(e)*2+6; // 28 world pixels, wider than a blue slime.
           ctx.lineCap='round';
-          ctx.globalAlpha=.22+.20*progress;
-          ctx.strokeStyle='#3b87bd';
-          ctx.lineWidth=12;
+          ctx.globalAlpha=.14+.12*progress;
+          ctx.strokeStyle='#2c679a'; // Subtle outer halo.
+          ctx.lineWidth=dashWidth+10;
           ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();
-          ctx.globalAlpha=.65+.30*progress;
-          ctx.strokeStyle='#a4e9ff';
-          ctx.lineWidth=2.5;
+          ctx.globalAlpha=.40+.20*progress;
+          ctx.strokeStyle='#3b87bd'; // The visible warning lane.
+          ctx.lineWidth=dashWidth;
+          ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();
+          ctx.globalAlpha=.58+.24*progress;
+          ctx.strokeStyle='#a4e9ff'; // Brighter central stripe.
+          ctx.lineWidth=dashWidth*.5;
           ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();
           ctx.fillStyle='#c7f2ff';
-          ctx.fillRect(bx-3,by-3,6,6);
+          ctx.fillRect(bx-4,by-4,8,8);
         } else {
           // Red slime and elite retain their circular area-of-effect warnings.
           const radius=j.radius;
