@@ -1,12 +1,13 @@
-/* Calion Survivors · prototype 0.0.1 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.2 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.1';
+  const VERSION = '0.0.2';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
   const MAX_ENEMIES = 38;
   const MAX_PROJECTILES = 70;
   const MAX_DROPS = 100;
   const MOD_SLOTS = 2;
+  const CAMERA_ZOOM = 0.82; // Camera shows around 22% more arena in each direction.
   const TAU = Math.PI * 2;
   const $ = id => document.getElementById(id);
   const canvas = $('arena');
@@ -19,6 +20,7 @@
   const toastEl = $('toast');
   const keys = new Set();
   const touchMove = { x: 0, y: 0 };
+  let activeJoystick = null;
   let screenW = 480, screenH = 270;
   let state = null, mode = 'menu', lastTimestamp = 0, toastLeft = 0;
   let worldTile = null;
@@ -59,7 +61,7 @@
     panelContent.innerHTML = `<p class="intro-text">Ciemny trakt zaroił się od goblinów. Przetrwaj 5 minut. Łotrzyk sam strzela w najbliższe zagrożenie, a Ty wybierasz, jak rozwinąć jego łuk.</p>
       <div class="info-trio"><div class="info-box"><b>05:00</b><span>CZAS PRÓBY</span></div><div class="info-box"><b>1</b><span>BROŃ NA RUN</span></div><div class="info-box"><b>3</b><span>KARTY WYBORU</span></div></div>
       ${button('Rozpocznij wyprawę', 'start')}
-      <p class="hint">PC: WASD / strzałki · P: pauza · 1, 2, 3: wybór karty<br>Telefon: wirtualny joystick na ekranie</p>`;
+      <p class="hint">PC: WASD / strzałki · P: pauza · 1, 2, 3: wybór karty<br>Telefon: joystick po lewej lub prawej stronie</p>`;
     updateHud();
   }
   function startGame() {
@@ -71,6 +73,7 @@
   }
   function pauseGame() {
     if (mode === 'playing') {
+      resetJoystick();
       visibleMode('paused');
       panelTitle.textContent = 'PAUZA'; panelSubtitle.textContent = 'Odpoczynek na trakcie';
       panelContent.innerHTML = `<p class="pause-text">Walka zatrzymana. Możesz wrócić do wyprawy lub zacząć od początku.</p>${button('Wróć do walki', 'resume')}${button('Nowa wyprawa', 'restart', true)}`;
@@ -138,8 +141,8 @@
 
   function resizeCanvas() {
     const r = canvas.getBoundingClientRect();
-    screenW = Math.max(160, int(r.width / 2));
-    screenH = Math.max(100, int(r.height / 2));
+    screenW = Math.max(160, int(r.width / (2 * CAMERA_ZOOM)));
+    screenH = Math.max(100, int(r.height / (2 * CAMERA_ZOOM)));
     canvas.width = screenW; canvas.height = screenH;
     ctx.imageSmoothingEnabled = false;
   }
@@ -364,18 +367,51 @@
     if(toastLeft>0){toastLeft-=dt;if(toastLeft<=0)toastEl.classList.remove('active');}
     draw();requestAnimationFrame(tick);
   }
-  function resetJoystick(){const knob=$('joystick-knob');if(knob)knob.style.transform='translate(-50%,-50%)';}
+  function resetJoystick(){
+    activeJoystick = null;
+    touchMove.x = touchMove.y = 0;
+    for (const side of ['left','right']) {
+      const knob = $(`joystick-${side}-knob`);
+      if (knob) knob.style.transform = 'translate(-50%,-50%)';
+    }
+  }
   function setupJoystick(){
-    const stick=$('joystick'),knob=$('joystick-knob');let active=null;
-    const move=e=>{const r=stick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
-      const dx=e.clientX-cx,dy=e.clientY-cy,mag=Math.max(1,Math.hypot(dx,dy)),radius=35;
-      touchMove.x=dx/mag*Math.min(1,mag/radius);touchMove.y=dy/mag*Math.min(1,mag/radius);
-      knob.style.transform=`translate(calc(-50% + ${touchMove.x*radius}px),calc(-50% + ${touchMove.y*radius}px))`;
+    const sides = ['left','right'];
+    const chooseSide = side => {
+      for (const name of sides) {
+        document.querySelector(`.touch-${name}`).classList.toggle('is-primary',name===side);
+      }
     };
-    stick.addEventListener('pointerdown',e=>{if(mode!=='playing')return;active=e.pointerId;stick.setPointerCapture(active);move(e);e.preventDefault();});
-    stick.addEventListener('pointermove',e=>{if(active!==e.pointerId)return;move(e);e.preventDefault();});
-    const end=e=>{if(active!==e.pointerId)return;active=null;touchMove.x=touchMove.y=0;resetJoystick();};
-    stick.addEventListener('pointerup',end);stick.addEventListener('pointercancel',end);
+    for (const side of sides) {
+      const stick = $(`joystick-${side}`), knob = $(`joystick-${side}-knob`);
+      const move = e => {
+        const r = stick.getBoundingClientRect(), cx = r.left + r.width/2, cy = r.top + r.height/2;
+        const dx = e.clientX-cx, dy = e.clientY-cy, mag = Math.max(1,Math.hypot(dx,dy)), radius = 35;
+        touchMove.x = dx/mag*Math.min(1,mag/radius);
+        touchMove.y = dy/mag*Math.min(1,mag/radius);
+        knob.style.transform = `translate(calc(-50% + ${touchMove.x*radius}px),calc(-50% + ${touchMove.y*radius}px))`;
+      };
+      stick.addEventListener('pointerdown',e=>{
+        if (mode!=='playing' || activeJoystick) return;
+        activeJoystick={side,pointerId:e.pointerId};
+        chooseSide(side);
+        stick.setPointerCapture(e.pointerId);
+        move(e);
+        e.preventDefault();
+      });
+      stick.addEventListener('pointermove',e=>{
+        if (!activeJoystick || activeJoystick.pointerId!==e.pointerId || activeJoystick.side!==side) return;
+        move(e);
+        e.preventDefault();
+      });
+      const end=e=>{
+        if (!activeJoystick || activeJoystick.pointerId!==e.pointerId || activeJoystick.side!==side) return;
+        resetJoystick();
+      };
+      stick.addEventListener('pointerup',end);
+      stick.addEventListener('pointercancel',end);
+      stick.addEventListener('lostpointercapture',end);
+    }
   }
   function setupInput(){
     document.addEventListener('keydown',e=>{

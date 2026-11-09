@@ -1,6 +1,6 @@
-# Calion Survivors · prototyp 0.0.1
+# Calion Survivors · prototyp 0.0.2
 
-Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.1** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
+Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.2** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
 
 ## Uruchomienie
 
@@ -11,7 +11,7 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - PC: `WASD` lub strzałki; łuk automatycznie strzela do najbliższego wroga.
 - `P` / `Esc`: pauza i wznowienie.
 - Podczas awansu: kliknij jedną z trzech kart lub naciśnij `1`, `2`, `3`.
-- Telefon: joystick dotykowy w lewym dolnym obszarze.
+- Telefon: dwa joysticki dotykowe. Domyślnie prawy jest widoczny w pełni, a lewy w 10%; dotknięcie dowolnego joysticka zamienia ich widoczność i aktywuje sterowanie.
 
 ## Zakres prototypu
 
@@ -22,7 +22,13 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Pięciominutowa próba przetrwania; ekran wygranej lub porażki oraz statystyki.
 - Proceduralne proste grafiki pixel art w odcieniach ciemnego drewna, stali, kamienia i mchu. Docelowe sprite'y WebP i animacje zastąpią te tymczasowe rysunki.
 
-## Świadomie poza wersją 0.0.1
+## Zmiany w 0.0.2
+
+- Dwa joysticki na telefonie (lewy i prawy), z przygaszeniem nieużywanego do 10%.
+- Przełączanie aktywnego joysticka przez dotknięcie, sterowanie wyłącznie jednym joystickiem naraz.
+- Kamera oddalona do 82% poprzedniego przybliżenia, widać większy obszar areny.
+
+## Świadomie poza wersją 0.0.2
 
 Brak pozostałych klas, ruletki startowej, konta, monet, sklepu, zapisywania postępu, rzadkości kart, kooperacji i gotowych animowanych assetów. To osobny prototyp, nie zmienia istniejącej strony świata Calionu.
 
