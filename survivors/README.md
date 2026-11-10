@@ -1,6 +1,6 @@
-# Calion Survivors · prototyp 0.0.16
+# Calion Survivors · prototyp 0.0.17
 
-Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.16** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
+Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.17** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
 
 ## Uruchomienie
 
@@ -24,6 +24,14 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Limity poziomów kart, **2 sloty modyfikatorów**; pary specjalizacji każdej broni **wzajemnie się wykluczają**. Podział strzał ma tylko jedno pokolenie, a odbicia są limitowane.
 - Pięciominutowa próba przetrwania; ekran wygranej lub porażki oraz statystyki.
 - Proceduralne proste grafiki pixel art w odcieniach ciemnego drewna, stali, kamienia i mchu. Docelowe sprite'y WebP i animacje zastąpią te tymczasowe rysunki.
+
+## Zmiany w 0.0.17
+
+- **Poprawione ponowne losowanie broni:** wszystkie trzy bronie **pozostają na kole**, również poprzednio wylosowana.
+- Pierwsze losowanie pozostaje równe: **33,3%** na Łuk, Sztylety i Łańcuch (dokładnie 1/3).
+- Przy jedynym ponownym losowaniu wcześniej wylosowana broń ma **25% szans na ponowne trafienie**, a pozostałe dwie mają po **37,5%**. Nie ma już gwarancji innej broni.
+- **Rozmiary trzech segmentów koła są proporcjonalne do wag** (90° + 135° + 135° przy ponownym losowaniu). Wybór losowy korzysta z dokładnie tych samych wag; wskaźnik po wyhamowaniu wskazuje środek wylosowanego segmentu. Legenda i podpisy na kole pokazują te same procenty.
+- Niewielkie wyróżnienie ramką w legendzie identyfikuje broń z obniżoną szansą. Odświeżone adresy CSS i JS z numerem wersji ograniczają problem starych plików w pamięci podręcznej przeglądarki.
 
 ## Zmiany w 0.0.16
 

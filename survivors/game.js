@@ -1,7 +1,7 @@
-/* Calion Survivors · prototype 0.0.16 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.17 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.16';
+  const VERSION = '0.0.17';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
   const MAX_ENEMIES = 80; // Requested population cap for the denser arena.
   const MAX_PROJECTILES = 70;
@@ -236,20 +236,43 @@
     panelSubtitle.textContent='Los łotrzyka · jedna broń na wyprawę';
     spinRoulette(false);
   }
+  function rouletteSectors(weights){
+    // Sector lengths and random weights always match, in the same weapon order.
+    // The first segment is centered at the pointer (12 o'clock).
+    let start=-weights[0]*180;
+    return weights.map((weight,index)=>{
+      const end=start+weight*360;
+      const sector={index,weight,start,end,center:(start+end)/2};
+      start=end;
+      return sector;
+    });
+  }
+  function pickWeightedWeapon(weights){
+    const roll=Math.random();
+    let cumulative=0;
+    for(let i=0;i<weights.length;i++){
+      cumulative+=weights[i];
+      if(roll<cumulative)return i;
+    }
+    return weights.length-1; // Floating-point safety.
+  }
   function spinRoulette(reroll){
     if(mode!=='roulette'||!roulette||roulette.spinning)return;
-    if(reroll){
-      if(roulette.rerollsLeft<=0||!roulette.selection)return;
-      roulette.rerollsLeft--;
-    }else if(roulette.selection!==null)return;
-    // The sectors and RNG are equally weighted: 1/3 at first, 1/2 on reroll.
-    const excluded=reroll?roulette.selection:null;
     const r=roulette;
-    r.options=WEAPONS.map((w,i)=>i).filter(i=>WEAPONS[i].id!==excluded);
-    r.targetIndex=int(Math.random()*r.options.length);
-    r.target=r.options[r.targetIndex];
+    if(reroll){
+      if(r.rerollsLeft<=0||!r.selection)return;
+      r.reducedWeapon=r.selection;
+      r.rerollsLeft--;
+    }else if(r.selection!==null)return;
+    // Reroll: previously drawn weapon 25%, each other weapon 37.5%.
+    // The previously drawn weapon stays on the wheel and can win again.
+    r.weights=WEAPONS.map(w=>r.reducedWeapon&&w.id===r.reducedWeapon?.25:.375);
+    if(!reroll)r.weights=WEAPONS.map(()=>1/3);
+    r.sectors=rouletteSectors(r.weights);
+    r.targetIndex=pickWeightedWeapon(r.weights);
+    r.target=r.targetIndex;
     r.angle=0;
-    r.endAngle=360*6-(360/r.options.length)*r.targetIndex;
+    r.endAngle=360*6-r.sectors[r.targetIndex].center;
     r.elapsed=0;r.spinning=true;r.selection=null;
     renderRoulette();
   }
@@ -276,27 +299,31 @@
     return 'M '+cx+' '+cy+' L '+x1.toFixed(2)+' '+y1.toFixed(2)+
       ' A '+radius+' '+radius+' 0 '+large+' 1 '+x2.toFixed(2)+' '+y2.toFixed(2)+' Z';
   }
+  function roulettePercent(value){
+    return Math.abs(value-1/3)<.00001?'33,3%':
+      (value*100).toFixed(value*100%1===0?0:1).replace('.',',')+'%';
+  }
   function renderRoulette(){
-    const r=roulette,n=r.options.length,sectorAngle=360/n;
+    const r=roulette;
     const palette=['#385243','#6b4b34','#3c5263'];
-    const sectors=r.options.map((id,i)=>{
-      const weapon=WEAPONS[id],centerAngle=i*sectorAngle;
-      const theta=(centerAngle-90)*DEG;
+    const sectors=r.sectors.map(sector=>{
+      const weapon=WEAPONS[sector.index];
+      const theta=(sector.center-90)*DEG;
       const x=(160+Math.cos(theta)*96).toFixed(1);
       const y=160+Math.sin(theta)*96;
-      const odds=n===3?'33,3%':'50%';
-      return '<path d="'+wheelSlicePath(centerAngle-sectorAngle/2,centerAngle+sectorAngle/2)+
-        '" fill="'+palette[id]+'" stroke="#121a16" stroke-width="4" />'+
+      const odds=roulettePercent(sector.weight);
+      return '<path d="'+wheelSlicePath(sector.start,sector.end)+
+        '" fill="'+palette[sector.index]+'" stroke="#121a16" stroke-width="4" />'+
         '<g text-anchor="middle" fill="#f5e9c7" font-family="Georgia,serif">'+
         '<text x="'+x+'" y="'+(y-19)+'" class="wheel-weapon-symbol">'+weapon.symbol+'</text>'+
         '<text x="'+x+'" y="'+(y+2)+'" class="wheel-weapon-name">'+weapon.name+'</text>'+
         '<text x="'+x+'" y="'+(y+24)+'" class="wheel-weapon-percent">'+odds+'</text></g>';
     }).join('');
-    const legend=WEAPONS.map((w,i)=>{
-      const included=r.options.includes(i),pct=included?(n===3?'33,3%':'50%'):'0%';
-      return '<div class="roulette-odd'+(included?'':' excluded')+'">'+
-        '<span class="roulette-odd-name">'+w.symbol+' '+w.name+'</span><strong>'+pct+'</strong></div>';
-    }).join('');
+    const legend=WEAPONS.map((w,i)=>
+      '<div class="roulette-odd'+(r.reducedWeapon===w.id?' reduced':'')+'">'+
+      '<span class="roulette-odd-name">'+w.symbol+' '+w.name+'</span>'+
+      '<strong>'+roulettePercent(r.weights[i])+'</strong></div>'
+    ).join('');
     const outcome=r.spinning?'Koło losuje broń…':
       'Wylosowano: <strong>'+WEAPONS[r.target].name+'</strong>';
     const controls=r.spinning?'<p class="roulette-spinning-hint">Losowanie trwa…</p>':
@@ -313,8 +340,9 @@
       '<circle cx="160" cy="160" r="7" fill="#cbb17e"/></svg></div></div>'+
       '<p class="roulette-outcome" aria-live="polite">'+outcome+'</p>'+
       '<div class="roulette-odds">'+legend+'</div>'+
-      '<p class="roulette-odds-note">'+(n===3?'Każda broń ma równą szansę.':
-        'Poprzednia broń ma 0% szans. Pozostałe mają po 50%.')+'</p>'+
+      '<p class="roulette-odds-note">'+(r.reducedWeapon?
+        'Powtórzenie '+WEAPONS.find(w=>w.id===r.reducedWeapon).name+': 25%. Pozostałe bronie: po 37,5%.':
+        'Każda broń ma równą szansę: 33,3%.')+'</p>'+
       controls+
       '<p class="hint">Jedna broń na całą wyprawę. '+(r.rerollsLeft?
         'Możesz raz ponowić losowanie.':'Wynik jest ostateczny.')+'</p>';
