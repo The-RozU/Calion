@@ -317,3 +317,7 @@
 /* v0.0.17: reduced chance remains a visible, playable segment. */
 .roulette-odd.reduced{border-color:#b59165;background:#332d24}
 .roulette-odd.reduced strong{color:#e6bd75}
+
+/* v0.0.18: readable weapon captions after stop, icon-only during the spin. */
+.wheel-weapon-icon-only{font-size:48px;font-weight:bold;fill:#f6edcf;paint-order:stroke;stroke:#142019;stroke-width:4px;stroke-linejoin:round}
+.overlay.roulette-mode .roulette-spinning-hint{min-height:20px}

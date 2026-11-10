@@ -1,6 +1,6 @@
-# Calion Survivors · prototyp 0.0.17
+# Calion Survivors · prototyp 0.0.18
 
-Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.17** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
+Pierwsza niezależna próba gry typu Survivors w świecie Calionu. Wersja **0.0.18** to w pełni działający prototyp przeglądarkowy, bez zależności, budowania projektu ani zewnętrznych zasobów.
 
 ## Uruchomienie
 
@@ -13,7 +13,7 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - `F`: przełączenie pełnego ekranu; także przycisk obok pauzy i przycisk w menu startowym.
 - `C`: panel statystyk na HUD oraz pod kartami (wstrzymuje walkę), zamykanie C, Esc lub ✕.
 - Podczas awansu: kliknij jedną z trzech kart lub naciśnij `1`, `2`, `3`.
-- Ruletka broni uruchamia się przed każdą wyprawą. Po pierwszym losowaniu można raz ponowić los lub zaakceptować broń.
+- Przed każdą wyprawą ruletka obraca się bez ograniczenia czasu. Kliknij **ZATRZYMAJ KOŁO**, poczekaj na wyhamowanie, następnie zatwierdź broń lub raz losuj ponownie.
 - Telefon: dwa joysticki dotykowe. Domyślnie prawy jest widoczny w pełni, a lewy w 10%; dotknięcie dowolnego joysticka zamienia ich widoczność i aktywuje sterowanie.
 
 ## Zakres prototypu
@@ -24,6 +24,14 @@ Otwórz `index.html` w przeglądarce. Wystarczy Chrome, Firefox, Edge lub Safari
 - Limity poziomów kart, **2 sloty modyfikatorów**; pary specjalizacji każdej broni **wzajemnie się wykluczają**. Podział strzał ma tylko jedno pokolenie, a odbicia są limitowane.
 - Pięciominutowa próba przetrwania; ekran wygranej lub porażki oraz statystyki.
 - Proceduralne proste grafiki pixel art w odcieniach ciemnego drewna, stali, kamienia i mchu. Docelowe sprite'y WebP i animacje zastąpią te tymczasowe rysunki.
+
+## Zmiany w 0.0.18
+
+- **Ruletka sterowana przez gracza:** koło obraca się ciągle, dopóki nie zostanie naciśnięty przycisk „ZATRZYMAJ KOŁO”. Dopiero wtedy rozpoczyna płynne wyhamowywanie. Przy ruszaniu z miejsca nie ma ukrytego, wcześniej narzuconego wyniku: broń jest ustalana z segmentu faktycznie znajdującego się pod wskaźnikiem po zatrzymaniu.
+- Początkowy kąt obrotu jest losowy, a podczas ruchu prędkość wynosi około 590–650°/s. Zwalnianie trwa 2,7 s, a prędkość maleje płynnie do zera.
+- **Podczas kręcenia i zwalniania na kole widać tylko symbole broni**, bez obracających się wraz z nim napisów. Dopiero po pełnym zatrzymaniu nazwy i procenty pojawiają się wewnątrz segmentów i pozostają czytelne poziomo, niezależnie od kąta koła.
+- Pierwsza ruletka nadal ma trzy równe szanse 33,3%; po jedynym ponownym losowaniu wcześniejsza broń ma 25%, dwie pozostałe po 37,5%. Wszystkie bronie nadal są widoczne. Legenda pod kołem przez cały czas pokazuje szanse.
+- Nowa runda nie może ruszyć, dopóki gracz nie zatrzyma koła, nie zobaczy wyniku i nie zaakceptuje broni. Wyświetlana wersja i parametry odświeżania zasobów podniesione do 0.0.18.
 
 ## Zmiany w 0.0.17
 

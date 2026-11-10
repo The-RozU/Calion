@@ -1,7 +1,7 @@
-/* Calion Survivors · prototype 0.0.17 · Vanilla Canvas 2D */
+/* Calion Survivors · prototype 0.0.18 · Vanilla Canvas 2D */
 (() => {
   'use strict';
-  const VERSION = '0.0.17';
+  const VERSION = '0.0.18';
   const RUN_DURATION = 300; // Five-minute playtest; balance is intentionally provisional.
   const MAX_ENEMIES = 80; // Requested population cap for the denser arena.
   const MAX_PROJECTILES = 70;
@@ -229,16 +229,20 @@
       <p class="hint">PC: WSAD / strzałki · P: pauza · C: statystyki · 1, 2, 3: wybór karty<br>Telefon: joystick po lewej lub prawej stronie</p>`;
     updateHud();
   }
+
   function beginRoulette(){
     closeStats();state=newState();keys.clear();touchMove.x=touchMove.y=0;resetJoystick();
-    roulette={spinning:false,elapsed:0,duration:2.25,index:0,start:0,target:0,steps:0,lastStep:-1,selection:null,rerollsLeft:1};
+    roulette={
+      spinning:false,phase:'ready',selection:null,rerollsLeft:1,reducedWeapon:null,
+      angle:0,spinSpeed:0,stopStartAngle:0,stopElapsed:0,stopDuration:2.7,
+      weights:[],sectors:[],target:null
+    };
     visibleMode('roulette');panelTitle.textContent='RULETKA BRONI';
     panelSubtitle.textContent='Los łotrzyka · jedna broń na wyprawę';
     spinRoulette(false);
   }
   function rouletteSectors(weights){
-    // Sector lengths and random weights always match, in the same weapon order.
-    // The first segment is centered at the pointer (12 o'clock).
+    // One complete circle; segment lengths are exactly proportional to weights.
     let start=-weights[0]*180;
     return weights.map((weight,index)=>{
       const end=start+weight*360;
@@ -246,15 +250,6 @@
       start=end;
       return sector;
     });
-  }
-  function pickWeightedWeapon(weights){
-    const roll=Math.random();
-    let cumulative=0;
-    for(let i=0;i<weights.length;i++){
-      cumulative+=weights[i];
-      if(roll<cumulative)return i;
-    }
-    return weights.length-1; // Floating-point safety.
   }
   function spinRoulette(reroll){
     if(mode!=='roulette'||!roulette||roulette.spinning)return;
@@ -264,31 +259,53 @@
       r.reducedWeapon=r.selection;
       r.rerollsLeft--;
     }else if(r.selection!==null)return;
-    // Reroll: previously drawn weapon 25%, each other weapon 37.5%.
-    // The previously drawn weapon stays on the wheel and can win again.
-    r.weights=WEAPONS.map(w=>r.reducedWeapon&&w.id===r.reducedWeapon?.25:.375);
-    if(!reroll)r.weights=WEAPONS.map(()=>1/3);
+    r.weights=WEAPONS.map(w=>r.reducedWeapon?(w.id===r.reducedWeapon?.25:.375):1/3);
     r.sectors=rouletteSectors(r.weights);
-    r.targetIndex=pickWeightedWeapon(r.weights);
-    r.target=r.targetIndex;
-    r.angle=0;
-    r.endAngle=360*6-r.sectors[r.targetIndex].center;
-    r.elapsed=0;r.spinning=true;r.selection=null;
+    // The starting phase is random; the player decides when to trigger deceleration.
+    r.angle=Math.random()*360;
+    r.spinSpeed=590+Math.random()*60; // Degrees per second during free spin.
+    r.phase='spinning';r.spinning=true;r.selection=null;r.target=null;
+    r.stopElapsed=0;
     renderRoulette();
+  }
+  function stopRoulette(){
+    if(mode!=='roulette'||!roulette||roulette.phase!=='spinning')return;
+    const r=roulette;
+    r.phase='stopping';
+    r.stopStartAngle=r.angle;
+    r.stopElapsed=0;
+    renderRoulette();
+  }
+  function selectedRouletteSector(r){
+    // The static pointer points up (0 degrees). Undo wheel rotation.
+    const start=r.sectors[0].start;
+    const position=((-r.angle-start)%360+360)%360+start;
+    return r.sectors.find(sector=>position>=sector.start&&position<sector.end)||
+      r.sectors[r.sectors.length-1];
   }
   function updateRoulette(dt){
     if(mode!=='roulette'||!roulette||!roulette.spinning)return;
     const r=roulette;
-    r.elapsed=Math.min(r.duration,r.elapsed+dt);
-    const progress=clamp(r.elapsed/r.duration,0,1);
-    r.angle=r.endAngle*(1-(1-progress)**4);
+    if(r.phase==='spinning'){
+      r.angle=(r.angle+r.spinSpeed*dt)%360;
+    }else if(r.phase==='stopping'){
+      r.stopElapsed=Math.min(r.stopDuration,r.stopElapsed+dt);
+      const progress=r.stopElapsed/r.stopDuration;
+      // Ease-out cubic: derivative at t=0 equals prior spinSpeed,
+      // derivative at t=1 is zero, with no abrupt speed jump.
+      r.angle=r.stopStartAngle+r.spinSpeed*r.stopDuration/3*
+        (1-(1-progress)**3);
+      if(progress>=1){
+        r.spinning=false;r.phase='done';
+        const sector=selectedRouletteSector(r);
+        r.target=sector.index;
+        r.selection=WEAPONS[sector.index].id;
+        renderRoulette();
+        return;
+      }
+    }
     const wheel=$('roulette-wheel');
     if(wheel)wheel.style.transform='rotate('+r.angle+'deg)';
-    if(progress>=1){
-      r.spinning=false;
-      r.selection=WEAPONS[r.target].id;
-      renderRoulette();
-    }
   }
   function wheelSlicePath(startAngle,endAngle){
     const radius=146,cx=160,cy=160;
@@ -303,33 +320,49 @@
     return Math.abs(value-1/3)<.00001?'33,3%':
       (value*100).toFixed(value*100%1===0?0:1).replace('.',',')+'%';
   }
+
+  function roulettePercent(value){
+    return Math.abs(value-1/3)<.00001?'33,3%':
+      (value*100).toFixed(value*100%1===0?0:1).replace('.',',')+'%';
+  }
   function renderRoulette(){
-    const r=roulette;
+    const r=roulette,isDone=r.phase==='done';
     const palette=['#385243','#6b4b34','#3c5263'];
     const sectors=r.sectors.map(sector=>{
       const weapon=WEAPONS[sector.index];
       const theta=(sector.center-90)*DEG;
-      const x=(160+Math.cos(theta)*96).toFixed(1);
+      const x=160+Math.cos(theta)*96;
       const y=160+Math.sin(theta)*96;
-      const odds=roulettePercent(sector.weight);
-      return '<path d="'+wheelSlicePath(sector.start,sector.end)+
-        '" fill="'+palette[sector.index]+'" stroke="#121a16" stroke-width="4" />'+
+      // While turning only weapon icons are shown; after stopping, rotate
+      // the captions back to horizontal, independent of wheel angle.
+      const textGroup=isDone?
+        '<g transform="rotate('+(-r.angle)+' '+x+' '+y+')" text-anchor="middle" fill="#f5e9c7" font-family="Georgia,serif">'+
+        '<text x="'+x+'" y="'+(y-24)+'" class="wheel-weapon-symbol">'+weapon.symbol+'</text>'+
+        '<text x="'+x+'" y="'+(y+0)+'" class="wheel-weapon-name">'+weapon.name+'</text>'+
+        '<text x="'+x+'" y="'+(y+23)+'" class="wheel-weapon-percent">'+roulettePercent(sector.weight)+'</text></g>':
         '<g text-anchor="middle" fill="#f5e9c7" font-family="Georgia,serif">'+
-        '<text x="'+x+'" y="'+(y-19)+'" class="wheel-weapon-symbol">'+weapon.symbol+'</text>'+
-        '<text x="'+x+'" y="'+(y+2)+'" class="wheel-weapon-name">'+weapon.name+'</text>'+
-        '<text x="'+x+'" y="'+(y+24)+'" class="wheel-weapon-percent">'+odds+'</text></g>';
+        '<text x="'+x+'" y="'+(y+11)+'" class="wheel-weapon-icon-only">'+weapon.symbol+'</text></g>';
+      return '<path d="'+wheelSlicePath(sector.start,sector.end)+
+        '" fill="'+palette[sector.index]+'" stroke="#121a16" stroke-width="4" />'+textGroup;
     }).join('');
     const legend=WEAPONS.map((w,i)=>
       '<div class="roulette-odd'+(r.reducedWeapon===w.id?' reduced':'')+'">'+
       '<span class="roulette-odd-name">'+w.symbol+' '+w.name+'</span>'+
       '<strong>'+roulettePercent(r.weights[i])+'</strong></div>'
     ).join('');
-    const outcome=r.spinning?'Koło losuje broń…':
-      'Wylosowano: <strong>'+WEAPONS[r.target].name+'</strong>';
-    const controls=r.spinning?'<p class="roulette-spinning-hint">Losowanie trwa…</p>':
-      (r.rerollsLeft?button('Losuj ponownie (1 raz)','reroll',true):
-      '<p class="roulette-spent">Ponowne losowanie wykorzystane</p>')+
-      button('Ruszaj w drogę','confirm');
+    let outcome,controls;
+    if(r.phase==='spinning'){
+      outcome='Koło się kręci. Zatrzymaj je w wybranej chwili!';
+      controls=button('ZATRZYMAJ KOŁO','stop');
+    }else if(r.phase==='stopping'){
+      outcome='Koło zwalnia…';
+      controls='<p class="roulette-spinning-hint">Koło zatrzymuje się…</p>';
+    }else{
+      outcome='Wylosowano: <strong>'+WEAPONS[r.target].name+'</strong>';
+      controls=(r.rerollsLeft?button('Losuj ponownie (1 raz)','reroll',true):
+        '<p class="roulette-spent">Ponowne losowanie wykorzystane</p>')+
+        button('Ruszaj w drogę','confirm');
+    }
     panelContent.innerHTML='<div class="roulette-wheel-stage">'+
       '<span class="roulette-pointer" aria-hidden="true"></span>'+
       '<div class="roulette-wheel" id="roulette-wheel" style="transform:rotate('+r.angle+'deg)">'+
@@ -341,11 +374,11 @@
       '<p class="roulette-outcome" aria-live="polite">'+outcome+'</p>'+
       '<div class="roulette-odds">'+legend+'</div>'+
       '<p class="roulette-odds-note">'+(r.reducedWeapon?
-        'Powtórzenie '+WEAPONS.find(w=>w.id===r.reducedWeapon).name+': 25%. Pozostałe bronie: po 37,5%.':
+        'Poprzednia broń: 25%. Dwie pozostałe: po 37,5%.':
         'Każda broń ma równą szansę: 33,3%.')+'</p>'+
       controls+
       '<p class="hint">Jedna broń na całą wyprawę. '+(r.rerollsLeft?
-        'Możesz raz ponowić losowanie.':'Wynik jest ostateczny.')+'</p>';
+        'Masz jedno ponowne losowanie.':'Wynik jest ostateczny.')+'</p>';
   }
   function startGame(){
     if(mode!=='roulette'||!roulette||roulette.spinning||!roulette.selection)return;
@@ -1280,6 +1313,7 @@
       const action=e.target.closest('[data-action]')?.dataset.action;
       if(action==='start'||action==='restart')beginRoulette();
       else if(action==='reroll')spinRoulette(true);
+      else if(action==='stop')stopRoulette();
       else if(action==='confirm')startGame();
       else if(action==='menu')showMenu();else if(action==='resume')visibleMode('playing');
       else if(action==='fullscreen')toggleFullscreen();
@@ -1298,7 +1332,7 @@
   setupInput();resizeCanvas();showMenu();requestAnimationFrame(tick);
   // Stable read-only debug bridge to inspect the prototype in browser tests.
   window.CalionPrototype={version:VERSION,getSnapshot:()=>({mode,statsOpen,weapon:state.weapon,
-    roulette:roulette?{spinning:roulette.spinning,selection:roulette.selection,rerollsLeft:roulette.rerollsLeft}:null,
+    roulette:roulette?{spinning:roulette.spinning,phase:roulette.phase,selection:roulette.selection,rerollsLeft:roulette.rerollsLeft,weights:roulette.weights.slice()}:null,
     stats:combatStats(),elapsed:state.elapsed,level:state.level,xp:state.xp,kills:state.kills,hp:state.player.hp,
     upgrades:{...state.upgrades},enemies:state.enemies.length,enemyTypes:state.enemies.map(e=>e.type),
     enemyStage:state.enemyStage,enemyShots:state.enemyProjectiles.length,eliteSpawns:state.eliteSpawns,nextEliteAt:state.nextEliteAt}),start:beginRoulette};
