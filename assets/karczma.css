@@ -1,0 +1,212 @@
+/* Karczma Calionu — alternatywny motyw 0.0.23.
+   Wersja demonstracyjna, niezależna od Mrocznego Atlasu.
+   Materiały: ciemne deski, miedź, przydymione srebro, skóra, pergamin. */
+:root{
+  --t-wood:#29160d;--t-wood-dark:#130b08;--t-wood-light:#5b3520;
+  --t-copper:#bd8250;--t-copper-dark:#5a3219;
+  --t-steel:#b4ad9d;--t-paper:#dfc69a;--t-ink:#302417;
+  --t-cream:#f3ddae;--t-leather:#4b2619;--t-green:#12352e;
+  --t-board:
+    repeating-linear-gradient(0deg,transparent 0 129px,#100703 130px,#725032 132px,#1a0b07 135px,transparent 140px),
+    repeating-linear-gradient(89deg,rgba(0,0,0,.07) 0px,rgba(0,0,0,.05) 3px,rgba(237,168,94,.045) 4px,transparent 6px,transparent 17px,rgba(9,1,1,.15) 20px,transparent 22px,transparent 43px),
+    linear-gradient(90deg,#28140b,#42251a 29%,#2a160e 51%,#513020 74%,#26140c);
+}
+body.tavern-theme{font-family:Georgia,'Times New Roman',serif;color:var(--t-cream);background-color:#1e120b;background-image:var(--t-board);background-attachment:fixed}
+body.tavern-theme:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.45;background:
+  radial-gradient(ellipse at 55% -10%,transparent 20%,#090603c7 90%),
+  repeating-linear-gradient(2deg,transparent 0px,rgba(255,227,171,.02) 2px,transparent 3px,transparent 9px)}
+.tavern-topline{display:flex;justify-content:space-between;padding:6px clamp(15px,3vw,60px);gap:15px;background:#100a07;border-bottom:1px solid #6b442a;font-size:10px;letter-spacing:.19em;color:#bd9871;position:relative;z-index:52}
+.tavern-theme .site-header{position:sticky;top:0;z-index:55;background:
+    linear-gradient(180deg,#0009,#0003 20%,transparent 35%,#140802a1 88%),
+    repeating-linear-gradient(90deg,transparent 0 23px,rgba(0,0,0,.23) 24px,rgba(195,137,80,.06) 27px,transparent 32px),
+    linear-gradient(180deg,#613823,#2e170e 55%,#1b0f08);
+  border-top:2px solid #895632;border-bottom:7px solid #150b06;box-shadow:0 2px 0 #ad8751,0 11px 20px #0008}
+.tavern-theme .site-header:before,.tavern-theme .site-header:after{content:"";position:absolute;top:34px;width:26px;height:26px;border:4px ridge #98958e;border-radius:5px;background:radial-gradient(circle,#d9c7a5 0 3px,#6e706d 4px 7px,#28231e 8px 11px);box-shadow:inset 0 0 4px #000;z-index:1}
+.tavern-theme .site-header:before{left:10px}.tavern-theme .site-header:after{right:10px}
+.tavern-theme .header-inner{min-height:86px;max-width:1900px;width:100%;padding-inline:clamp(35px,4vw,90px);gap:28px}
+.tavern-theme .brand{gap:14px;min-width:max-content;position:relative}
+.guild-standard{display:flex;flex-direction:column;align-items:center;justify-content:center;width:47px;height:74px;gap:0;color:#e3b86b;background:#0f3633;clip-path:polygon(0 0,100% 0,100% 76%,50% 100%,0 76%);border-left:3px solid #c19655;border-right:3px solid #c19655;filter:drop-shadow(2px 4px 2px #0008)}
+.guild-standard span:first-child{font-size:28px;line-height:34px}.guild-standard span:last-child{font-size:20px;line-height:20px}
+.brand-sign{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70px;padding:7px 26px 9px;border:2px solid #9a6a3b;border-radius:6px;background:linear-gradient(180deg,#582d1a,#31180d 54%,#24120d);box-shadow:inset 0 0 0 2px #25130d,inset 0 0 15px #0008,2px 5px 10px #0008;position:relative}
+.brand-sign:before,.brand-sign:after{content:"";position:absolute;top:31px;width:7px;height:7px;border-radius:50%;background:radial-gradient(circle at 30% 28%,#f5caa0,#92542e 55%,#402a20);box-shadow:0 1px 2px #000}
+.brand-sign:before{left:8px}.brand-sign:after{right:8px}
+.tavern-theme .brand-name{display:block;color:#f3dcaa;font:500 clamp(26px,2.5vw,45px)/1 Georgia,serif;letter-spacing:.025em;text-shadow:1px 2px 2px #000}
+.brand-sign small{font:700 9px/2 Georgia,serif;letter-spacing:.15em;color:#bd9870;white-space:nowrap}
+.tavern-theme .main-nav{gap:0;display:flex;align-items:center}
+.tavern-theme .main-nav a,.tavern-theme .main-nav .nav-games{font:500 clamp(15px,1.08vw,19px)/1.2 Georgia,serif;letter-spacing:0;color:#ebd7b5;padding:11px clamp(8px,1vw,17px);border-right:1px solid #bd875a58;border-top:0;border-bottom:0;border-left:0;background:transparent;white-space:nowrap}
+.tavern-theme .main-nav a:hover,.tavern-theme .main-nav a.active{color:#f7de9b;background:linear-gradient(180deg,#472014bc,#8c4026bd);box-shadow:inset 0 0 0 1px #b17245}
+.tavern-theme .main-nav a.active:after{display:none}
+.tavern-theme .main-nav a:last-child{border:0}
+.tavern-theme .menu-toggle{display:none;border:2px solid #9c6a40;background:linear-gradient(#582d1c,#28140b);color:#ffdfa4;border-radius:3px}
+.tavern-theme #main-content{width:min(100%,1920px);max-width:none;padding:0 clamp(10px,2vw,38px) 56px}
+.tavern-home{padding:19px 0 0}
+.tavern-hero{min-height:620px;height:clamp(570px,39vw,730px);position:relative;overflow:hidden;background:#16100d;border:11px solid #351c0e;box-shadow:inset 0 0 0 2px #9b603a,0 4px 0 #91623d,0 14px 40px #000b}
+.tavern-hero:before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;box-shadow:inset 0 0 0 2px #a87749,inset 0 0 28px #000e;background:
+  radial-gradient(circle at 15px 15px,#edbf83 0 3px,#4d4a45 4px 6px,transparent 7px),
+  radial-gradient(circle at calc(100% - 15px) 15px,#edbf83 0 3px,#4d4a45 4px 6px,transparent 7px),
+  radial-gradient(circle at 15px calc(100% - 15px),#edbf83 0 3px,#4d4a45 4px 6px,transparent 7px),
+  radial-gradient(circle at calc(100% - 15px) calc(100% - 15px),#edbf83 0 3px,#4d4a45 4px 6px,transparent 7px)}
+.tavern-hero-art{position:absolute;inset:0;background:url("./images/karczma-wnetrze.jpg") center center/cover no-repeat;image-rendering:auto}
+.tavern-hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0b0807d5 0%,#120d0b9c 29%,#120d0b38 59%,transparent 85%),linear-gradient(0deg,#0c0706a1,transparent 28%);pointer-events:none}
+.tavern-hero-copy{position:relative;z-index:3;padding-top:clamp(100px,10vw,195px);padding-left:clamp(25px,6vw,130px);max-width:760px;text-shadow:0 3px 6px #000d}
+.tavern-overline{display:block;font:700 clamp(10px,1vw,15px)/1.5 Georgia,serif;letter-spacing:.21em;color:#e0bd86}
+.tavern-hero h1{color:#ffebc6;font:500 clamp(68px,8vw,135px)/1.02 Georgia,serif;letter-spacing:.02em;margin:14px 0 12px;text-shadow:3px 7px 3px #000c}
+.tavern-rule{display:flex;align-items:center;gap:10px;color:#d39e60;width:min(380px,85%)}.tavern-rule:before,.tavern-rule:after{content:"";height:1px;background:#986d43;flex:1}
+.tavern-hero-copy p{font:clamp(16px,1.35vw,22px)/1.55 Georgia,serif;color:#dfc8a5;max-width:530px;margin:14px 0 24px}
+.tavern-cta{display:inline-flex;align-items:center;justify-content:center;gap:12px;font:600 clamp(16px,1.3vw,21px)/1.3 Georgia,serif;color:#ffebc9;border:2px solid #b57b42;border-radius:3px;background:linear-gradient(180deg,#7e3f25,#4f2115 52%,#38180f);padding:13px 20px;box-shadow:inset 0 0 0 2px #2c150e,0 4px 8px #0009;text-shadow:0 1px #000}
+.tavern-cta svg{color:#edbb75}.tavern-cta:hover{background:linear-gradient(180deg,#a45b31,#6a2b17)}
+.tavern-hero-caption{position:absolute;z-index:3;right:28px;bottom:18px;font:700 10px/1.4 Georgia,serif;letter-spacing:.13em;color:#efc98e;text-shadow:0 2px 5px #000}
+.tavern-shortcuts{display:grid;grid-template-columns:repeat(4,1fr);position:relative;margin:0 22px;border:3px solid #29180f;background:linear-gradient(180deg,#603a25,#321b13);box-shadow:0 4px 0 #120905,0 14px 24px #0009}
+.tavern-shortcuts:before,.tavern-shortcuts:after{content:"";position:absolute;width:12px;height:12px;background:radial-gradient(circle,#e8d1a4 0 2px,#96938c 3px 5px,#27201c 6px);top:calc(50% - 6px)}
+.tavern-shortcuts:before{left:8px}.tavern-shortcuts:after{right:8px}
+.tavern-shortcuts a{display:flex;justify-content:center;align-items:center;gap:13px;min-height:70px;padding:10px;font:500 clamp(15px,1.18vw,20px) Georgia,serif;border-right:2px solid #1e100bd9;color:#f6dbad;text-shadow:0 1px #000}
+.tavern-shortcuts a:last-child{border:0}.tavern-shortcuts svg{width:23px;height:23px;color:#c48d58}
+.tavern-shortcuts a:hover{background:#7d4931}
+.tavern-board{margin-top:44px;padding:28px 30px 32px;border:10px ridge #5f3920;box-shadow:inset 0 0 0 3px #28160f,0 5px 0 #140b06,0 15px 25px #0009;position:relative;background:
+    radial-gradient(ellipse at top,#5e3621,#29160d 80%),var(--t-board)}
+.tavern-board:before,.tavern-board:after{content:"";position:absolute;top:17px;width:18px;height:18px;border:4px ridge #89837b;border-radius:4px;background:radial-gradient(circle,#c4b8a1 0 3px,#45423d 4px 9px)}
+.tavern-board:before{left:12px}.tavern-board:after{right:12px}
+.tavern-board-head{text-align:center;margin:0 0 28px}.tavern-section-mark{font:700 11px/1.6 Georgia,serif;letter-spacing:.19em;color:#c69d64}
+.tavern-board-head h2,.tavern-section-divider h2,.tavern-ledger h2{font:500 clamp(28px,2.8vw,47px)/1.2 Georgia,serif;margin:5px 0;color:#f2d9ac}
+.tavern-board-head em{font-style:normal;color:#d99a62}
+.tavern-board-content{display:grid;grid-template-columns:minmax(300px,.45fr) minmax(0,1.55fr);gap:28px;align-items:stretch}
+.tavern-notes{display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:25px;padding:5px 0}
+.tavern-note{position:relative;color:#2f2115;box-shadow:3px 6px 7px #120903ae,inset 0 0 22px #aa834e80;background:radial-gradient(ellipse at 55% 0,#f7e7bf,#d7b884 72%,#bc945d);border:1px solid #947047;padding:29px 28px 25px;transform:rotate(-1deg);margin-right:19px}
+.tavern-note:before{content:"";pointer-events:none;position:absolute;inset:5px;border:1px solid #97714458}
+.tavern-note-side{margin-left:32px;margin-right:0;transform:rotate(1.2deg);padding:20px 24px}
+.tavern-pin{position:absolute;z-index:2;top:8px;left:calc(50% - 8px);width:17px;height:17px;border-radius:50%;box-shadow:2px 3px 4px #29140999,0 0 0 1px #4c291a}
+.tavern-pin-copper{background:radial-gradient(circle at 27% 22%,#ffda9b,#be8051 50%,#5c3222)}
+.tavern-pin-steel{background:radial-gradient(circle at 27% 22%,#ece5d3,#a7a89c 50%,#494948)}
+.tavern-note small{font:700 9px/1.5 Georgia,serif;color:#8c643f;letter-spacing:.15em}
+.tavern-note h3{font:500 clamp(26px,2.1vw,38px)/1.22 Georgia,serif;margin:12px 0}
+.tavern-note strong{display:block;font:500 26px/1.4 Georgia,serif;margin:7px 0}
+.tavern-note p{font:clamp(16px,1.1vw,19px)/1.46 Georgia,serif;margin:10px 0 19px;color:#45301f}
+.tavern-note-side p{margin-bottom:0;font-size:17px}
+.tavern-note a{color:#173d32;text-decoration:underline;text-underline-offset:4px;font:600 18px Georgia,serif}
+.tavern-map-sheet{display:block;position:relative;border:8px solid #9d7349;box-shadow:inset 0 0 20px #0007,2px 4px 10px #000a;background:#d1ad79;min-height:520px;overflow:hidden}
+.tavern-map-sheet:before{content:"";inset:5px;position:absolute;border:2px solid #6b4b34;pointer-events:none;z-index:2}
+.tavern-map-sheet img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;image-rendering:auto;filter:saturate(.9)}
+.tavern-map-sheet:hover img{filter:saturate(1.06) brightness(1.07)}
+.tavern-map-fastener{position:absolute;z-index:3;width:17px;height:17px;border-radius:50%;background:radial-gradient(circle at 30% 20%,#ffe2b1,#bd8954 40%,#472c22 85%);box-shadow:1px 2px 3px #291409b9}
+.tavern-map-fastener.upper{top:12px;left:13px}.tavern-map-fastener.lower{bottom:14px;right:14px}
+.tavern-map-callout{position:absolute;right:20px;bottom:19px;background:#19392d;border:2px solid #b18c58;color:#fcebcf;padding:10px 19px;font:600 18px Georgia,serif;box-shadow:0 4px 10px #0009}
+.tavern-chronicles{padding:49px 0 0}.tavern-section-divider{display:flex;align-items:baseline;justify-content:center;gap:23px;flex-wrap:wrap;margin-bottom:27px;text-shadow:0 2px 6px #000}
+.tavern-section-divider>span:first-child{font:700 11px Georgia,serif;letter-spacing:.15em;color:#c49b61}
+.tavern-section-divider h2{margin:0}.tavern-ornament{font-size:25px;color:#b9804b}
+.tavern-chronicle-cards{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.tavern-scroll{min-height:335px;display:grid;grid-template-columns:44% 56%;position:relative;padding:15px;box-shadow:0 0 0 7px #3e2418,0 0 0 10px #95623e,0 16px 25px #000b;background:radial-gradient(ellipse at 55% -5%,#f0deb5,#d8b98a 82%,#b99361);border:1px solid #a57d53;color:var(--t-ink)}
+.tavern-scroll:before{content:"";pointer-events:none;inset:5px;position:absolute;border:1px solid #886b4770}
+.tavern-metal-corner{position:absolute;z-index:3;top:8px;width:26px;height:26px;background:radial-gradient(circle at 35% 35%,#dfd6c2 0 3px,#89847a 4px 7px,transparent 8px),linear-gradient(135deg,#2b2b28,#85817b 50%,#292321);border:1px solid #373633;box-shadow:1px 2px 3px #0009}
+.tavern-metal-corner.top-left{left:8px}.tavern-metal-corner.top-right{right:8px}
+.tavern-scroll-portrait{border:3px solid #6e4c2f;min-width:0;min-height:290px;overflow:hidden;box-shadow:inset 0 0 10px #0008;background:#251a12}
+.tavern-scroll-portrait img{display:block;width:100%;height:100%;max-height:380px;object-fit:cover;object-position:43% center;image-rendering:auto}
+.tavern-scroll-warg .tavern-scroll-portrait img{object-position:55% center}
+.tavern-scroll-copy{padding:18px 18px 14px 27px;display:flex;flex-direction:column;align-items:flex-start}
+.tavern-scroll-overline{font:italic 17px Georgia,serif;color:#573e2a}.tavern-scroll h3{font:500 clamp(32px,2.6vw,50px)/1.1 Georgia,serif;margin:7px 0 13px}
+.tavern-scroll p{font:clamp(16px,1.04vw,20px)/1.5 Georgia,serif;margin:0 0 16px;color:#483522}
+.tavern-scroll-copy a{font:600 19px/1.4 Georgia,serif;margin-top:auto;color:#194338;text-decoration:underline;text-underline-offset:4px}
+.tavern-scroll-copy a:hover{color:#7c4528}
+.tavern-ledger{margin:60px 0 20px}.tavern-ledger-leather{display:grid;grid-template-columns:auto 1.2fr .7fr;align-items:center;gap:32px;padding:34px 52px;background:
+  radial-gradient(circle at 20% 50%,#8250374f,transparent 40%),
+  repeating-linear-gradient(120deg,transparent 0 16px,#10090827 17px,transparent 20px),
+  linear-gradient(180deg,#603622,#351c15 51%,#24120e);
+  border:8px ridge #70442d;box-shadow:inset 0 0 0 2px #c18a51,inset 0 0 35px #120805,0 12px 22px #000b}
+.tavern-book-clasp{display:grid;place-items:center;width:77px;height:91px;color:#e3b579;font-size:35px;background:linear-gradient(90deg,#2c1b15,#75412a,#281810);border:3px double #a97942;border-radius:5px}
+.tavern-ledger h2{font-size:clamp(25px,2.3vw,42px);margin:7px 0}.tavern-ledger p{font:17px/1.5 Georgia,serif;color:#d1b796;margin:0;max-width:610px}
+.tavern-ledger-links{display:flex;flex-direction:column;gap:0;border-left:1px solid #946c47;padding-left:25px}
+.tavern-ledger-links a{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;font:600 18px Georgia,serif;color:#f2d4a1;border-bottom:1px solid #9f75464f}
+.tavern-ledger-links a:hover{color:#fff}.tavern-ledger-links a span{color:#bd895c}
+.tavern-ledger-links small{font:11px Georgia,serif;color:#bd9871}
+.tavern-theme .site-footer{border-top:9px ridge #805339;background:linear-gradient(180deg,#2f190e,#120906)}
+.tavern-theme .footer-inner{max-width:1800px;gap:30px;padding:34px 40px}
+.tavern-theme .footer-brand{font:600 26px Georgia,serif;color:#f0d2a0}
+.tavern-theme .footer-brand small{font:700 9px Georgia,serif;letter-spacing:.12em}
+.footer-seal{width:42px;height:48px;display:grid;place-items:center;font-size:26px;color:#e9c795;background:#133b32;clip-path:polygon(50% 0,100% 17%,100% 70%,50% 100%,0 70%,0 17%);border:1px solid #c69561}
+.tavern-theme .footer-inner p{color:#d5b893;font:14px/1.6 Georgia,serif}
+.tavern-theme .footer-links{font:16px Georgia,serif;color:#d1b28b}
+.tavern-theme .footer-version{font:10px Georgia,serif;color:#a58661}
+.tavern-theme .inner-page{margin:22px 0;background:
+  radial-gradient(ellipse at 45% 1%,#f1deba,#d4b585 78%,#b99462);color:#302417;border:18px solid #422516;
+  box-shadow:inset 0 0 0 3px #a67d4c,inset 0 0 60px #9c714a77,0 8px 30px #000b;max-width:none}
+.tavern-theme .inner-hero{background:transparent;border-bottom:2px solid #9b7b53}
+.tavern-theme .inner-hero h1,.tavern-theme .inner-hero h1 em{font-family:Georgia,serif;color:#362516}
+.tavern-theme .inner-hero p{color:#60452b;font:18px/1.55 Georgia,serif}
+.tavern-theme .inner-hero .eyebrow{color:#79512e}
+.tavern-theme .entry-card{color:#302417;background:radial-gradient(ellipse at top,#f2ddb3,#d0ad75);border:1px solid #9b774a;box-shadow:2px 5px 0 #aa85566b,inset 0 0 23px #b18d5a77;padding:24px}
+.tavern-theme .entry-card h3{font-family:Georgia,serif;color:#2d2016}
+.tavern-theme .entry-card p,.tavern-theme .entry-subtitle{color:#594027}
+.tavern-theme .entry-tag,.tavern-theme .entry-more{color:#75522f}.tavern-theme .entry-more{border-top-color:#a08055}
+.tavern-theme .search-field{background:#efdfbd;border:1px solid #9f7e53;color:#392918}
+.tavern-theme .search-field input{color:#392918}
+.tavern-theme .archive-count{color:#765936}
+.tavern-theme .world-map-panel{background:#e6d0a4;border:5px ridge #977047;box-shadow:0 7px 0 #8f6e44}
+.tavern-theme .atlas-paper-button{border:2px solid #a17743;background:#214137;color:#f6e2bb;font:600 17px Georgia,serif}
+.tavern-theme .timeline-block{background:#e7ce9d;color:#322719;border-left-color:#8a4b2d}
+.tavern-theme .timeline-block span{color:#8b5336}.tavern-theme .timeline-block strong{color:#302417}
+.tavern-theme .timeline-block small{color:#5f4a35}
+.tavern-theme .game-card{background:#dfc69a;border:2px solid #98704a;color:#302417}
+.tavern-theme .game-card-header h3{font-family:Georgia,serif}
+.tavern-theme .game-card-content p,.tavern-theme .game-meta{color:#65472f}
+.tavern-theme .game-card-content .button-outline{border-color:#987046;color:#573820;background:#efd6a4}
+.tavern-theme .lore-dialog{background:radial-gradient(ellipse at top,#f1dbaf,#d0ad76);color:#302417;border:14px ridge #7c5032}
+.tavern-theme .lore-dialog h2,.tavern-theme .lore-dialog p{color:#37271a}.tavern-theme .dialog-body{color:#4e3926;border-color:#9a744b}.tavern-theme .dialog-subtitle{color:#81522f}
+.tavern-theme .dialog-head .eyebrow,.tavern-theme .dialog-bottom span{color:#784d2c}
+.tavern-theme .dialog-bottom{border-top-color:#95704b}
+.tavern-theme .map-dialog{border:12px ridge #81502c;background:#1d110b}
+.tavern-theme .map-dialog-toolbar{background:linear-gradient(#563322,#28170e)}
+.tavern-theme .map-dialog-toolbar button{background:#432417;border-color:#ae7f4d}
+@media(max-width:1230px){
+  .tavern-theme .header-inner{padding-inline:38px;gap:16px}
+  .brand-sign{padding:7px 14px 9px}
+  .tavern-theme .main-nav a,.tavern-theme .main-nav .nav-games{font-size:15px;padding-inline:9px}
+  .tavern-chronicle-cards{grid-template-columns:1fr}
+  .tavern-scroll{max-width:none}
+}
+@media(max-width:960px){
+  .tavern-theme .menu-toggle{display:flex}
+  .tavern-theme .header-inner{flex-wrap:wrap;gap:10px;min-height:76px;padding-inline:40px}
+  .tavern-theme .main-nav{display:none;width:100%;flex-wrap:wrap;padding:0 0 16px}
+  .tavern-theme .main-nav.open{display:flex}
+  .tavern-theme .main-nav a,.tavern-theme .main-nav .nav-games{font-size:16px;border:1px solid #865633;padding:10px 14px}
+  .tavern-hero{height:590px;min-height:0}
+  .tavern-board-content{grid-template-columns:1fr}
+  .tavern-notes{display:grid;grid-template-columns:1fr 1fr;align-items:start;gap:16px}
+  .tavern-note{margin:0;transform:none}.tavern-note-side{margin:40px 0 0}
+  .tavern-map-sheet{min-height:0}.tavern-map-sheet img{height:auto}
+  .tavern-ledger-leather{grid-template-columns:auto 1fr}
+  .tavern-ledger-links{grid-column:2}
+}
+@media(max-width:670px){
+  .tavern-topline{font-size:8px}.tavern-topline span:last-child{display:none}
+  .tavern-theme .site-header:before,.tavern-theme .site-header:after{width:13px;height:13px;top:29px}
+  .tavern-theme .site-header:before{left:5px}.tavern-theme .site-header:after{right:5px}
+  .tavern-theme .header-inner{padding-inline:25px}.brand-sign{min-height:50px}
+  .tavern-theme .brand-name{font-size:25px}.brand-sign small{font-size:7px}
+  .guild-standard{width:34px;height:54px}.guild-standard span:first-child{font-size:21px;line-height:23px}.guild-standard span:last-child{font-size:14px}
+  .tavern-theme #main-content{padding-inline:9px}
+  .tavern-home{padding-top:8px}
+  .tavern-hero{height:510px;border-width:7px}
+  .tavern-hero-art{background-position:58% center}
+  .tavern-hero-copy{padding:95px 21px 0;max-width:100%}
+  .tavern-hero h1{font-size:clamp(55px,13vw,82px)}.tavern-overline{font-size:10px;letter-spacing:.14em}
+  .tavern-hero-copy p{font-size:16px;max-width:370px}
+  .tavern-hero-caption{font-size:8px;right:8px;bottom:12px}
+  .tavern-shortcuts{grid-template-columns:1fr 1fr;margin:0 4px}
+  .tavern-shortcuts a{min-height:55px;font-size:15px;padding:9px;gap:6px}
+  .tavern-shortcuts svg{width:18px;height:18px}
+  .tavern-board{margin-top:25px;border-width:6px;padding:22px 15px}
+  .tavern-board-head h2{font-size:30px}
+  .tavern-notes{grid-template-columns:1fr}.tavern-note-side{margin:0}
+  .tavern-map-sheet{border-width:4px}.tavern-map-callout{font-size:13px;padding:7px 12px;bottom:10px;right:10px}
+  .tavern-section-divider{gap:8px}.tavern-section-divider h2{width:100%;text-align:center;font-size:31px}
+  .tavern-chronicle-cards{gap:25px}
+  .tavern-scroll{display:flex;flex-direction:column;padding:10px}
+  .tavern-scroll-portrait{height:250px;min-height:0}.tavern-scroll-portrait img{height:100%;max-height:none}
+  .tavern-scroll-copy{padding:18px 15px 9px}.tavern-scroll p{font-size:18px}.tavern-scroll h3{font-size:36px}
+  .tavern-ledger{margin:40px 0}.tavern-ledger-leather{grid-template-columns:1fr;padding:20px;gap:14px}
+  .tavern-book-clasp{display:none}.tavern-ledger-links{grid-column:1;padding:0 0 0 12px}
+  .tavern-ledger h2{font-size:28px}
+  .tavern-theme .inner-page{padding:16px;border-width:7px}
+  .tavern-theme .footer-inner{padding:25px 15px}.tavern-theme .footer-links{flex-wrap:wrap}
+}
+@media(prefers-reduced-motion:reduce){.tavern-theme *{transition:none!important;animation:none!important}}

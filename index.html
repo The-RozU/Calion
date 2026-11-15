@@ -3,16 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0b1110">
+  <meta name="theme-color" content="#241309">
   <meta name="description" content="Calion: oficjalne archiwum uniwersum. Odkrywaj historię, krainy, postacie, bestiariusz i graj w gry ze świata Calionu.">
   <meta property="og:title" content="Calion | Bramy do zapomnianych historii">
   <meta property="og:description" content="Jeden świat. Tysiące opowieści. Kroniki, bestiariusz, postacie i gry Calionu.">
-  <title>Calion | Świat, kroniki i gry</title>
+  <title>Karczma Calionu | Kroniki świata</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%230b1110' d='M0 0h64v64H0z'/%3E%3Cpath fill='%23d1ae6d' d='M32 4 55 13v22L32 60 9 35V13z'/%3E%3Cpath fill='%2319251f' d='M32 12 47 18v14L32 49 17 32V18z'/%3E%3Cpath fill='%23d1ae6d' d='M42 25V19H26l-7 7v12l7 7h16v-6H29l-4-4v-7l4-3z'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="./assets/style.css?v=0.0.22">
-  <script src="./assets/app.js?v=0.0.22" defer></script>
+  <link rel="stylesheet" href="./assets/style.css?v=0.0.23">
+  <link rel="stylesheet" href="./assets/karczma.css?v=0.0.23">
+  <script src="./assets/app.js?v=0.0.23" defer></script>
 </head>
-<body>
+<body class="tavern-theme">
 <svg class="svg-defs" width="0" height="0" aria-hidden="true" focusable="false"><defs>
   <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"/></symbol>
   <symbol id="i-map" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15m6-12v15"/></symbol>
@@ -27,11 +28,15 @@
   <symbol id="i-external" viewBox="0 0 24 24"><path d="M13 4h7v7m0-7-9 9m7 1v6H4V6h6"/></symbol>
 </defs></svg>
 
-<div class="atlas-topbar"><span>✥ &nbsp; KRONIKI ZAPOMNIANEGO ŚWIATA</span><span>ROK 825 · PROTOTYP 0.0.22</span></div>
+
+<div class="tavern-topline"><span>✦ &nbsp; KRONIKI ŚWIATA CALIONU</span><span>OTWARTA KSIĘGA · WERSJA 0.0.23</span></div>
 <header class="site-header">
   <div class="header-inner">
-    <a class="brand" href="#/" aria-label="Calion, strona główna"><span class="brand-banner" aria-hidden="true">♜<small>≋</small></span><span class="brand-name">CALION</span></a>
-    <button id="menu-toggle" class="menu-toggle" type="button" aria-label="Pokaż menu" aria-expanded="false">☰ <span>MENU</span></button>
+    <a class="brand" href="#/" aria-label="Calion, strona główna">
+      <span class="guild-standard" aria-hidden="true"><span>♜</span><span>≋</span></span>
+      <span class="brand-sign"><span class="brand-name">CALION</span><small>KARCZMA POSZUKIWACZY</small></span>
+    </a>
+    <button id="menu-toggle" class="menu-toggle" type="button" aria-label="Rozwiń menu" aria-expanded="false">☰ <span>MENU</span></button>
     <nav id="main-nav" class="main-nav" aria-label="Nawigacja główna">
       <a href="#/" data-nav="start">Główna</a>
       <a href="#/swiat" data-nav="swiat">Świat</a>
@@ -46,55 +51,100 @@
 </header>
 <main id="main-content">
   
-<div id="home-view" class="atlas-home">
-  <section class="atlas-cover" aria-labelledby="hero-title">
-    <div class="atlas-cover-art" role="img" aria-label="Pixelartowa panorama średniowiecznego miasta portowego Calion o zachodzie słońca"></div>
-    <div class="atlas-cover-text">
-      <span class="atlas-cover-kicker">✥ &nbsp; KRONIKI ZAPOMNIANEGO ŚWIATA</span>
+
+<div id="home-view" class="tavern-home">
+  <section class="tavern-hero" aria-labelledby="hero-title">
+    <div class="tavern-hero-art" role="img" aria-label="Pixelartowe wnętrze średniowiecznej karczmy Gildii Poszukiwaczy z kominkiem, świecami i stołami"></div>
+    <div class="tavern-hero-copy">
+      <span class="tavern-overline">✦ &nbsp; Z KRONIK ZAPOMNIANEGO ŚWIATA</span>
       <h1 id="hero-title">CALION</h1>
-      <div class="atlas-rule" aria-hidden="true"><span>◇</span></div>
-      <a class="atlas-button" href="#/swiat"><svg aria-hidden="true"><use href="#i-book"/></svg> Otwórz atlas <span aria-hidden="true">→</span></a>
+      <div class="tavern-rule" aria-hidden="true"><span>✥</span></div>
+      <p>Przy stole Poszukiwaczy każdy ma historię. Jedne zapisano w kronikach, inne dopiero czekają na odkrycie.</p>
+      <a class="tavern-cta" href="#/swiat"><svg aria-hidden="true"><use href="#i-book"/></svg> Otwórz księgę świata <span aria-hidden="true">→</span></a>
     </div>
+    <div class="tavern-hero-caption"><span aria-hidden="true">✥</span> POD ZNAKIEM MIECZA · GILDIA POSZUKIWACZY</div>
   </section>
-  <section class="atlas-parchment atlas-region" aria-labelledby="region-title">
-    <div class="atlas-paper-copy">
-      <span class="atlas-small-title">I · ATLAS KRAIN</span>
-      <h2 id="region-title">Kraina Calionu</h2>
-      <p>Portowe miasto Calion to serce krainy, dawny szlak kupców, poszukiwaczy i wygnańców.</p>
-      <p>Za jego murami rozciągają się dzikie lasy Elderonu, surowe góry Durnhollow i liczne osady nad rzeką Mirdan.</p>
-      <div class="atlas-ink-rule" aria-hidden="true">✧</div>
-      <a class="atlas-paper-button" href="#/swiat">Poznaj świat <span aria-hidden="true">→</span></a>
+
+  <nav class="tavern-shortcuts" aria-label="Szybkie przejścia do kronik">
+    <a href="#/swiat"><svg aria-hidden="true"><use href="#i-map"/></svg><span>Atlas krain</span></a>
+    <a href="#/historia"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Dawne kroniki</span></a>
+    <a href="#/postacie"><svg aria-hidden="true"><use href="#i-crown"/></svg><span>Znane postacie</span></a>
+    <a href="#/bestiariusz"><svg aria-hidden="true"><use href="#i-skull"/></svg><span>Bestiariusz</span></a>
+  </nav>
+
+  <section class="tavern-board" aria-labelledby="board-title">
+    <div class="tavern-board-head">
+      <span class="tavern-section-mark">I / TABLICA POSZUKIWACZY</span>
+      <h2 id="board-title">Co skrywają <em>krainy Calionu?</em></h2>
     </div>
-    <div class="atlas-map" aria-label="Mapa okolic Calionu">
-      <a class="atlas-map-preview" href="#/swiat" aria-label="Otwórz atlas krain Calionu">
-        <img src="./assets/images/mapa.webp" alt="Oryginalna mapa okolic Calionu z Grzbietem Kolosa, Durnhollow, Elderonem, doliną Mirdan, Lasem Orklag, Bagnami Milczenia i Zatoką Calionu" width="1536" height="1024" loading="lazy" decoding="async">
-        <span class="atlas-map-cta">Otwórz pełną mapę <span aria-hidden="true">↗</span></span>
+    <div class="tavern-board-content">
+      <div class="tavern-notes">
+        <div class="tavern-note tavern-note-main">
+          <span class="tavern-pin tavern-pin-copper" aria-hidden="true"></span>
+          <small>PRZYPIĘTO DO TABLICY</small>
+          <h3>Okolice Calionu</h3>
+          <p>Od portowych ulic przez Las Elderon aż po Grzbiet Kolosa. Każda droga niesie inne opowieści.</p>
+          <a href="#/swiat">Przejrzyj atlas <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="tavern-note tavern-note-side">
+          <span class="tavern-pin tavern-pin-steel" aria-hidden="true"></span>
+          <small>NOTATKA Z PODRÓŻY</small>
+          <strong>Durnhollow</strong>
+          <p>3–5 dni pieszo z Calionu, jeśli pogoda sprzyja.</p>
+        </div>
+      </div>
+      <a href="#/swiat" class="tavern-map-sheet" aria-label="Otwórz szczegółową mapę świata Calionu">
+        <span class="tavern-map-fastener upper" aria-hidden="true"></span>
+        <img src="./assets/images/mapa.webp" alt="Mapa okolic Calionu, Durnhollow, Elderonu, doliny Mirdan i pobliskich krain" width="1536" height="1024" loading="lazy" decoding="async">
+        <span class="tavern-map-fastener lower" aria-hidden="true"></span>
+        <span class="tavern-map-callout">Rozwiń mapę <span aria-hidden="true">↗</span></span>
       </a>
     </div>
   </section>
-  <section class="atlas-stories" aria-label="Wyróżnione kroniki">
-    <article class="atlas-parchment atlas-story atlas-story-character">
-      <div class="atlas-story-art atlas-story-art-ralfor" role="img" aria-label="Pixelartowy Ralfor, krasnoludzki kowal w rozświetlonej kuźni"></div>
-      <div class="atlas-story-text">
-        <span class="atlas-story-overline">Z kronik Calionu</span>
-        <h2>Ralfor</h2>
-        <p>Krasnoludzki mistrz kowalski z Calionu. W jego warsztacie powstaje oręż, który niejednego Poszukiwacza ocalił przed śmiercią.</p>
-        <div class="atlas-ink-rule" aria-hidden="true">✧</div>
-        <a href="#/postacie">Poznaj postacie <span aria-hidden="true">→</span></a>
-      </div>
-    </article>
-    <article class="atlas-parchment atlas-story atlas-story-bestiary">
-      <div class="atlas-story-text">
-        <span class="atlas-story-overline">Z kart bestiariusza</span>
-        <h2>Wargi Elderonu</h2>
-        <div class="atlas-story-art atlas-story-art-warg" role="img" aria-label="Pixelartowy warg z Elderonu w mrocznym lesie"></div>
-        <p>Za murami miasta czai się dzika północ. Nawet doświadczony wędrowiec wie, że nie wszystkie ścieżki prowadzą do domu.</p>
-        <div class="atlas-ink-rule" aria-hidden="true">✧</div>
-        <a href="#/bestiariusz">Przeglądaj bestiariusz <span aria-hidden="true">→</span></a>
-      </div>
-    </article>
+
+  <section class="tavern-chronicles" aria-labelledby="chronicle-title">
+    <div class="tavern-section-divider">
+      <span>II / ZAPISKI Z KARCMY</span><h2 id="chronicle-title">Historie przy ogniu</h2><span class="tavern-ornament" aria-hidden="true">✥</span>
+    </div>
+    <div class="tavern-chronicle-cards">
+      <article class="tavern-scroll tavern-scroll-ralfor">
+        <span class="tavern-metal-corner top-left" aria-hidden="true"></span><span class="tavern-metal-corner top-right" aria-hidden="true"></span>
+        <div class="tavern-scroll-portrait"><img src="./assets/images/ralfor.webp" alt="Ralfor, krasnoludzki mistrz kowalstwa w swojej kuźni" width="768" height="512" loading="lazy"></div>
+        <div class="tavern-scroll-copy">
+          <span class="tavern-scroll-overline">Z kronik Calionu</span>
+          <h3>Ralfor</h3>
+          <p>Stary krasnolud i mistrz kowalski. Jego kuźnia współpracuje z Gildią Poszukiwaczy, a wykonana tam broń ma własną renomę.</p>
+          <a href="#/postacie">Poznaj postacie <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+      <article class="tavern-scroll tavern-scroll-warg">
+        <span class="tavern-metal-corner top-left" aria-hidden="true"></span><span class="tavern-metal-corner top-right" aria-hidden="true"></span>
+        <div class="tavern-scroll-portrait"><img src="./assets/images/warg.webp" alt="Warg w mrocznym lesie Elderon" width="768" height="512" loading="lazy"></div>
+        <div class="tavern-scroll-copy">
+          <span class="tavern-scroll-overline">Z kart bestiariusza</span>
+          <h3>Wargi Elderonu</h3>
+          <p>W lasach północy łatwo zgubić szlak. Jeszcze łatwiej zapomnieć, że nie każda leśna ścieżka jest bezpieczna.</p>
+          <a href="#/bestiariusz">Przeglądaj bestiariusz <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+    </div>
   </section>
-  <section class="atlas-epilogue"><p>Każda kraina ma swoją historię.</p><span aria-hidden="true">───────── ◇ ─────────</span></section>
+
+  <section class="tavern-ledger" aria-labelledby="ledger-title">
+    <div class="tavern-ledger-leather">
+      <span class="tavern-book-clasp" aria-hidden="true">✦</span>
+      <div>
+        <span class="tavern-section-mark">III / KSIĘGI NA STOLE</span>
+        <h2 id="ledger-title">Nie tylko mapy i potwory.</h2>
+        <p>Poznaj tych, którzy rządzą Calionem, chronią jego mury albo wyruszają na północne szlaki.</p>
+      </div>
+      <div class="tavern-ledger-links">
+        <a href="#/frakcje">Frakcje i gildie <span aria-hidden="true">→</span></a>
+        <a href="#/rasy">Rasy i ludy <span aria-hidden="true">→</span></a>
+        <a href="#/gry">Gry Calionu <small>W przygotowaniu</small> <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
 </div>
 <section id="collection-view" class="inner-page" hidden aria-live="polite">
     <div class="inner-hero"><span id="collection-eyebrow" class="eyebrow"></span><h1 id="collection-title"></h1><p id="collection-desc"></p></div>
@@ -116,7 +166,7 @@
     <p class="player-help">Wskazówka: możesz włączyć pełny ekran przyciskiem powyżej. Aby powrócić, naciśnij <kbd>Esc</kbd>. Postępy i ustawienia zależą od wybranej gry.</p>
   </section>
 </main>
-<footer class="site-footer"><div class="footer-inner"><a class="footer-brand" href="#/"><span class="brand-mark small">C</span><span>CALION<small>UNIWERSUM • KRONIKI • GRY</small></span></a><p>Świat, który powstaje z każdą nową opowieścią.<br>Projekt uniwersum Calionu.</p><div class="footer-links"><a href="#/swiat">Atlas świata</a><a href="#/bestiariusz">Bestiariusz</a><a href="#/gry">Biblioteka gier</a></div><span class="footer-version">© 2026 CALION · PROTOTYP v0.0.22</span></div></footer>
+<footer class="site-footer"><div class="footer-inner"><a class="footer-brand" href="#/"><span class="footer-seal" aria-hidden="true">C</span><span>CALION<small>KRONIKI ZAPOMNIANEGO ŚWIATA</small></span></a><p>Każda historia gdzieś się zaczyna. Ta przy stole Poszukiwaczy.</p><div class="footer-links"><a href="#/swiat">Atlas świata</a><a href="#/historia">Kroniki</a><a href="#/gry">Gry</a></div><span class="footer-version">WARIANT KARCZMA · v0.0.23</span></div></footer>
 <dialog id="map-dialog" class="map-dialog" aria-label="Powiększona mapa okolic Calionu">
   <div class="map-dialog-toolbar"><strong>OKOLICE CALIONU</strong><button id="map-close" type="button">✕ Zamknij</button></div>
   <div class="map-dialog-scroll"><img src="./assets/images/mapa.webp" width="1536" height="1024" alt="Powiększona, szczegółowa mapa okolic Calionu"></div>

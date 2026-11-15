@@ -54,3 +54,17 @@ Nowa główna strona w stylu dark fantasy pixel art na podstawie zaakceptowanej 
 - Grafiki WebP z wyższej rozdzielczości są przygotowywane z plików źródłowych przez automatyzację assets.
 
 - Gotowe ilustracje strony korzystają z lokalnych plików WebP, a większe JPEG pozostają źródłami do reprodukowalnej konwersji w GitHub Actions.
+
+## Wariant testowy: Karczma Calionu v0.0.23
+
+Ta wersja powstaje **wyłącznie na gałęzi `karczma`** jako alternatywa dla Mrocznego Atlasu na `dev-mode`. Zmiany nie powinny być automatycznie przenoszone na `main`.
+
+### Założenia wizualne
+
+- Pełnoekranowy pixelartowy kadr wnętrza karczmy jako hero.
+- Tło z warstwowo stylizowanego ciemnego drewna; miedziane ćwieki i srebrne okucia; pergaminy i oprawa z brązowej skóry.
+- Tablica Poszukiwaczy z mapą Calionu (zachowana oryginalna mapa WebP).
+- Kroniki Ralfora i Wargów Elderonu prezentowane jako osobne pergaminowe wpisy.
+- Podstrony encyklopedii, wyszukiwarka, pełnoekranowa mapa i zapowiedzi gier zachowują funkcjonalność.
+
+Pliki: `assets/karczma.css` to samodzielna warstwa stylistyczna ponad istniejącym `assets/style.css`. Grafika `assets/images/karczma-wnetrze.webp` powstaje automatycznie z pliku `karczma-wnetrze.jpg` przez workflow `karczma-webp.yml`. Grafiki gry są lokalne, bez powrotu usuniętych plików Survivors.

@@ -155,7 +155,7 @@
     else{
       const frame=$("#game-iframe");if(frame.hasAttribute("src"))frame.removeAttribute("src");
       if(route!=="start"){loadCollection(route);document.title=sections[route].kicker.split("/")[0].trim()+" | Calion";}
-      else document.title="Calion | Świat, kroniki i gry";
+      else document.title="Karczma Calionu | Kroniki świata";
     }
     setActiveNav(route);closeMenu();window.scrollTo(0,0);
   }
