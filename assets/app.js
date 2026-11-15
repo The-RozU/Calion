@@ -58,6 +58,7 @@
   const $=(sel)=>document.querySelector(sel);
   const home=$("#home-view"),collection=$("#collection-view"),player=$("#play-view"),menu=$("#main-nav");
   const search=$("#archive-search");
+  const worldMapPanel=$("#world-map-panel"),mapDialog=$("#map-dialog");
   const escapeHTML=(s)=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const icon=(id)=>'<svg aria-hidden="true"><use href="#'+id+'"></use></svg>';
   let currentSection="";
@@ -125,6 +126,7 @@
     $("#collection-title").innerHTML=s.title;
     $("#collection-desc").textContent=s.desc;
     search.value="";
+    worldMapPanel.hidden=section!=="swiat";
     search.placeholder=section==="gry"?"Szukaj gier...":"Szukaj w archiwum...";
     $("#game-library").hidden=section!=="gry";
     $("#collection-grid").hidden=section==="gry";
@@ -157,6 +159,9 @@
     }
     setActiveNav(route);closeMenu();window.scrollTo(0,0);
   }
+  $("#map-expand").addEventListener("click",()=>mapDialog.showModal());
+  $("#map-close").addEventListener("click",()=>mapDialog.close());
+  mapDialog.addEventListener("click",event=>{if(event.target===mapDialog)mapDialog.close()});
   $("#menu-toggle").addEventListener("click",()=>{const open=menu.classList.toggle("open");$("#menu-toggle").setAttribute("aria-expanded",String(open));});
   search.addEventListener("input",()=>currentSection==="gry"?renderGames():renderEntries());
   $("#dialog-close").addEventListener("click",()=>$("#lore-dialog").close());

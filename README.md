@@ -4,7 +4,7 @@ Wstępny projekt strony **Calion** łączącej lore świata, kroniki, postacie, 
 
 ## Wersja
 
-Portal: **0.0.21** (prototyp). Zachowana istniejąca gra **Calion Survivors 0.0.18** w katalogu `survivors/`.
+Portal: **0.0.22** (prototyp). Zachowana istniejąca gra **Calion Survivors 0.0.18** w katalogu `survivors/`.
 
 ## Zawartość
 
@@ -40,6 +40,17 @@ Na GitHub Pages ustaw w **Settings → Pages → Build and deployment → Deploy
 
 Wstępne streszczenia z projektowego dokumentu świata Calionu i wcześniejszej wersji Kronik; miejsca, dla których brak kompletnych szczegółów, są oznaczone jako wpisy do rozwinięcia, zamiast dopisywać niezatwierdzony kanon.
 
-## Wersja 0.0.21 — Mroczny Atlas
+## Wersja 0.0.22 — Mroczny Atlas
 
 Nowa główna strona w stylu dark fantasy pixel art na podstawie zaakceptowanej makiety. Ilustracje są lokalnymi plikami WebP. Sekcje atlasu, kronik, postaci i bestiariusza zachowują dotychczasową zawartość. Wszystkie gry oznaczono jako przyszłe, bez prób uruchamiania usuniętych plików. Wdrożenie testowe tylko na gałęzi `dev-mode`.
+
+
+## 0.0.22 — widescreen i mapa
+
+- Układ wykorzystuje prawie całą szerokość 16:9, do 1920 px.
+- Obrazy nie są rozciągane z wymuszoną pikselizacją.
+- Oryginalna mapa Calionu stanowi centralny punkt atlasu, bez dodatkowych etykiet zasłaniających nazwy.
+- W dziale Świat jest pełna mapa z przyciskiem powiększenia; na telefonach można ją przewijać.
+- Grafiki WebP z wyższej rozdzielczości są przygotowywane z plików źródłowych przez automatyzację assets.
+
+- Do czasu wygenerowania indywidualnych plików WebP strona korzysta z pełnowymiarowych JPG (plan: po konwersji w repozytorium podmienić odwołania na WebP).
