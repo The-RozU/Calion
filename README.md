@@ -53,4 +53,4 @@ Nowa główna strona w stylu dark fantasy pixel art na podstawie zaakceptowanej 
 - W dziale Świat jest pełna mapa z przyciskiem powiększenia; na telefonach można ją przewijać.
 - Grafiki WebP z wyższej rozdzielczości są przygotowywane z plików źródłowych przez automatyzację assets.
 
-- Do czasu wygenerowania indywidualnych plików WebP strona korzysta z pełnowymiarowych JPG (plan: po konwersji w repozytorium podmienić odwołania na WebP).
+- Gotowe ilustracje strony korzystają z lokalnych plików WebP, a większe JPEG pozostają źródłami do reprodukowalnej konwersji w GitHub Actions.

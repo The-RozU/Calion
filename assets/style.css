@@ -160,3 +160,8 @@ body:before{background:linear-gradient(90deg,#101714,#171e1a 50%,#101714);opacit
 .atlas-map-cta{font-size:16px}
 @media(max-width:1050px){.atlas-story-art-ralfor{min-height:330px}}
 @media(max-width:650px){.atlas-story-art-ralfor{width:100%;height:285px;min-height:0}.atlas-story-art-warg{height:210px}}
+
+/* Production illustrations: optimized full-resolution WebP assets. */
+.atlas-cover-art{background-image:url("./images/port.webp");background-size:cover;background-position:center center;image-rendering:auto}
+.atlas-story-art-ralfor{background-image:url("./images/ralfor.webp");background-size:cover;background-position:42% center;image-rendering:auto}
+.atlas-story-art-warg{background-image:url("./images/warg.webp");background-size:cover;background-position:center 47%;image-rendering:auto}
