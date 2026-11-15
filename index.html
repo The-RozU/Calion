@@ -9,8 +9,8 @@
   <meta property="og:description" content="Jeden świat. Tysiące opowieści. Kroniki, bestiariusz, postacie i gry Calionu.">
   <title>Calion | Świat, kroniki i gry</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%230b1110' d='M0 0h64v64H0z'/%3E%3Cpath fill='%23d1ae6d' d='M32 4 55 13v22L32 60 9 35V13z'/%3E%3Cpath fill='%2319251f' d='M32 12 47 18v14L32 49 17 32V18z'/%3E%3Cpath fill='%23d1ae6d' d='M42 25V19H26l-7 7v12l7 7h16v-6H29l-4-4v-7l4-3z'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="./assets/style.css?v=0.0.20">
-  <script src="./assets/app.js?v=0.0.20" defer></script>
+  <link rel="stylesheet" href="./assets/style.css?v=0.0.21">
+  <script src="./assets/app.js?v=0.0.21" defer></script>
 </head>
 <body>
 <svg class="svg-defs" width="0" height="0" aria-hidden="true" focusable="false"><defs>
@@ -26,81 +26,77 @@
   <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/></symbol>
   <symbol id="i-external" viewBox="0 0 24 24"><path d="M13 4h7v7m0-7-9 9m7 1v6H4V6h6"/></symbol>
 </defs></svg>
-<div class="topline"><span>ARCHIWUM UNIWERSUM CALION</span><span class="topline-right">KRONIKI ROKU 824–825 <b>✦</b> WERSJA 0.0.20</span></div>
+
+<div class="atlas-topbar"><span>✥ &nbsp; KRONIKI ZAPOMNIANEGO ŚWIATA</span><span>ROK 825 · PROTOTYP 0.0.21</span></div>
 <header class="site-header">
   <div class="header-inner">
-    <a class="brand" href="#/" aria-label="Calion, strona główna"><span class="brand-mark">C</span><span class="brand-name">CALION<small>KRONIKI ZAPOMNIANEGO ŚWIATA</small></span></a>
+    <a class="brand" href="#/" aria-label="Calion, strona główna"><span class="brand-banner" aria-hidden="true">♜<small>≋</small></span><span class="brand-name">CALION</span></a>
     <button id="menu-toggle" class="menu-toggle" type="button" aria-label="Pokaż menu" aria-expanded="false">☰ <span>MENU</span></button>
     <nav id="main-nav" class="main-nav" aria-label="Nawigacja główna">
-      <a href="#/" data-nav="start">Strona główna</a><a href="#/swiat" data-nav="swiat">Świat</a><a href="#/historia" data-nav="historia">Historia</a><a href="#/postacie" data-nav="postacie">Postacie</a><a href="#/bestiariusz" data-nav="bestiariusz">Bestiariusz</a><a href="#/frakcje" data-nav="frakcje">Frakcje</a><a href="#/rasy" data-nav="rasy">Rasy</a><a href="#/gry" data-nav="gry" class="nav-games"><svg><use href="#i-game"/></svg> Gry</a>
+      <a href="#/" data-nav="start">Główna</a>
+      <a href="#/swiat" data-nav="swiat">Świat</a>
+      <a href="#/historia" data-nav="historia">Kroniki</a>
+      <a href="#/postacie" data-nav="postacie">Postacie</a>
+      <a href="#/bestiariusz" data-nav="bestiariusz">Bestiariusz</a>
+      <a href="#/frakcje" data-nav="frakcje">Frakcje</a>
+      <a href="#/rasy" data-nav="rasy">Rasy</a>
+      <a href="#/gry" data-nav="gry">Gry</a>
     </nav>
   </div>
 </header>
 <main id="main-content">
-  <div id="home-view">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-text">
-        <div class="eyebrow"><span class="shimmer-dot"></span> OTWÓRZ BRAMY NIEZNANEGO</div>
-        <h1 id="hero-title">Witaj w świecie <em>Calionu.</em></h1>
-        <p class="hero-lead">Za murami portowego miasta rozciąga się świat pełen zapomnianych opowieści. Poznaj jego krainy, bohaterów, mroczne stworzenia i legendy. A potem <strong>zapisz własną historię w naszych grach.</strong></p>
-        <div class="hero-actions"><a href="#/swiat" class="button button-primary"><svg><use href="#i-map"/></svg> ODKRYJ ŚWIAT <svg class="arrow-icon"><use href="#i-arrow"/></svg></a><a href="#/gry" class="button button-ghost"><svg><use href="#i-game"/></svg> PRZEJDŹ DO GIER</a></div>
-        <div class="hero-footnote"><span class="footnote-line"></span> JEDEN ŚWIAT. NIEZLICZONE PRZYGODY.</div>
+  
+<div id="home-view" class="atlas-home">
+  <section class="atlas-cover" aria-labelledby="hero-title">
+    <div class="atlas-cover-art" role="img" aria-label="Pixelartowa panorama średniowiecznego miasta portowego Calion o zachodzie słońca"></div>
+    <div class="atlas-cover-text">
+      <span class="atlas-cover-kicker">✥ &nbsp; KRONIKI ZAPOMNIANEGO ŚWIATA</span>
+      <h1 id="hero-title">CALION</h1>
+      <div class="atlas-rule" aria-hidden="true"><span>◇</span></div>
+      <a class="atlas-button" href="#/swiat"><svg aria-hidden="true"><use href="#i-book"/></svg> Otwórz atlas <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+  <section class="atlas-parchment atlas-region" aria-labelledby="region-title">
+    <div class="atlas-paper-copy">
+      <span class="atlas-small-title">I · ATLAS KRAIN</span>
+      <h2 id="region-title">Kraina Calionu</h2>
+      <p>Portowe miasto Calion to serce krainy, dawny szlak kupców, poszukiwaczy i wygnańców.</p>
+      <p>Za jego murami rozciągają się dzikie lasy Elderonu, surowe góry Durnhollow i liczne osady nad rzeką Mirdan.</p>
+      <div class="atlas-ink-rule" aria-hidden="true">✧</div>
+      <a class="atlas-paper-button" href="#/swiat">Poznaj świat <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="atlas-map" aria-label="Ilustracyjna mapa okolic Calionu">
+      <img src="./assets/images/mapa.webp" alt="Pixelartowa mapa: lasy, góry, rzeka i portowe miasto" width="128" height="86" loading="lazy">
+      <a class="atlas-map-pin pin-elderon" href="#/swiat" aria-label="Odkryj las Elderon">Elderon</a>
+      <a class="atlas-map-pin pin-durnhollow" href="#/swiat" aria-label="Odkryj Durnhollow">Durnhollow</a>
+      <a class="atlas-map-pin pin-calion" href="#/swiat" aria-label="Odkryj miasto Calion">Calion</a>
+    </div>
+  </section>
+  <section class="atlas-stories" aria-label="Wyróżnione kroniki">
+    <article class="atlas-parchment atlas-story atlas-story-character">
+      <img src="./assets/images/ralfor.webp" alt="Pixelartowy krasnoludzki kowal Ralfor w rozświetlonej kuźni" width="128" height="86" loading="lazy">
+      <div class="atlas-story-text">
+        <span class="atlas-story-overline">Z kronik Calionu</span>
+        <h2>Ralfor</h2>
+        <p>Krasnoludzki mistrz kowalski z Calionu. W jego warsztacie powstaje oręż, który niejednego Poszukiwacza ocalił przed śmiercią.</p>
+        <div class="atlas-ink-rule" aria-hidden="true">✧</div>
+        <a href="#/postacie">Poznaj postacie <span aria-hidden="true">→</span></a>
       </div>
-      <div class="hero-art" aria-hidden="true">
-        <svg viewBox="0 0 920 560" preserveAspectRatio="xMidYMid slice" shape-rendering="crispEdges">
-          <defs>
-            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#101b22"/><stop offset=".55" stop-color="#25302c"/><stop offset="1" stop-color="#68523c"/></linearGradient>
-            <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#1b3336"/><stop offset="1" stop-color="#111e22"/></linearGradient>
-          </defs>
-          <path fill="url(#sky)" d="M0 0h920v560H0z"/>
-          <path fill="#cdb88b" d="M649 66h17v18h17v34h-51V84h17z" opacity=".75"/>
-          <path fill="#e2b879" d="M655 76h10v17h10v16h-30V93h10z"/>
-          <g fill="#c1b88d" opacity=".3"><path d="M104 82h4v4h-4zm63 51h4v4h-4zm42-83h4v4h-4zm520 85h3v3h-3zm63 60h4v4h-4zm-470-85h3v3h-3zm550-80h3v3h-3z"/></g>
-          <path fill="#192b2c" d="m0 265 100-80 58 35 86-110 120 130 65-82 110 82 116-94 114 109 82-58 69 52v310H0z"/>
-          <path fill="#263732" d="m0 327 110-74 80 58 68-63 120 58 102-82 92 60 98-58 108 81 142-65v317H0z"/>
-          <path fill="#15251e" d="M0 350h44v-34h17v-35h12v35h18v34h30v-52h13v-23h13v23h14v52h37v-33h18v33h21v210H0z"/>
-          <g fill="#14221f"><path d="M740 344v-76h16v-28h18v28h15v76h30v-50h20v-23h12v23h20v50h49v216H692V344z"/></g>
-          <path fill="#121d1b" d="M160 365h40v-30h28v-27h28v27h35v-51h27v-47h38v-38h17v38h35v47h22v-72h18v-35h18v35h19v72h38v-39h17v-48h22v48h18v39h23v47h22v-34h28v34h40v195H160z"/>
-          <g fill="#38423b"><path d="M185 363h80v-45h25v-40h27v-45h33v-40h22v40h30v45h26v41h38v-30h20v-62h25v-32h24v32h26v62h35v30h45v44h40v101H185z"/></g>
-          <path fill="#646452" d="M204 372h65v-34h24v-35h29v-52h48v52h32v35h40v34h65v-28h27v-46h29v-65h38v65h29v46h30v28h67v108H204z"/>
-          <g fill="#a69a78"><path d="M215 376h54v-33h30v-36h29v-55h40v55h30v36h37v33h69v-27h33v-44h29v-69h32v69h29v44h29v27h56v22H215z"/></g>
-          <g fill="#272f2b"><path d="M312 310h16v29h-16zm31-39h15v31h-15zm42 38h16v29h-16zm163 11h17v27h-17zm40-61h15v34h-15zm41 61h16v27h-16z"/></g>
-          <g fill="#e9b76c"><path d="M316 315h8v16h-8zm31-39h7v18h-7zm43 37h7v17h-7zm162 10h8v17h-8zm42-59h6v24h-6zm41 60h7v15h-7z"/></g>
-          <path fill="#242d29" d="M170 374h544v25H170z"/>
-          <path fill="#4e5449" d="M145 397h602v56H145z"/>
-          <path fill="#7c755a" d="M154 406h581v8H154zm0 25h581v7H154z"/>
-          <path fill="#27362f" d="M138 443h640v31H138z"/>
-          <path fill="url(#sea)" d="M0 473h920v87H0z"/>
-          <g fill="#a47f4b" opacity=".3"><path d="M0 492h145v3H0zm200 23h150v3H200zm440-18h140v3H640zm-280 39h170v3H360z"/></g>
-          <path fill="#100f10" d="m44 474 57 12 61-12-16 19H59z"/>
-          <path fill="#191e1d" d="M98 421v54h4v-54zm7 11 42 40h-42zm-8 3-39 38h39z"/>
-          <path fill="#d3aa68" d="M452 449h6v12h-6zm-235 1h6v12h-6zm380 2h6v12h-6z"/>
-          <path fill="#0c1716" d="M0 545h920v15H0z"/>
-          <g opacity=".13" stroke="#e3b572"><path d="M0 0h920v560H0z" stroke-width="16" fill="none"/></g>
-        </svg>
-        <div class="art-label"><span>✦ WIDOK Z ARCHIWUM</span><strong>Calion, południowe wybrzeże</strong></div>
+    </article>
+    <article class="atlas-parchment atlas-story atlas-story-bestiary">
+      <div class="atlas-story-text">
+        <span class="atlas-story-overline">Z kart bestiariusza</span>
+        <h2>Wargi Elderonu</h2>
+        <img src="./assets/images/warg.webp" alt="Pixelartowy warg pośród ciemnego sosnowego lasu" width="128" height="86" loading="lazy">
+        <p>Za murami miasta czai się dzika północ. Nawet doświadczony wędrowiec wie, że nie wszystkie ścieżki prowadzą do domu.</p>
+        <div class="atlas-ink-rule" aria-hidden="true">✧</div>
+        <a href="#/bestiariusz">Przeglądaj bestiariusz <span aria-hidden="true">→</span></a>
       </div>
-    </section>
-    <section class="fact-strip" aria-label="O świecie"><div><svg><use href="#i-crown"/></svg><p><strong>Rok 825</strong><span>Czas obecnych kronik</span></p></div><div><svg><use href="#i-map"/></svg><p><strong>Południowe wybrzeże</strong><span>Serce krainy Calionu</span></p></div><div><svg><use href="#i-shield"/></svg><p><strong>Gildia Poszukiwaczy</strong><span>Przygody zaczynają się tutaj</span></p></div></section>
-    <section class="page-section path-section">
-      <div class="section-label"><span>01 / POZNAJ UNIWERSUM</span><span class="section-line"></span></div>
-      <div class="section-intro"><div><h2>Wybierz swoją <em>ścieżkę.</em></h2><p>Każda księga otwiera inne drzwi. Od historii wielkich wojen po cienie skrywające się w starych lasach.</p></div><a class="text-link" href="#/swiat">Rozpocznij odkrywanie <svg><use href="#i-arrow"/></svg></a></div>
-      <div class="path-grid">
-        <a class="path-card path-world" href="#/swiat"><span class="path-symbol"><svg><use href="#i-map"/></svg></span><span class="path-num">01 / ATLAS</span><h3>Świat i krainy</h3><p>Miasta, lasy, góry i zakątki, których nie obejmują królewskie mapy.</p><span class="path-action">ODKRYJ KRAINY <svg><use href="#i-arrow"/></svg></span></a>
-        <a class="path-card path-history" href="#/historia"><span class="path-symbol"><svg><use href="#i-book"/></svg></span><span class="path-num">02 / KRONIKI</span><h3>Historia świata</h3><p>Wojna z Demonami, Wojny Run i wydarzenia kształtujące obecną erę.</p><span class="path-action">CZYTAJ KRONIKI <svg><use href="#i-arrow"/></svg></span></a>
-        <a class="path-card path-heroes" href="#/postacie"><span class="path-symbol"><svg><use href="#i-crown"/></svg></span><span class="path-num">03 / BIOGRAFIE</span><h3>Postacie</h3><p>Władcy, bohaterowie, poszukiwacze, magowie i ludzie z cienia.</p><span class="path-action">POZNAJ POSTACIE <svg><use href="#i-arrow"/></svg></span></a>
-        <a class="path-card path-beasts" href="#/bestiariusz"><span class="path-symbol"><svg><use href="#i-skull"/></svg></span><span class="path-num">04 / BESTIARIUSZ</span><h3>Stworzenia i potwory</h3><p>Od wilków Elderonu po istoty, o których lepiej nie mówić nocą.</p><span class="path-action">OTWÓRZ BESTIARIUSZ <svg><use href="#i-arrow"/></svg></span></a>
-        <a class="path-card path-factions" href="#/frakcje"><span class="path-symbol"><svg><use href="#i-shield"/></svg></span><span class="path-num">05 / ORGANIZACJE</span><h3>Frakcje i gildie</h3><p>Wierność koronie, służba gildii czy droga wytyczona poza prawem?</p><span class="path-action">POZNAJ FRAKCJE <svg><use href="#i-arrow"/></svg></span></a>
-        <a class="path-card path-games" href="#/gry"><span class="path-symbol"><svg><use href="#i-game"/></svg></span><span class="path-num">06 / GRAJ ONLINE</span><h3>Gry Calionu</h3><p>Nie tylko czytaj o przygodach. Rozpocznij własną w przeglądarce.</p><span class="path-action">ZOBACZ GRY <svg><use href="#i-arrow"/></svg></span></a>
-      </div>
-    </section>
-    <section class="page-section spotlight-section">
-      <div class="section-label"><span>02 / Z ARCHIWÓW CALIONU</span><span class="section-line"></span></div>
-      <div class="spotlight-layout"><div class="spotlight-story"><span class="eyebrow">✦ OPOWIEŚĆ Z POŁUDNIOWYCH KRAIN</span><h2>Miasto, w którym <em>zaczyna się wszystko.</em></h2><p>Calion to portowe miasto-państwo nad szeroką zatoką. Jego ulice tętnią handlem, a Gildia Poszukiwaczy przyciąga śmiałków gotowych wyruszyć poza bezpieczne mury.</p><p>Za bramami czekają lasy Elderonu, północne góry i sekrety starsze niż większość kronik.</p><a class="button button-outline" href="#/swiat">POZNAJ MIASTO CALION <svg class="arrow-icon"><use href="#i-arrow"/></svg></a></div><div class="chronicle-box"><div class="chronicle-heading"><svg><use href="#i-book"/></svg> ZAPISY KRONIKARZA</div><div class="chronicle-entry"><span>ROK 0</span><strong>Rozejm z Demonami</strong><small>Nowy początek kalendarza.</small></div><div class="chronicle-entry"><span>200–239</span><strong>Wojny Run</strong><small>Walka o artefakty i dziką magię.</small></div><div class="chronicle-entry"><span>824–825</span><strong>Obecna era</strong><small>Miasto Calion i jego niespokojne pogranicze.</small></div><a href="#/historia" class="text-link">Otwórz oś czasu <svg><use href="#i-arrow"/></svg></a></div></div>
-    </section>
-    <section class="page-section play-promo"><div class="play-promo-ornament">✦</div><div><div class="eyebrow">03 / TWOJA HISTORIA</div><h2>Legendy nie muszą być <em>tylko czytane.</em></h2><p>Odkrywaj gry osadzone w Calionie. Zagraj bezpośrednio tutaj, a gdy chcesz, przejdź na pełny ekran.</p></div><a class="button button-primary" href="#/gry"><svg><use href="#i-game"/></svg> ODKRYJ GRY <svg class="arrow-icon"><use href="#i-arrow"/></svg></a></section>
-  </div>
-  <section id="collection-view" class="inner-page" hidden aria-live="polite">
+    </article>
+  </section>
+  <section class="atlas-epilogue"><p>Każda kraina ma swoją historię.</p><span aria-hidden="true">───────── ◇ ─────────</span></section>
+</div>
+<section id="collection-view" class="inner-page" hidden aria-live="polite">
     <div class="inner-hero"><span id="collection-eyebrow" class="eyebrow"></span><h1 id="collection-title"></h1><p id="collection-desc"></p></div>
     <div class="collection-toolbar"><label class="search-field"><span aria-hidden="true">⌕</span><input id="archive-search" type="search" placeholder="Szukaj w archiwum..." autocomplete="off"></label><span id="archive-count" class="archive-count"></span></div>
     <div id="history-timeline" class="timeline" hidden></div>
@@ -115,7 +111,7 @@
     <p class="player-help">Wskazówka: możesz włączyć pełny ekran przyciskiem powyżej. Aby powrócić, naciśnij <kbd>Esc</kbd>. Postępy i ustawienia zależą od wybranej gry.</p>
   </section>
 </main>
-<footer class="site-footer"><div class="footer-inner"><a class="footer-brand" href="#/"><span class="brand-mark small">C</span><span>CALION<small>UNIWERSUM • KRONIKI • GRY</small></span></a><p>Świat, który powstaje z każdą nową opowieścią.<br>Projekt uniwersum Calionu.</p><div class="footer-links"><a href="#/swiat">Atlas świata</a><a href="#/bestiariusz">Bestiariusz</a><a href="#/gry">Biblioteka gier</a></div><span class="footer-version">© 2026 CALION · PROTOTYP v0.0.20</span></div></footer>
+<footer class="site-footer"><div class="footer-inner"><a class="footer-brand" href="#/"><span class="brand-mark small">C</span><span>CALION<small>UNIWERSUM • KRONIKI • GRY</small></span></a><p>Świat, który powstaje z każdą nową opowieścią.<br>Projekt uniwersum Calionu.</p><div class="footer-links"><a href="#/swiat">Atlas świata</a><a href="#/bestiariusz">Bestiariusz</a><a href="#/gry">Biblioteka gier</a></div><span class="footer-version">© 2026 CALION · PROTOTYP v0.0.21</span></div></footer>
 <dialog id="lore-dialog" class="lore-dialog" aria-labelledby="dialog-title"><div class="dialog-head"><span id="dialog-tag" class="eyebrow"></span><button id="dialog-close" aria-label="Zamknij opis" type="button">✕</button></div><h2 id="dialog-title"></h2><p id="dialog-subtitle" class="dialog-subtitle"></p><div id="dialog-body" class="dialog-body"></div><div class="dialog-bottom"><span>✦ Z KRONIK CALIONU</span><button type="button" id="dialog-close-bottom" class="button button-outline">ZAMKNIJ ZWÓJ</button></div></dialog>
 </body>
 </html>
