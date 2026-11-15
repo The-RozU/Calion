@@ -423,7 +423,7 @@ body.tavern-theme::before {
 }
 
 
-/* v0.0.27 • Papier bez geometrycznych paneli.
+/* v0.0.28 • Papier bez geometrycznych paneli.
    Kształt dotyczy TYLKO arkusza w ::before, więc pinezki i miękkie cienie nie są obcinane. */
 
 /* Mapa: przezroczysty WebP bez czarnego otoczenia, cień śledzi krawędź pergaminu. */
@@ -602,4 +602,36 @@ body.tavern-theme::before {
   .tavern-map-callout{bottom:0;right:0;font-size:15px;padding:0}
   .tavern-note{padding:30px 23px 26px}
   .tavern-scroll{padding:17px}
+}
+
+
+/* v0.0.28 — Poprawka renderowania pergaminów w mobilnym Chromium.
+   Warstwa papieru zostaje wewnątrz karty, a nie pod drewnianym tłem. */
+.tavern-note,
+.tavern-scroll {
+  position:relative;
+  z-index:0;
+  isolation:isolate;
+}
+.tavern-note::before,
+.tavern-scroll::before {
+  z-index:0;
+}
+.tavern-note > *,
+.tavern-scroll > * {
+  position:relative;
+  z-index:2;
+}
+.tavern-note::after {
+  z-index:3;
+}
+.tavern-note .tavern-pin,
+.tavern-scroll .tavern-metal-corner {
+  z-index:4;
+}
+@media (max-width:670px) {
+  .tavern-note,
+  .tavern-scroll {
+    filter:drop-shadow(2px 4px 5px rgba(18,7,2,.35));
+  }
 }

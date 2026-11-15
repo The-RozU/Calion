@@ -1,6 +1,6 @@
 # Calion · portal uniwersum
 
-**Aktualny motyw: Karczma Calionu v0.0.27.**
+**Aktualny motyw: Karczma Calionu v0.0.28.**
 
 Strona internetowa poświęcona uniwersum Calionu, jego krainom, historii, postaciom, bestiariuszowi, rasom, frakcjom i przyszłym grom. Motyw wizualny łączy średniowieczną karczmę Gildii Poszukiwaczy, pikselowe ilustracje dark fantasy, miedziane i srebrne okucia, skórzane dodatki oraz pergaminowe kroniki.
 
@@ -62,3 +62,9 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Delikatne zagniecenia, różne krawędzie kartek i mniej geometryczne rozmieszczenie kronik.
 - Mapa na stronie głównej korzysta z przygotowanej przez GitHub Actions wersji WebP z przezroczystością (`mapa-przypieta.webp`), podczas gdy pełna mapa w atlasie pozostaje bez zmian.
 - Wersja dostępna tylko w `dev-mode`, przed publikacją na `main`.
+
+## 0.0.28 — Poprawka pergaminu na telefonach
+
+- Usunięto błąd wyświetlania tła przypiętych kartek w mobilnym Chromium: papier pozostaje na warstwie `z-index:0` ponad deskami, treść na `z-index:2`, zagięcie na `z-index:3`, mocowania na `z-index:4`.
+- Poprawiono analogiczny problem w kartach Ralfora i Wargów oraz uproszczono cieniowanie poniżej 670 px szerokości.
+- Zmiany tylko na `dev-mode`.
