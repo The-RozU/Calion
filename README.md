@@ -4,7 +4,7 @@ Wstępny projekt strony **Calion** łączącej lore świata, kroniki, postacie, 
 
 ## Wersja
 
-Portal: **0.0.19** (prototyp). Zachowana istniejąca gra **Calion Survivors 0.0.18** w katalogu `survivors/`.
+Portal: **0.0.20** (prototyp). Zachowana istniejąca gra **Calion Survivors 0.0.18** w katalogu `survivors/`.
 
 ## Zawartość
 
