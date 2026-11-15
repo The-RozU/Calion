@@ -1,0 +1,74 @@
+name: Calion — Transparent parchment map
+on:
+  push:
+    branches: [dev-mode]
+    paths:
+      - '.github/workflows/map-parchment.yml'
+      - 'assets/images/mapa.webp'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  parchment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Pillow and NumPy
+        run: python -m pip install pillow numpy
+      - name: Remove exterior dark matte without touching map content
+        run: |
+          python - <<'PY'
+          from collections import deque
+          from pathlib import Path
+          import numpy as np
+          from PIL import Image, ImageFilter
+          p=Path("assets/images")
+          image=Image.open(p/"mapa.webp").convert("RGB")
+          rgb=np.asarray(image,dtype=np.uint8)
+          h,w=rgb.shape[:2]
+          # Only dark pixels connected to the very outside can be transparent.
+          # This leaves mountains, text, coastlines, and interior ink intact.
+          maxima=rgb.max(axis=2).astype(np.int16)
+          luminance=rgb.astype(np.float32).mean(axis=2)
+          matte=(maxima<115)&(luminance<86)
+          outside=np.zeros((h,w),dtype=np.uint8)
+          q=deque()
+          for x in range(w):
+              if matte[0,x]: outside[0,x]=1; q.append((0,x))
+              if matte[h-1,x]: outside[h-1,x]=1; q.append((h-1,x))
+          for y in range(h):
+              if matte[y,0]: outside[y,0]=1; q.append((y,0))
+              if matte[y,w-1]: outside[y,w-1]=1; q.append((y,w-1))
+          while q:
+              y,x=q.popleft()
+              for ny,nx in ((y-1,x),(y+1,x),(y,x-1),(y,x+1)):
+                  if 0<=ny<h and 0<=nx<w and matte[ny,nx] and not outside[ny,nx]:
+                      outside[ny,nx]=1
+                      q.append((ny,nx))
+          removed=int(outside.sum())
+          print("Removed matte pixels:",removed,"of",h*w)
+          if removed>int(.22*h*w):
+              raise RuntimeError("Unexpectedly large exterior detected. Abort to protect the map.")
+          # Smooth only cut edges. Keep original pixels everywhere else.
+          alpha=Image.fromarray((255-outside*255).astype("uint8"),mode="L")
+          alpha=alpha.filter(ImageFilter.GaussianBlur(radius=.9))
+          result=image.convert("RGBA")
+          result.putalpha(alpha)
+          output=p/"mapa-przypieta.webp"
+          result.save(output,"WEBP",lossless=True,method=6)
+          print(output,(w,h),output.stat().st_size)
+          PY
+      - name: Commit transparent map on dev-mode
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/mapa-przypieta.webp
+          if ! git diff --cached --quiet; then
+            git commit -m "assets: transparent parchment for pinned map (v0.0.27)"
+            git push
+          fi

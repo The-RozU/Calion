@@ -421,3 +421,185 @@ body.tavern-theme::before {
     background-attachment: scroll, scroll;
   }
 }
+
+
+/* v0.0.27 • Papier bez geometrycznych paneli.
+   Kształt dotyczy TYLKO arkusza w ::before, więc pinezki i miękkie cienie nie są obcinane. */
+
+/* Mapa: przezroczysty WebP bez czarnego otoczenia, cień śledzi krawędź pergaminu. */
+.tavern-map-sheet {
+  padding: 0 0 31px;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  overflow: visible;
+  border-radius: 0;
+  isolation: isolate;
+  transform: rotate(.15deg);
+}
+.tavern-map-sheet::before { content: none; }
+.tavern-map-sheet::after {
+  content: "";
+  pointer-events: none;
+  z-index: -1;
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 29px;
+  height: 23px;
+  background: radial-gradient(ellipse at center,rgba(12,5,2,.25),transparent 72%);
+  filter: blur(5px);
+}
+.tavern-map-sheet img {
+  display:block;
+  width:100%;
+  height:auto;
+  background:transparent;
+  object-fit:contain;
+  filter: saturate(.98) drop-shadow(0 7px 7px rgba(12,5,2,.2));
+}
+.tavern-map-sheet:hover img {
+  filter: saturate(1.04) brightness(1.025) drop-shadow(0 9px 10px rgba(12,5,2,.24));
+}
+.tavern-map-callout {
+  right:0;
+  bottom:0;
+  padding:0;
+  border:0;
+  background:none;
+  box-shadow:none;
+  font-size:18px;
+}
+.tavern-map-fastener.upper{left:2.2%;top:2%}
+.tavern-map-fastener.right{right:2.2%;top:2%}
+
+/* Luźne notatki z nieregularnymi, delikatnie nadwyrężonymi krawędziami. */
+.tavern-note {
+  isolation: isolate;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  clip-path: none;
+  filter: drop-shadow(2px 6px 6px rgba(18,7,2,.45));
+  transform: rotate(-1.4deg);
+  transition: transform .22s ease, filter .22s ease;
+  padding: 32px clamp(20px,1.7vw,31px) 29px;
+}
+.tavern-note::before {
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse at 91% 84%, rgba(111,62,20,.13), transparent 34%),
+    radial-gradient(ellipse at 12% 7%,#f7e9c8,#e6cca0 59%,#d1ac79 100%);
+  clip-path:polygon(
+    .8% 1.6%, 6% .7%, 14% 1.3%, 24% .45%, 39% .85%, 49% .3%,
+    64% .9%, 78% .3%, 92% 1%, 98.9% .8%, 99.4% 8%,
+    98.9% 24%, 99.6% 43%, 99.1% 63%, 99.7% 81%, 98.7% 98%,
+    87% 99.2%, 72% 98.4%, 57% 99.5%, 44% 98.9%,
+    29% 99.5%, 16% 98.5%, 2% 98.9%, .4% 92%,
+    .9% 76%, .3% 59%, 1% 37%, .3% 17%
+  );
+}
+.tavern-note::after {
+  content:"";
+  pointer-events:none;
+  position:absolute;
+  z-index:1;
+  top:1px;
+  right:1px;
+  width:31px;
+  height:30px;
+  border:0;
+  border-radius:0;
+  box-shadow:-2px 3px 3px rgba(70,39,13,.16);
+  background:linear-gradient(132deg,#af804e 0 34%,#f6e6c1 35% 65%,#d3b182 100%);
+  clip-path:polygon(10% 0,100% 2%,100% 100%);
+}
+.tavern-note:hover {
+  filter:drop-shadow(3px 9px 9px rgba(18,7,2,.5));
+  transform:translateY(-3px) rotate(-.7deg);
+  box-shadow:none;
+}
+.tavern-note-side {
+  transform:rotate(1.7deg);
+  background:transparent;
+  margin-left:clamp(13px,2.1vw,36px);
+}
+.tavern-note-side::before {
+  background:
+    radial-gradient(ellipse at 8% 78%,rgba(143,91,37,.12),transparent 37%),
+    radial-gradient(ellipse at 30% 0%,#f5e7c6,#e2c59a 63%,#cba878 100%);
+  clip-path:polygon(
+    1% 1%, 16% .4%, 29% 1%, 48% .35%, 67% 1%, 82% .5%, 98.5% 1.2%,
+    99.4% 18%, 98.7% 36%, 99.5% 58%, 98.6% 80%, 99% 98%,
+    86% 99.3%, 66% 98.8%, 48% 99.4%, 27% 98.5%, 1.3% 99%,
+    .7% 79%, 1.1% 57%, .6% 37%
+  );
+}
+.tavern-note-side:hover {transform:translateY(-3px) rotate(1deg)}
+.tavern-pin {top:-7px;z-index:4}
+
+/* Kroniki przypięte do tej samej tablicy: papier zamiast wizualnej ramki. */
+.tavern-scroll {
+  isolation:isolate;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  clip-path:none;
+  filter: drop-shadow(2px 8px 8px rgba(12,5,2,.44));
+  transition: transform .2s ease, filter .2s ease;
+  padding:clamp(17px,1.5vw,25px);
+}
+.tavern-scroll::before {
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  pointer-events:none;
+  border:0;
+  box-shadow:none;
+  background:
+    radial-gradient(ellipse at 82% 15%,rgba(142,98,42,.08),transparent 45%),
+    linear-gradient(122deg,#f6e5c0 0%,#e8d0a7 54%,#d2b080 100%);
+  clip-path: polygon(
+    .7% 1%, 7% .55%, 16% 1%, 27% .35%, 41% .75%, 53% .3%,
+    67% .9%, 81% .45%, 98.9% 1.1%, 99.5% 9%,
+    98.9% 22%, 99.5% 38%, 99.1% 57%, 99.7% 76%, 98.8% 98.2%,
+    85% 99%, 68% 98.5%, 51% 99.3%, 34% 98.7%,
+    18% 99.3%, 1% 98.4%, .4% 84%, 1% 64%,
+    .6% 42%, 1% 20%
+  );
+}
+.tavern-scroll-warg::before {
+  clip-path:polygon(
+    1.1% .6%, 11% 1.1%, 25% .6%, 43% 1.1%, 59% .3%,
+    76% 1%, 98.6% .5%, 99.3% 19%, 98.8% 40%, 99.6% 62%,
+    99% 97.9%, 88% 99.4%, 73% 98.6%, 55% 99.1%,
+    35% 98.6%, 17% 99.3%, .7% 98.5%, 1% 78%, .4% 55%, .9% 31%
+  );
+}
+.tavern-scroll:hover {
+  filter:drop-shadow(3px 12px 11px rgba(12,5,2,.5));
+  box-shadow:none;
+  transform: translateY(-3px) rotate(0);
+}
+.tavern-scroll-portrait {border:0;box-shadow:none;border-radius:1px}
+.tavern-metal-corner {top:-7px;z-index:4}
+@media (max-width:960px) {
+  .tavern-note {filter:drop-shadow(2px 5px 6px rgba(18,7,2,.4))}
+  .tavern-scroll {filter:drop-shadow(2px 6px 7px rgba(18,7,2,.4))}
+}
+@media (max-width:670px) {
+  .tavern-map-sheet {padding-bottom:31px}
+  .tavern-map-callout{bottom:0;right:0;font-size:15px;padding:0}
+  .tavern-note{padding:30px 23px 26px}
+  .tavern-scroll{padding:17px}
+}
