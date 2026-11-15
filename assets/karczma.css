@@ -1,4 +1,4 @@
-/* Karczma Calionu — alternatywny motyw 0.0.23.
+/* Karczma Calionu — alternatywny motyw 0.0.24.
    Wersja demonstracyjna, niezależna od Mrocznego Atlasu.
    Materiały: ciemne deski, miedź, przydymione srebro, skóra, pergamin. */
 :root{
@@ -210,3 +210,26 @@ body.tavern-theme:before{content:"";position:fixed;inset:0;z-index:-1;pointer-ev
   .tavern-theme .footer-inner{padding:25px 15px}.tavern-theme .footer-links{flex-wrap:wrap}
 }
 @media(prefers-reduced-motion:reduce){.tavern-theme *{transition:none!important;animation:none!important}}
+
+/* 0.0.24 — naturalna, bezszwowa tekstura drewnianych desek pixel-art.
+   Zamiast gradientowej imitacji drewna: pojedynczy powtarzalny obraz WebP,
+   dopasowany na czterech krawędziach. Bez dodatkowej warstwy sztucznych pasków. */
+body.tavern-theme {
+  background-color: #28150c;
+  background-image:
+    linear-gradient(rgba(15, 7, 4, 0.17), rgba(15, 7, 4, 0.17)),
+    url("./images/drewno-bezszwowe.webp");
+  background-repeat: no-repeat, repeat;
+  background-position: center center, center top;
+  background-size: cover, 1240px 941px;
+  background-attachment: fixed, fixed;
+}
+body.tavern-theme::before {
+  content: none;
+}
+/* Na urządzeniach mobilnych fixed backgrounds są obsługiwane nierówno. */
+@media (max-width: 720px) {
+  body.tavern-theme {
+    background-attachment: scroll, scroll;
+  }
+}

@@ -4,7 +4,7 @@ Wstępny projekt strony **Calion** łączącej lore świata, kroniki, postacie, 
 
 ## Wersja
 
-Portal: **0.0.23** (prototyp). Zachowana istniejąca gra **Calion Survivors 0.0.18** w katalogu `survivors/`.
+Portal: **0.0.24** (prototyp). Zachowana istniejąca gra **Calion Survivors 0.0.18** w katalogu `survivors/`.
 
 ## Zawartość
 
@@ -55,7 +55,7 @@ Nowa główna strona w stylu dark fantasy pixel art na podstawie zaakceptowanej 
 
 - Gotowe ilustracje strony korzystają z lokalnych plików WebP, a większe JPEG pozostają źródłami do reprodukowalnej konwersji w GitHub Actions.
 
-## Wariant testowy: Karczma Calionu v0.0.23
+## Wariant testowy: Karczma Calionu v0.0.24
 
 Ta wersja powstaje **wyłącznie na gałęzi `karczma`** jako alternatywa dla Mrocznego Atlasu na `dev-mode`. Zmiany nie powinny być automatycznie przenoszone na `main`.
 
@@ -68,3 +68,11 @@ Ta wersja powstaje **wyłącznie na gałęzi `karczma`** jako alternatywa dla Mr
 - Podstrony encyklopedii, wyszukiwarka, pełnoekranowa mapa i zapowiedzi gier zachowują funkcjonalność.
 
 Pliki: `assets/karczma.css` to samodzielna warstwa stylistyczna ponad istniejącym `assets/style.css`. Grafika `assets/images/karczma-wnetrze.webp` powstaje automatycznie z pliku `karczma-wnetrze.jpg` przez workflow `karczma-webp.yml`. Grafiki gry są lokalne, bez powrotu usuniętych plików Survivors.
+
+## Karczma 0.0.24 — naturalne, bezszwowe deski
+
+- Nowe tło bazuje na przesłanej pikselowej teksturze drewna. Zamiast gradientów i sztucznych pasków używa lokalnego pliku `assets/images/drewno-bezszwowe.webp`.
+- Plik ma wymiary 1240×941 px i jest przygotowany tak, aby przeciwległe krawędzie łączyły się bez linii podczas powtarzania.
+- Tło powtarza się w natywnej wielkości i pozostaje na miejscu podczas przewijania na komputerze; wersja mobilna korzysta ze zwykłego przewijania.
+- Zmieniona tylko gałąź `karczma`. Pozostałe grafiki i działy strony bez zmian.
+- Źródło JPG do ponownego wygenerowania WebP i workflow: `assets/images/drewno-bezszwowe-source.jpg`, `.github/workflows/karczma-wood-webp.yml`.
