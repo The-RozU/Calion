@@ -1,713 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calion – Kroniki, Świat i Gry</title>
-<style>
-  :root {
-    --bg-main: #0d1014;
-    --bg-panel: #151921;
-    --bg-card: #1c222d;
-    --gold: #b38743;
-    --gold-bright: #d9aa5f;
-    --gold-dim: rgba(179, 135, 67, 0.25);
-    --text-main: #e8ddc7;
-    --text-muted: #9e9380;
-    --red: #8a2424;
-    --green: #3b6e4c;
-  }
-
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  body {
-    background-color: var(--bg-main);
-    background-image: radial-gradient(circle at 50% 0%, rgba(179, 135, 67, 0.12), transparent 60%);
-    color: var(--text-main);
-    font-family: 'Georgia', serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* NAGŁÓWEK */
-  header {
-    text-align: center;
-    padding: 28px 16px 20px;
-    border-bottom: 2px solid var(--gold);
-    background: linear-gradient(180deg, #12161d 0%, #0d1014 100%);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
-  }
-
-  .crest {
-    font-size: 0.8rem;
-    letter-spacing: 3px;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 6px;
-    font-family: system-ui, sans-serif;
-  }
-
-  h1 {
-    font-size: 2.2rem;
-    color: var(--gold-bright);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
-    margin-bottom: 8px;
-  }
-
-  .subtitle {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    max-width: 600px;
-    margin: 0 auto 16px;
-    line-height: 1.4;
-  }
-
-  .top-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 12px;
-  }
-
-  .btn {
-    background: linear-gradient(180deg, #b38743, #7d5b28);
-    color: #fff;
-    border: 1px solid var(--gold-bright);
-    padding: 9px 16px;
-    border-radius: 6px;
-    font-weight: bold;
-    font-family: system-ui, sans-serif;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: 0.2s;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .btn:hover {
-    filter: brightness(1.15);
-    transform: translateY(-1px);
-  }
-
-  .btn-secondary {
-    background: #1c222d;
-    border: 1px solid var(--gold);
-    color: var(--text-main);
-  }
-
-  .btn-danger {
-    background: var(--red);
-    border-color: #c94a4a;
-  }
-
-  /* NAWIGACJA KATEGORII */
-  .nav-bar {
-    display: flex;
-    overflow-x: auto;
-    gap: 8px;
-    padding: 12px 16px;
-    background: #11141b;
-    border-bottom: 1px solid var(--gold-dim);
-    justify-content: center;
-  }
-
-  @media (max-width: 650px) {
-    .nav-bar {
-      justify-content: flex-start;
-    }
-  }
-
-  .tab-btn {
-    background: var(--bg-panel);
-    color: var(--text-muted);
-    border: 1px solid var(--gold-dim);
-    padding: 8px 14px;
-    border-radius: 20px;
-    cursor: pointer;
-    white-space: nowrap;
-    font-family: system-ui, sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    transition: 0.2s;
-  }
-
-  .tab-btn.active {
-    background: var(--gold);
-    color: #0d1014;
-    border-color: var(--gold-bright);
-  }
-
-  /* WYSZUKIWARKA */
-  .container {
-    width: 100%;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 20px 16px;
-    flex: 1;
-  }
-
-  .search-bar {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .search-input {
-    flex: 1;
-    background: var(--bg-panel);
-    border: 1px solid var(--gold-dim);
-    color: var(--text-main);
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    outline: none;
-  }
-
-  .search-input:focus {
-    border-color: var(--gold);
-  }
-
-  /* SIATKA KART */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-    gap: 16px;
-  }
-
-  .card {
-    background: var(--bg-card);
-    border: 1px solid var(--gold-dim);
-    border-radius: 8px;
-    padding: 18px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: 0.2s;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--gold);
-  }
-
-  .card:hover {
-    border-color: var(--gold);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-  }
-
-  .card-badge {
-    display: inline-block;
-    font-family: system-ui, sans-serif;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--gold-bright);
-    background: rgba(179, 135, 67, 0.15);
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-bottom: 8px;
-    align-self: flex-start;
-  }
-
-  .card h3 {
-    font-size: 1.2rem;
-    color: var(--text-main);
-    margin-bottom: 6px;
-  }
-
-  .card-sub {
-    font-size: 0.82rem;
-    color: var(--gold);
-    margin-bottom: 10px;
-    font-style: italic;
-  }
-
-  .card-desc {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    line-height: 1.45;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .card-footer {
-    margin-top: 14px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: system-ui, sans-serif;
-    font-size: 0.8rem;
-    color: var(--gold-bright);
-  }
-
-  /* OKNA MODALNE (PODGLĄD I DODAWANIE) */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.82);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    padding: 16px;
-    z-index: 100;
-  }
-
-  .modal-overlay.open {
-    display: flex;
-  }
-
-  .modal {
-    background: var(--bg-panel);
-    border: 2px solid var(--gold);
-    border-radius: 10px;
-    width: 100%;
-    max-width: 650px;
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: 24px;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
-  }
-
-  .modal h2 {
-    color: var(--gold-bright);
-    margin-bottom: 6px;
-  }
-
-  .modal-body {
-    margin: 16px 0;
-    line-height: 1.6;
-    white-space: pre-line;
-    color: var(--text-main);
-    font-size: 0.98rem;
-  }
-
-  .form-group {
-    margin-bottom: 14px;
-  }
-
-  .form-group label {
-    display: block;
-    font-family: system-ui, sans-serif;
-    font-size: 0.85rem;
-    color: var(--gold-bright);
-    margin-bottom: 5px;
-  }
-
-  .form-control {
-    width: 100%;
-    background: var(--bg-main);
-    border: 1px solid var(--gold-dim);
-    color: var(--text-main);
-    padding: 10px 12px;
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 0.95rem;
-  }
-
-  textarea.form-control {
-    min-height: 140px;
-    resize: vertical;
-  }
-
-  .modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 18px;
-    flex-wrap: wrap;
-  }
-
-  footer {
-    text-align: center;
-    padding: 16px;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    border-top: 1px solid var(--gold-dim);
-    font-family: system-ui, sans-serif;
-  }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b1110">
+  <meta name="description" content="Calion: oficjalne archiwum uniwersum. Odkrywaj historię, krainy, postacie, bestiariusz i graj w gry ze świata Calionu.">
+  <meta property="og:title" content="Calion | Bramy do zapomnianych historii">
+  <meta property="og:description" content="Jeden świat. Tysiące opowieści. Kroniki, bestiariusz, postacie i gry Calionu.">
+  <title>Calion | Świat, kroniki i gry</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%230b1110' d='M0 0h64v64H0z'/%3E%3Cpath fill='%23d1ae6d' d='M32 4 55 13v22L32 60 9 35V13z'/%3E%3Cpath fill='%2319251f' d='M32 12 47 18v14L32 49 17 32V18z'/%3E%3Cpath fill='%23d1ae6d' d='M42 25V19H26l-7 7v12l7 7h16v-6H29l-4-4v-7l4-3z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./assets/style.css?v=0.0.19">
+  <script src="./assets/app.js?v=0.0.19" defer></script>
 </head>
 <body>
-
-<header>
-  <div class="crest">Królewskie Archiwa Gildii</div>
-  <h1>Kroniki Calionu</h1>
-  <p class="subtitle">Kompendium wiedzy o świecie, historii, bohaterach, potworach oraz grach osadzonych w uniwersum Calionu.</p>
-  <div class="top-actions">
-    <button class="btn" onclick="openFormModal()">➕ Dodaj nowy wpis</button>
-    <button class="btn btn-secondary" onclick="exportToClipboard()">📋 Kopiuj bazę (do GitHuba)</button>
+<svg class="svg-defs" width="0" height="0" aria-hidden="true" focusable="false"><defs>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15m6-12v15"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 2 9 4v6c0 5-3.5 8-9 10-5.5-2-9-5-9-10V6zM9 12l2 2 4-4"/></symbol>
+  <symbol id="i-skull" viewBox="0 0 24 24"><path d="M12 2C6 2 4 6 4 11c0 3 1.5 5 4 6v4h8v-4c2.5-1 4-3 4-6 0-5-2-9-8-9Zm-4 9h2m4 0h2m-5 5h2M10 21v-3m4 3v-3"/></symbol>
+  <symbol id="i-sword" viewBox="0 0 24 24"><path d="m21 3-3 8-7 7-5-5 7-7zM5 12l7 7m-10 0 3-3m-2 6 4-4"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5z"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24"><path d="M2 8 7 12l5-9 5 9 5-4-2 12H4zM4 17h16"/></symbol>
+  <symbol id="i-game" viewBox="0 0 24 24"><path d="M7 7h10c3 0 4 3 5 9 .5 4-2.5 5-5 2l-2-2H9l-2 2c-2.5 3-5.5 2-5-2C3 10 4 7 7 7Zm1 3v5m-2.5-2.5h5M17 11h.1M19 13h.1"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+  <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M13 4h7v7m0-7-9 9m7 1v6H4V6h6"/></symbol>
+</defs></svg>
+<div class="topline"><span>ARCHIWUM UNIWERSUM CALION</span><span class="topline-right">KRONIKI ROKU 824–825 <b>✦</b> WERSJA 0.0.19</span></div>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="#/" aria-label="Calion, strona główna"><span class="brand-mark">C</span><span class="brand-name">CALION<small>KRONIKI ZAPOMNIANEGO ŚWIATA</small></span></a>
+    <button id="menu-toggle" class="menu-toggle" type="button" aria-label="Pokaż menu" aria-expanded="false">☰ <span>MENU</span></button>
+    <nav id="main-nav" class="main-nav" aria-label="Nawigacja główna">
+      <a href="#/" data-nav="start">Strona główna</a><a href="#/swiat" data-nav="swiat">Świat</a><a href="#/historia" data-nav="historia">Historia</a><a href="#/postacie" data-nav="postacie">Postacie</a><a href="#/bestiariusz" data-nav="bestiariusz">Bestiariusz</a><a href="#/frakcje" data-nav="frakcje">Frakcje</a><a href="#/rasy" data-nav="rasy">Rasy</a><a href="#/gry" data-nav="gry" class="nav-games"><svg><use href="#i-game"/></svg> Gry</a>
+    </nav>
   </div>
 </header>
-
-<nav class="nav-bar">
-  <button class="tab-btn active" onclick="filterCategory('all', this)">Wszystko</button>
-  <button class="tab-btn" onclick="filterCategory('swiat', this)">🌍 Świat i Lokacje</button>
-  <button class="tab-btn" onclick="filterCategory('historia', this)">📜 Historia i Magia</button>
-  <button class="tab-btn" onclick="filterCategory('postacie', this)">👥 Postacie i Frakcje</button>
-  <button class="tab-btn" onclick="filterCategory('gry', this)">🎮 Gry Calionu</button>
-  <button class="tab-btn" onclick="filterCategory('inne', this)">💡 Pomysły i Inne</button>
-</nav>
-
-<main class="container">
-  <div class="search-bar">
-    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Szukaj w kronikach (np. Elderon, Leoryk, Ralfor, żywioły)..." oninput="renderCards()">
+<main id="main-content">
+  <div id="home-view">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-text">
+        <div class="eyebrow"><span class="shimmer-dot"></span> OTWÓRZ BRAMY NIEZNANEGO</div>
+        <h1 id="hero-title">Witaj w świecie <em>Calionu.</em></h1>
+        <p class="hero-lead">Za murami portowego miasta rozciąga się świat pełen zapomnianych opowieści. Poznaj jego krainy, bohaterów, mroczne stworzenia i legendy. A potem <strong>zapisz własną historię w naszych grach.</strong></p>
+        <div class="hero-actions"><a href="#/swiat" class="button button-primary"><svg><use href="#i-map"/></svg> ODKRYJ ŚWIAT <svg class="arrow-icon"><use href="#i-arrow"/></svg></a><a href="#/gry" class="button button-ghost"><svg><use href="#i-game"/></svg> PRZEJDŹ DO GIER</a></div>
+        <div class="hero-footnote"><span class="footnote-line"></span> JEDEN ŚWIAT. NIEZLICZONE PRZYGODY.</div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 920 560" preserveAspectRatio="xMidYMid slice" shape-rendering="crispEdges">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#101b22"/><stop offset=".55" stop-color="#25302c"/><stop offset="1" stop-color="#68523c"/></linearGradient>
+            <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#1b3336"/><stop offset="1" stop-color="#111e22"/></linearGradient>
+          </defs>
+          <path fill="url(#sky)" d="M0 0h920v560H0z"/>
+          <path fill="#cdb88b" d="M649 66h17v18h17v34h-51V84h17z" opacity=".75"/>
+          <path fill="#e2b879" d="M655 76h10v17h10v16h-30V93h10z"/>
+          <g fill="#c1b88d" opacity=".3"><path d="M104 82h4v4h-4zm63 51h4v4h-4zm42-83h4v4h-4zm520 85h3v3h-3zm63 60h4v4h-4zm-470-85h3v3h-3zm550-80h3v3h-3z"/></g>
+          <path fill="#192b2c" d="m0 265 100-80 58 35 86-110 120 130 65-82 110 82 116-94 114 109 82-58 69 52v310H0z"/>
+          <path fill="#263732" d="m0 327 110-74 80 58 68-63 120 58 102-82 92 60 98-58 108 81 142-65v317H0z"/>
+          <path fill="#15251e" d="M0 350h44v-34h17v-35h12v35h18v34h30v-52h13v-23h13v23h14v52h37v-33h18v33h21v210H0z"/>
+          <g fill="#14221f"><path d="M740 344v-76h16v-28h18v28h15v76h30v-50h20v-23h12v23h20v50h49v216H692V344z"/></g>
+          <path fill="#121d1b" d="M160 365h40v-30h28v-27h28v27h35v-51h27v-47h38v-38h17v38h35v47h22v-72h18v-35h18v35h19v72h38v-39h17v-48h22v48h18v39h23v47h22v-34h28v34h40v195H160z"/>
+          <g fill="#38423b"><path d="M185 363h80v-45h25v-40h27v-45h33v-40h22v40h30v45h26v41h38v-30h20v-62h25v-32h24v32h26v62h35v30h45v44h40v101H185z"/></g>
+          <path fill="#646452" d="M204 372h65v-34h24v-35h29v-52h48v52h32v35h40v34h65v-28h27v-46h29v-65h38v65h29v46h30v28h67v108H204z"/>
+          <g fill="#a69a78"><path d="M215 376h54v-33h30v-36h29v-55h40v55h30v36h37v33h69v-27h33v-44h29v-69h32v69h29v44h29v27h56v22H215z"/></g>
+          <g fill="#272f2b"><path d="M312 310h16v29h-16zm31-39h15v31h-15zm42 38h16v29h-16zm163 11h17v27h-17zm40-61h15v34h-15zm41 61h16v27h-16z"/></g>
+          <g fill="#e9b76c"><path d="M316 315h8v16h-8zm31-39h7v18h-7zm43 37h7v17h-7zm162 10h8v17h-8zm42-59h6v24h-6zm41 60h7v15h-7z"/></g>
+          <path fill="#242d29" d="M170 374h544v25H170z"/>
+          <path fill="#4e5449" d="M145 397h602v56H145z"/>
+          <path fill="#7c755a" d="M154 406h581v8H154zm0 25h581v7H154z"/>
+          <path fill="#27362f" d="M138 443h640v31H138z"/>
+          <path fill="url(#sea)" d="M0 473h920v87H0z"/>
+          <g fill="#a47f4b" opacity=".3"><path d="M0 492h145v3H0zm200 23h150v3H200zm440-18h140v3H640zm-280 39h170v3H360z"/></g>
+          <path fill="#100f10" d="m44 474 57 12 61-12-16 19H59z"/>
+          <path fill="#191e1d" d="M98 421v54h4v-54zm7 11 42 40h-42zm-8 3-39 38h39z"/>
+          <path fill="#d3aa68" d="M452 449h6v12h-6zm-235 1h6v12h-6zm380 2h6v12h-6z"/>
+          <path fill="#0c1716" d="M0 545h920v15H0z"/>
+          <g opacity=".13" stroke="#e3b572"><path d="M0 0h920v560H0z" stroke-width="16" fill="none"/></g>
+        </svg>
+        <div class="art-label"><span>✦ WIDOK Z ARCHIWUM</span><strong>Calion, południowe wybrzeże</strong></div>
+      </div>
+    </section>
+    <section class="fact-strip" aria-label="O świecie"><div><svg><use href="#i-crown"/></svg><p><strong>Rok 825</strong><span>Czas obecnych kronik</span></p></div><div><svg><use href="#i-map"/></svg><p><strong>Południowe wybrzeże</strong><span>Serce krainy Calionu</span></p></div><div><svg><use href="#i-shield"/></svg><p><strong>Gildia Poszukiwaczy</strong><span>Przygody zaczynają się tutaj</span></p></div></section>
+    <section class="page-section path-section">
+      <div class="section-label"><span>01 / POZNAJ UNIWERSUM</span><span class="section-line"></span></div>
+      <div class="section-intro"><div><h2>Wybierz swoją <em>ścieżkę.</em></h2><p>Każda księga otwiera inne drzwi. Od historii wielkich wojen po cienie skrywające się w starych lasach.</p></div><a class="text-link" href="#/swiat">Rozpocznij odkrywanie <svg><use href="#i-arrow"/></svg></a></div>
+      <div class="path-grid">
+        <a class="path-card path-world" href="#/swiat"><span class="path-symbol"><svg><use href="#i-map"/></svg></span><span class="path-num">01 / ATLAS</span><h3>Świat i krainy</h3><p>Miasta, lasy, góry i zakątki, których nie obejmują królewskie mapy.</p><span class="path-action">ODKRYJ KRAINY <svg><use href="#i-arrow"/></svg></span></a>
+        <a class="path-card path-history" href="#/historia"><span class="path-symbol"><svg><use href="#i-book"/></svg></span><span class="path-num">02 / KRONIKI</span><h3>Historia świata</h3><p>Wojna z Demonami, Wojny Run i wydarzenia kształtujące obecną erę.</p><span class="path-action">CZYTAJ KRONIKI <svg><use href="#i-arrow"/></svg></span></a>
+        <a class="path-card path-heroes" href="#/postacie"><span class="path-symbol"><svg><use href="#i-crown"/></svg></span><span class="path-num">03 / BIOGRAFIE</span><h3>Postacie</h3><p>Władcy, bohaterowie, poszukiwacze, magowie i ludzie z cienia.</p><span class="path-action">POZNAJ POSTACIE <svg><use href="#i-arrow"/></svg></span></a>
+        <a class="path-card path-beasts" href="#/bestiariusz"><span class="path-symbol"><svg><use href="#i-skull"/></svg></span><span class="path-num">04 / BESTIARIUSZ</span><h3>Stworzenia i potwory</h3><p>Od wilków Elderonu po istoty, o których lepiej nie mówić nocą.</p><span class="path-action">OTWÓRZ BESTIARIUSZ <svg><use href="#i-arrow"/></svg></span></a>
+        <a class="path-card path-factions" href="#/frakcje"><span class="path-symbol"><svg><use href="#i-shield"/></svg></span><span class="path-num">05 / ORGANIZACJE</span><h3>Frakcje i gildie</h3><p>Wierność koronie, służba gildii czy droga wytyczona poza prawem?</p><span class="path-action">POZNAJ FRAKCJE <svg><use href="#i-arrow"/></svg></span></a>
+        <a class="path-card path-games" href="#/gry"><span class="path-symbol"><svg><use href="#i-game"/></svg></span><span class="path-num">06 / GRAJ ONLINE</span><h3>Gry Calionu</h3><p>Nie tylko czytaj o przygodach. Rozpocznij własną w przeglądarce.</p><span class="path-action">ZOBACZ GRY <svg><use href="#i-arrow"/></svg></span></a>
+      </div>
+    </section>
+    <section class="page-section spotlight-section">
+      <div class="section-label"><span>02 / Z ARCHIWÓW CALIONU</span><span class="section-line"></span></div>
+      <div class="spotlight-layout"><div class="spotlight-story"><span class="eyebrow">✦ OPOWIEŚĆ Z POŁUDNIOWYCH KRAIN</span><h2>Miasto, w którym <em>zaczyna się wszystko.</em></h2><p>Calion to portowe miasto-państwo nad szeroką zatoką. Jego ulice tętnią handlem, a Gildia Poszukiwaczy przyciąga śmiałków gotowych wyruszyć poza bezpieczne mury.</p><p>Za bramami czekają lasy Elderonu, północne góry i sekrety starsze niż większość kronik.</p><a class="button button-outline" href="#/swiat">POZNAJ MIASTO CALION <svg class="arrow-icon"><use href="#i-arrow"/></svg></a></div><div class="chronicle-box"><div class="chronicle-heading"><svg><use href="#i-book"/></svg> ZAPISY KRONIKARZA</div><div class="chronicle-entry"><span>ROK 0</span><strong>Rozejm z Demonami</strong><small>Nowy początek kalendarza.</small></div><div class="chronicle-entry"><span>200–239</span><strong>Wojny Run</strong><small>Walka o artefakty i dziką magię.</small></div><div class="chronicle-entry"><span>824–825</span><strong>Obecna era</strong><small>Miasto Calion i jego niespokojne pogranicze.</small></div><a href="#/historia" class="text-link">Otwórz oś czasu <svg><use href="#i-arrow"/></svg></a></div></div>
+    </section>
+    <section class="page-section play-promo"><div class="play-promo-ornament">✦</div><div><div class="eyebrow">03 / TWOJA HISTORIA</div><h2>Legendy nie muszą być <em>tylko czytane.</em></h2><p>Odkrywaj gry osadzone w Calionie. Zagraj bezpośrednio tutaj, a gdy chcesz, przejdź na pełny ekran.</p></div><a class="button button-primary" href="#/gry"><svg><use href="#i-game"/></svg> ODKRYJ GRY <svg class="arrow-icon"><use href="#i-arrow"/></svg></a></section>
   </div>
-
-  <div class="cards-grid" id="cardsGrid"></div>
+  <section id="collection-view" class="inner-page" hidden aria-live="polite">
+    <div class="inner-hero"><span id="collection-eyebrow" class="eyebrow"></span><h1 id="collection-title"></h1><p id="collection-desc"></p></div>
+    <div class="collection-toolbar"><label class="search-field"><span aria-hidden="true">⌕</span><input id="archive-search" type="search" placeholder="Szukaj w archiwum..." autocomplete="off"></label><span id="archive-count" class="archive-count"></span></div>
+    <div id="history-timeline" class="timeline" hidden></div>
+    <div id="collection-grid" class="collection-grid"></div>
+    <div id="game-library" class="games-grid" hidden></div>
+    <p id="empty-message" class="empty-message" hidden>Nie znaleziono wpisów. Spróbuj innego hasła.</p>
+  </section>
+  <section id="play-view" class="inner-page" hidden>
+    <div class="player-back"><a href="#/gry">← WRÓĆ DO BIBLIOTEKI GIER</a><span>CALION GAMES / ODTAWARZACZ</span></div>
+    <div class="player-header"><div><span id="player-tag" class="eyebrow">GRA PRZEGLĄDARKOWA</span><h1 id="player-title">Calion Survivors</h1><p id="player-desc"></p></div><div class="player-controls"><button id="fullscreen-button" class="button button-primary" type="button"><svg><use href="#i-expand"/></svg> PEŁNY EKRAN</button><a id="external-game-link" class="button button-outline" href="./survivors/" target="_blank" rel="noopener"><svg><use href="#i-external"/></svg> NOWA KARTA</a></div></div>
+    <div id="game-frame-shell" class="game-frame-shell"><iframe id="game-iframe" title="Gra Calionu" allow="fullscreen; gamepad" allowfullscreen loading="eager"></iframe></div>
+    <p class="player-help">Wskazówka: możesz włączyć pełny ekran przyciskiem powyżej. Aby powrócić, naciśnij <kbd>Esc</kbd>. Postępy i ustawienia zależą od wybranej gry.</p>
+  </section>
 </main>
-
-<!-- MODAL PODGLĄDU WPISU -->
-<div class="modal-overlay" id="viewModal">
-  <div class="modal">
-    <span class="card-badge" id="viewBadge">Kategoria</span>
-    <h2 id="viewTitle">Tytuł wpisu</h2>
-    <div class="card-sub" id="viewSub">Podtytuł</div>
-    <div class="modal-body" id="viewDesc"></div>
-    <div id="viewLinkBox" style="margin-top: 12px;"></div>
-    <div class="modal-actions">
-      <button class="btn btn-danger" id="btnDeleteEntry">🗑 Usuń</button>
-      <button class="btn btn-secondary" id="btnEditEntry">✏️ Edytuj</button>
-      <button class="btn" onclick="closeModals()">Zamknij</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL DODAWANIA / EDYCJI WPISU -->
-<div class="modal-overlay" id="formModal">
-  <div class="modal">
-    <h2 id="formHeader">Nowy wpis w Kronice</h2>
-    <input type="hidden" id="editId">
-    
-    <div class="form-group">
-      <label>Kategoria</label>
-      <select id="inputCat" class="form-control">
-        <option value="swiat">🌍 Świat i Lokacje</option>
-        <option value="historia">📜 Historia i Magia</option>
-        <option value="postacie">👥 Postacie i Frakcje</option>
-        <option value="gry">🎮 Gry Calionu</option>
-        <option value="inne">💡 Pomysły i Inne</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Tytuł / Nazwa</label>
-      <input type="text" id="inputTitle" class="form-control" placeholder="np. Las Orklag / Kapitan Leoryk / Nowa mechanika">
-    </div>
-
-    <div class="form-group">
-      <label>Krótki podtytuł / Rola / Tag</label>
-      <input type="text" id="inputSub" class="form-control" placeholder="np. Dziki las na północy / Dowódca Straży Miejskiej">
-    </div>
-
-    <div class="form-group">
-      <label>Pełny opis</label>
-      <textarea id="inputDesc" class="form-control" placeholder="Wpisz tutaj całą historię, notatki, statystyki lub pomysły..."></textarea>
-    </div>
-
-    <div class="form-group">
-      <label>Link zewnętrzny (opcjonalnie – np. do gry lub grafiki)</label>
-      <input type="text" id="inputLink" class="form-control" placeholder="np. https://the-rozu.github.io/Karcianka/">
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModals()">Anuluj</button>
-      <button class="btn" onclick="saveEntry()">💾 Zapisz w Kronice</button>
-    </div>
-  </div>
-</div>
-
-<footer>
-  Kroniki Calionu • Wersja GitHub Pages (Pamięć lokalna + Eksport JSON) • Przyszła domena: Calion.pl
-</footer>
-
-<script>
-  // --- STARTOWA BAZA DANYCH ŚWIATA CALIONU ---
-  const INITIAL_DATA = [
-    {
-      id: "swiat-calion",
-      cat: "swiat",
-      title: "Miasto Calion",
-      sub: "Stolica i wielkie miasto-port nad Zatoką Calionu",
-      desc: "Tętniące życiem miasto-port, w którym przecinają się szlaki handlowe, wpływy Królewskiej Gildii Poszukiwaczy oraz cienie pod ulicami.\n\nKluczowe miejsca w mieście:\n• Przedbramie Południowe – główny punkt kontrolny, gdzie strażnicy legitymują przybyszów.\n• Rynek Główny – serce handlu.\n• Karczma „Pod Złotym Mewem” – ulubione miejsce najemników i szulerów karcianych.\n• Kuźnia Ralfora – surowy warsztat krasnoludzkiego mistrza kowalstwa.\n• Kościół Światła oraz Slumsy Calionu rządzone przez półświatek.",
-      link: ""
-    },
-    {
-      id: "swiat-okolice",
-      cat: "swiat",
-      title: "Okolice Calionu (Szlak i Krainy)",
-      sub: "Geografia regionu wokół stolicy",
-      desc: "Krainy otaczające stolicę:\n• Elderon (Dziki Las Północy) – najstarszy las w okolicy, w którym ścieżki zmieniają się same. Pełen goblinów, slime'ów, wargów i starych ruin.\n• Durnhollow – surowa osada wśród gór Grzbietu Kolosa (3–5 dni pieszo od Calionu).\n• Las Orklag i Jaskinie Lizardów – gęsty, mroczny las pełen dawnych mogił orków i wilgotnych tuneli.\n• Bagna Milczenia i Zatopione Ruiny – martwe ziemie na zachodzie skrywające ruiny starsze niż Imperium.\n• Dolina Rzeki Mirdan, Stary Trakt Kupiecki, miasteczko Vellan, osada Ostahler oraz warownia Fort Daegur na wschodzie.",
-      link: ""
-    },
-    {
-      id: "hist-os-czasu",
-      cat: "historia",
-      title: "Oś Czasu Królestwa Calionu",
-      sub: "Od Wielkiej Wojny z Demonami do lat 824–825",
-      desc: "Główne epoki historyczne uniwersum:\n• Dawne Ery: Wielka Wojna z Demonami oraz wyniszczające Wojny Run.\n• Czasy współczesne (lata 824–825): Okres pozornego pokoju pod rządami króla Arthela IV, w którym narastają napięcia wewnątrz miasta, anomalie na Placu Egzekucyjnym (grzyby Kośniaka) oraz zagrożenia na leśnych traktach.",
-      link: ""
-    },
-    {
-      id: "hist-magia",
-      cat: "historia",
-      title: "Kodeks Dominacji Żywiołów",
-      sub: "System magii i traktaty archimaga Serisa Kela",
-      desc: "Magia w świecie Calionu opiera się na dwóch filarach:\n1. Koło Pięciu Żywiołów – ścisłe relacje dominacji i ulegania pomiędzy żywiołami (np. Ogień kontruje Naturę, a ulega Wodzie).\n2. Oś Dualizmu – odwieczne napięcie pomiędzy Światłem a Mrokiem (Cieniem).",
-      link: ""
-    },
-    {
-      id: "post-leoryk",
-      cat: "postacie",
-      title: "Kapitan Leoryk i Straż Miejska",
-      sub: "Dowódca obrony Calionu",
-      desc: "Straż Miejska Calionu to zorganizowana, zdyscyplinowana formacja obronna utrzymująca porządek w murach miasta. Choć formalnie podlega królowi Arthelowi IV, w praktyce twardą ręką dowodzi nią Kapitan Leoryk, którego słowo na ulicach i bramach jest prawem samym w sobie.",
-      link: ""
-    },
-    {
-      id: "post-bohaterowie",
-      cat: "postacie",
-      title: "Gildie i Znane Postacie",
-      sub: "Poszukiwacze przygód, rzemieślnicy i mieszkańcy",
-      desc: "Ważne postacie i ugrupowania:\n• Królewska Gildia Poszukiwaczy – zrzesza najemników i śmiałków realizujących zlecenia.\n• Talion (Alarion) – młody rycerz rangi D z Gildii, posługujący się Dworską Szermierką, Lwią Tarczą i zdolnością Krew Króla.\n• Ralfor – krasnoludzki kowal prowadzący słynną kuźnię.\n• Riven Wistlow – dowódca kompanii „Biały Kieł Północy”.\n• Kompania „The Boss”.\n• Rozu – postać związana z cieniami i półświatkiem Calionu.",
-      link: ""
-    },
-    {
-      id: "gry-szulernia",
-      cat: "gry",
-      title: "Calion: Karciana Szulernia",
-      sub: "Gra karciana na stole karczemnym (HTML/JS)",
-      desc: "Grywalna karcianka osadzona w karczmie Calionu. Zawiera pojedynki przy drewnianym stole, przedmioty, mikstury oraz mechaniki taktyczne. W przyszłości zostanie rozbudowana o tablicę wyników (Leaderboard) oraz tryb PvP.",
-      link: "https://the-rozu.github.io/Karcianka/"
-    },
-    {
-      id: "gry-roguelite",
-      cat: "gry",
-      title: "Kroniki Calionu: Szlak Wyprawy (Roguelite D6)",
-      sub: "Taktyczna gra kościana w klimacie Dicey Dungeons (16:9)",
-      desc: "Wyprawa przez losowo generowaną mapę Lasu Elderon. Przypisujesz kości D6 do kart ekwipunku i umiejętności, walcząc ze Slime'ami, Goblinami, Szkieletami i Wargami.",
-      link: ""
-    },
-    {
-      id: "gry-idle",
-      cat: "gry",
-      title: "Calion: Idle RPG",
-      sub: "Mobilna gra RPG z rozwojem statystyk i Kuźnią Ralfora",
-      desc: "Bohater automatycznie przemierza Las Eldaron, walcząc z falami Leśnych i Błękitnych Slime'ów oraz Czarnym Slime Bossem. Zbieraj brązowe monety, trenuj STR, CON, DEX, WIS i wykuwaj coraz lepszy oręż u Ralfora.",
-      link: ""
-    },
-    {
-      id: "inne-pomysly",
-      cat: "inne",
-      title: "Plany rozwoju projektu Calion.pl",
-      sub: "Pomysły na przyszłość i serwer",
-      desc: "Lista rzeczy do zrealizowania w kolejnych etapach:\n• Wykupienie domeny calion.pl i podpięcie jej pod projekt.\n• Postawienie własnego serwera (PC i7-11700F / Synology) z tunelem Cloudflare.\n• Wspólna tablica wyników (Leaderboard) dla znajomych w karciance.\n• Interaktywna mapa Okolic Calionu z klikalnymi znacznikami lokacji.",
-      link: ""
-    }
-  ];
-
-  const STORAGE_KEY = "calion_kronika_data_v1";
-  let entries = [];
-  let activeCategory = "all";
-
-  const catLabels = {
-    swiat: "🌍 Świat i Lokacje",
-    historia: "📜 Historia i Magia",
-    postacie: "👥 Postacie i Frakcje",
-    gry: "🎮 Gry Calionu",
-    inne: "💡 Pomysły i Inne"
-  };
-
-  function loadEntries() {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      entries = JSON.parse(saved);
-    } else {
-      entries = [...INITIAL_DATA];
-      saveToStorage();
-    }
-  }
-
-  function saveToStorage() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-  }
-
-  function filterCategory(cat, btnEl) {
-    activeCategory = cat;
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btnEl.classList.add('active');
-    renderCards();
-  }
-
-  function renderCards() {
-    const grid = document.getElementById('cardsGrid');
-    const query = document.getElementById('searchInput').value.toLowerCase().trim();
-    grid.innerHTML = '';
-
-    const filtered = entries.filter(item => {
-      const matchCat = activeCategory === 'all' || item.cat === activeCategory;
-      const matchSearch = item.title.toLowerCase().includes(query) ||
-                          item.sub.toLowerCase().includes(query) ||
-                          item.desc.toLowerCase().includes(query);
-      return matchCat && matchSearch;
-    });
-
-    if (filtered.length === 0) {
-      grid.innerHTML = `<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 30px;">Brak wpisów spełniających kryteria. Dodaj nowy wpis przyciskiem na górze!</p>`;
-      return;
-    }
-
-    filtered.forEach(item => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.onclick = () => openViewModal(item.id);
-
-      card.innerHTML = `
-        <div>
-          <span class="card-badge">${catLabels[item.cat] || item.cat}</span>
-          <h3>${item.title}</h3>
-          <div class="card-sub">${item.sub}</div>
-          <div class="card-desc">${item.desc}</div>
-        </div>
-        <div class="card-footer">
-          <span>Otwórz zwój →</span>
-          ${item.link ? '<span>🔗 Zawiera link</span>' : ''}
-        </div>
-      `;
-      grid.appendChild(card);
-    });
-  }
-
-  function openViewModal(id) {
-    const item = entries.find(e => e.id === id);
-    if (!item) return;
-
-    document.getElementById('viewBadge').innerText = catLabels[item.cat] || item.cat;
-    document.getElementById('viewTitle').innerText = item.title;
-    document.getElementById('viewSub').innerText = item.sub;
-    document.getElementById('viewDesc').innerText = item.desc;
-
-    const linkBox = document.getElementById('viewLinkBox');
-    if (item.link) {
-      linkBox.innerHTML = `<a href="${item.link}" target="_blank" class="btn">🚀 Uruchom / Otwórz link</a>`;
-    } else {
-      linkBox.innerHTML = '';
-    }
-
-    document.getElementById('btnEditEntry').onclick = () => {
-      closeModals();
-      openFormModal(item.id);
-    };
-
-    document.getElementById('btnDeleteEntry').onclick = () => {
-      if (confirm(`Czy na pewno chcesz usunąć wpis „${item.title}”?`)) {
-        entries = entries.filter(e => e.id !== id);
-        saveToStorage();
-        closeModals();
-        renderCards();
-      }
-    };
-
-    document.getElementById('viewModal').classList.add('open');
-  }
-
-  function openFormModal(editId = null) {
-    const header = document.getElementById('formHeader');
-    document.getElementById('editId').value = editId || '';
-
-    if (editId) {
-      const item = entries.find(e => e.id === editId);
-      header.innerText = "Edytuj wpis w Kronice";
-      document.getElementById('inputCat').value = item.cat;
-      document.getElementById('inputTitle').value = item.title;
-      document.getElementById('inputSub').value = item.sub;
-      document.getElementById('inputDesc').value = item.desc;
-      document.getElementById('inputLink').value = item.link || '';
-    } else {
-      header.innerText = "Dodaj nowy wpis do Kroniki";
-      document.getElementById('inputCat').value = activeCategory === 'all' ? 'swiat' : activeCategory;
-      document.getElementById('inputTitle').value = '';
-      document.getElementById('inputSub').value = '';
-      document.getElementById('inputDesc').value = '';
-      document.getElementById('inputLink').value = '';
-    }
-
-    document.getElementById('formModal').classList.add('open');
-  }
-
-  function saveEntry() {
-    const editId = document.getElementById('editId').value;
-    const cat = document.getElementById('inputCat').value;
-    const title = document.getElementById('inputTitle').value.trim();
-    const sub = document.getElementById('inputSub').value.trim();
-    const desc = document.getElementById('inputDesc').value.trim();
-    const link = document.getElementById('inputLink').value.trim();
-
-    if (!title || !desc) {
-      alert("Wpisz przynajmniej tytuł oraz opis!");
-      return;
-    }
-
-    if (editId) {
-      const idx = entries.findIndex(e => e.id === editId);
-      if (idx > -1) {
-        entries[idx] = { id: editId, cat, title, sub, desc, link };
-      }
-    } else {
-      const newEntry = {
-        id: 'wpis-' + Date.now(),
-        cat,
-        title,
-        sub,
-        desc,
-        link
-      };
-      entries.unshift(newEntry);
-    }
-
-    saveToStorage();
-    closeModals();
-    renderCards();
-  }
-
-  function closeModals() {
-    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
-  }
-
-  function exportToClipboard() {
-    const jsonText = "const INITIAL_DATA = " + JSON.stringify(entries, null, 2) + ";";
-    navigator.clipboard.writeText(jsonText).then(() => {
-      alert("Skopiowano całą bazę wpisów do schowka! Możesz ją teraz wkleić do pliku na GitHubie, aby zapisać zmiany na stałe w chmurze.");
-    }).catch(() => {
-      alert("Nie udało się automatycznie skopiować. Spróbuj w przeglądarce.");
-    });
-  }
-
-  loadEntries();
-  renderCards();
-</script>
+<footer class="site-footer"><div class="footer-inner"><a class="footer-brand" href="#/"><span class="brand-mark small">C</span><span>CALION<small>UNIWERSUM • KRONIKI • GRY</small></span></a><p>Świat, który powstaje z każdą nową opowieścią.<br>Projekt uniwersum Calionu.</p><div class="footer-links"><a href="#/swiat">Atlas świata</a><a href="#/bestiariusz">Bestiariusz</a><a href="#/gry">Biblioteka gier</a></div><span class="footer-version">© 2026 CALION · PROTOTYP v0.0.19</span></div></footer>
+<dialog id="lore-dialog" class="lore-dialog" aria-labelledby="dialog-title"><div class="dialog-head"><span id="dialog-tag" class="eyebrow"></span><button id="dialog-close" aria-label="Zamknij opis" type="button">✕</button></div><h2 id="dialog-title"></h2><p id="dialog-subtitle" class="dialog-subtitle"></p><div id="dialog-body" class="dialog-body"></div><div class="dialog-bottom"><span>✦ Z KRONIK CALIONU</span><button type="button" id="dialog-close-bottom" class="button button-outline">ZAMKNIJ ZWÓJ</button></div></dialog>
 </body>
 </html>
