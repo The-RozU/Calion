@@ -1,4 +1,4 @@
-/* Karczma Calionu — alternatywny motyw 0.0.25.
+/* Karczma Calionu — alternatywny motyw 0.0.26.
    Wersja demonstracyjna, niezależna od Mrocznego Atlasu.
    Materiały: ciemne deski, miedź, przydymione srebro, skóra, pergamin. */
 :root{
@@ -62,47 +62,235 @@ body.tavern-theme:before{content:"";position:fixed;inset:0;z-index:-1;pointer-ev
 .tavern-shortcuts a{display:flex;justify-content:center;align-items:center;gap:13px;min-height:70px;padding:10px;font:500 clamp(15px,1.18vw,20px) Georgia,serif;border-right:2px solid #1e100bd9;color:#f6dbad;text-shadow:0 1px #000}
 .tavern-shortcuts a:last-child{border:0}.tavern-shortcuts svg{width:23px;height:23px;color:#c48d58}
 .tavern-shortcuts a:hover{background:#7d4931}
-.tavern-board{margin-top:44px;padding:28px 30px 32px;border:10px ridge #5f3920;box-shadow:inset 0 0 0 3px #28160f,0 5px 0 #140b06,0 15px 25px #0009;position:relative;background:
-    radial-gradient(ellipse at top,#5e3621,#29160d 80%),var(--t-board)}
-.tavern-board:before,.tavern-board:after{content:"";position:absolute;top:17px;width:18px;height:18px;border:4px ridge #89837b;border-radius:4px;background:radial-gradient(circle,#c4b8a1 0 3px,#45423d 4px 9px)}
-.tavern-board:before{left:12px}.tavern-board:after{right:12px}
-.tavern-board-head{text-align:center;margin:0 0 28px}.tavern-section-mark{font:700 11px/1.6 Georgia,serif;letter-spacing:.19em;color:#c69d64}
-.tavern-board-head h2,.tavern-section-divider h2,.tavern-ledger h2{font:500 clamp(28px,2.8vw,47px)/1.2 Georgia,serif;margin:5px 0;color:#f2d9ac}
-.tavern-board-head em{font-style:normal;color:#d99a62}
-.tavern-board-content{display:grid;grid-template-columns:minmax(300px,.45fr) minmax(0,1.55fr);gap:28px;align-items:stretch}
-.tavern-notes{display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:25px;padding:5px 0}
-.tavern-note{position:relative;color:#2f2115;box-shadow:3px 6px 7px #120903ae,inset 0 0 22px #aa834e80;background:radial-gradient(ellipse at 55% 0,#f7e7bf,#d7b884 72%,#bc945d);border:1px solid #947047;padding:29px 28px 25px;transform:rotate(-1deg);margin-right:19px}
-.tavern-note:before{content:"";pointer-events:none;position:absolute;inset:5px;border:1px solid #97714458}
-.tavern-note-side{margin-left:32px;margin-right:0;transform:rotate(1.2deg);padding:20px 24px}
-.tavern-pin{position:absolute;z-index:2;top:8px;left:calc(50% - 8px);width:17px;height:17px;border-radius:50%;box-shadow:2px 3px 4px #29140999,0 0 0 1px #4c291a}
-.tavern-pin-copper{background:radial-gradient(circle at 27% 22%,#ffda9b,#be8051 50%,#5c3222)}
-.tavern-pin-steel{background:radial-gradient(circle at 27% 22%,#ece5d3,#a7a89c 50%,#494948)}
-.tavern-note small{font:700 9px/1.5 Georgia,serif;color:#8c643f;letter-spacing:.15em}
+/* v0.0.26 — Kartki bez ciężkich ram: przypięte do prawdziwego drewna. */
+.tavern-board{
+  position:relative;
+  margin-top:58px;
+  padding:0 7px;
+  background:none;
+  border:0;
+  box-shadow:none;
+}
+.tavern-board::before,.tavern-board::after{content:none}
+.tavern-board-head{
+  text-align:center;
+  margin:0 0 32px;
+  padding:0 14px;
+}
+.tavern-section-mark{
+  font:700 11px/1.6 Georgia,serif;
+  letter-spacing:.19em;
+  color:#d0a676;
+  text-shadow:0 2px 5px #000c;
+}
+.tavern-board-head h2,
+.tavern-section-divider h2,
+.tavern-ledger h2{
+  font:500 clamp(28px,2.8vw,47px)/1.2 Georgia,serif;
+  margin:5px 0;
+  color:#f4dcaf;
+  text-shadow:0 3px 8px #150903a6;
+}
+.tavern-board-head em{font-style:normal;color:#e7ae75}
+.tavern-board-content{
+  display:grid;
+  grid-template-columns:minmax(235px,.4fr) minmax(0,1.6fr);
+  gap:clamp(24px,2.8vw,48px);
+  align-items:center;
+}
+.tavern-notes{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:center;
+  gap:clamp(23px,2.4vw,39px);
+  padding:8px 0;
+}
+.tavern-note{
+  position:relative;
+  color:#302216;
+  border:0;
+  border-radius:3px 7px 4px 9px;
+  padding:clamp(26px,2vw,36px) clamp(20px,2vw,34px) 27px;
+  background:
+    linear-gradient(104deg,transparent 0 90%,#9e6c3422 100%),
+    radial-gradient(ellipse at 20% 16%,#f6e7c4 0%,#e6cda1 45%,#d4b27e 96%);
+  box-shadow:
+    2px 9px 18px #120804a8,
+    0 2px 3px #1709048c,
+    inset 0 0 22px #91613335;
+  transform:rotate(-1.1deg);
+  margin:0 17px 0 0;
+  transition:transform .22s ease,box-shadow .22s ease;
+}
+/* Delikatny ślad zaginania papieru, bez dekoracyjnej prostokątnej ramki. */
+.tavern-note::before{
+  content:"";
+  pointer-events:none;
+  position:absolute;
+  top:0;
+  right:0;
+  width:28px;
+  height:27px;
+  border:0;
+  border-radius:0 7px 0 5px;
+  background:linear-gradient(225deg,#7147257a 0 11px,#f8e9c5 12px 19px,transparent 20px);
+  box-shadow:none;
+}
+.tavern-note:hover{
+  transform:translateY(-3px) rotate(-.5deg);
+  box-shadow:3px 12px 24px #100704b6;
+}
+.tavern-note-side{
+  margin-left:clamp(13px,2.1vw,36px);
+  margin-right:0;
+  padding:25px 26px 22px;
+  transform:rotate(1.5deg);
+  background:radial-gradient(ellipse at 22% 12%,#f5e5bc,#d9ba89 90%);
+}
+.tavern-note-side:hover{transform:translateY(-3px) rotate(.8deg)}
+.tavern-pin{
+  position:absolute;
+  z-index:2;
+  top:-7px;
+  left:calc(50% - 9px);
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  box-shadow:1px 4px 4px #170b0588,0 0 0 1px #4c2e1cbf;
+}
+.tavern-pin-copper{background:radial-gradient(circle at 27% 22%,#ffdfa5,#bc7b48 55%,#542a1a)}
+.tavern-pin-steel{background:radial-gradient(circle at 27% 22%,#f0ebdd,#9e9f99 55%,#4d4c46)}
+.tavern-note small{font:700 9px/1.5 Georgia,serif;color:#825936;letter-spacing:.15em}
 .tavern-note h3{font:500 clamp(26px,2.1vw,38px)/1.22 Georgia,serif;margin:12px 0}
 .tavern-note strong{display:block;font:500 26px/1.4 Georgia,serif;margin:7px 0}
 .tavern-note p{font:clamp(16px,1.1vw,19px)/1.46 Georgia,serif;margin:10px 0 19px;color:#45301f}
 .tavern-note-side p{margin-bottom:0;font-size:17px}
 .tavern-note a{color:#173d32;text-decoration:underline;text-underline-offset:4px;font:600 18px Georgia,serif}
-.tavern-map-sheet{display:block;position:relative;border:8px solid #9d7349;box-shadow:inset 0 0 20px #0007,2px 4px 10px #000a;background:#d1ad79;min-height:520px;overflow:hidden}
-.tavern-map-sheet:before{content:"";inset:5px;position:absolute;border:2px solid #6b4b34;pointer-events:none;z-index:2}
-.tavern-map-sheet img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;image-rendering:auto;filter:saturate(.9)}
-.tavern-map-sheet:hover img{filter:saturate(1.06) brightness(1.07)}
-.tavern-map-fastener{position:absolute;z-index:3;width:17px;height:17px;border-radius:50%;background:radial-gradient(circle at 30% 20%,#ffe2b1,#bd8954 40%,#472c22 85%);box-shadow:1px 2px 3px #291409b9}
-.tavern-map-fastener.upper{top:12px;left:13px}.tavern-map-fastener.lower{bottom:14px;right:14px}
-.tavern-map-callout{position:absolute;right:20px;bottom:19px;background:#19392d;border:2px solid #b18c58;color:#fcebcf;padding:10px 19px;font:600 18px Georgia,serif;box-shadow:0 4px 10px #0009}
-.tavern-chronicles{padding:49px 0 0}.tavern-section-divider{display:flex;align-items:baseline;justify-content:center;gap:23px;flex-wrap:wrap;margin-bottom:27px;text-shadow:0 2px 6px #000}
+/* Mapa ma własną postrzępioną krawędź w obrazie: nie oprawiamy jej ponownie. */
+.tavern-map-sheet{
+  display:block;
+  position:relative;
+  border:0;
+  border-radius:2px;
+  background:transparent;
+  box-shadow:none;
+  min-height:0;
+  overflow:visible;
+  padding:0 0 44px;
+  transform:rotate(.2deg);
+  transition:transform .22s ease;
+}
+.tavern-map-sheet::before{content:none}
+.tavern-map-sheet img{
+  display:block;
+  width:100%;
+  height:auto;
+  object-fit:contain;
+  image-rendering:auto;
+  border:0;
+  filter:saturate(.94) drop-shadow(2px 9px 13px #1108039c);
+  transition:filter .22s ease;
+}
+.tavern-map-sheet:hover{transform:rotate(0)}
+.tavern-map-sheet:hover img{filter:saturate(1.06) brightness(1.03) drop-shadow(2px 11px 18px #110803ad)}
+.tavern-map-fastener{
+  position:absolute;
+  z-index:3;
+  width:17px;
+  height:17px;
+  top:7px;
+  border-radius:50%;
+  background:radial-gradient(circle at 30% 20%,#ffe1ad,#b87e4b 45%,#4c3022 86%);
+  box-shadow:1px 3px 4px #291409aa;
+}
+.tavern-map-fastener.upper{left:2%;top:1.8%}
+.tavern-map-fastener.right{left:auto;right:2%;bottom:auto;top:1.8%}
+.tavern-map-callout{
+  position:absolute;
+  right:0;
+  bottom:1px;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  color:#f4d5a0;
+  padding:3px 2px;
+  font:600 18px Georgia,serif;
+  text-decoration:underline;
+  text-underline-offset:4px;
+  text-shadow:0 2px 4px #0009;
+}
+.tavern-map-sheet:hover .tavern-map-callout{color:#ffe8bd}
+.tavern-chronicles{padding:58px 7px 0}
+.tavern-section-divider{
+  display:flex;
+  align-items:baseline;
+  justify-content:center;
+  gap:23px;
+  flex-wrap:wrap;
+  margin-bottom:32px;
+  text-shadow:0 2px 6px #000;
+}
 .tavern-section-divider>span:first-child{font:700 11px Georgia,serif;letter-spacing:.15em;color:#c49b61}
-.tavern-section-divider h2{margin:0}.tavern-ornament{font-size:25px;color:#b9804b}
-.tavern-chronicle-cards{display:grid;grid-template-columns:1fr 1fr;gap:28px}
-.tavern-scroll{min-height:335px;display:grid;grid-template-columns:44% 56%;position:relative;padding:15px;box-shadow:0 0 0 7px #3e2418,0 0 0 10px #95623e,0 16px 25px #000b;background:radial-gradient(ellipse at 55% -5%,#f0deb5,#d8b98a 82%,#b99361);border:1px solid #a57d53;color:var(--t-ink)}
-.tavern-scroll:before{content:"";pointer-events:none;inset:5px;position:absolute;border:1px solid #886b4770}
-.tavern-metal-corner{position:absolute;z-index:3;top:8px;width:26px;height:26px;background:radial-gradient(circle at 35% 35%,#dfd6c2 0 3px,#89847a 4px 7px,transparent 8px),linear-gradient(135deg,#2b2b28,#85817b 50%,#292321);border:1px solid #373633;box-shadow:1px 2px 3px #0009}
-.tavern-metal-corner.top-left{left:8px}.tavern-metal-corner.top-right{right:8px}
-.tavern-scroll-portrait{border:3px solid #6e4c2f;min-width:0;min-height:290px;overflow:hidden;box-shadow:inset 0 0 10px #0008;background:#251a12}
-.tavern-scroll-portrait img{display:block;width:100%;height:100%;max-height:380px;object-fit:cover;object-position:43% center;image-rendering:auto}
+.tavern-section-divider h2{margin:0}
+.tavern-ornament{font-size:25px;color:#b9804b}
+.tavern-chronicle-cards{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(25px,2.5vw,48px);
+  align-items:stretch;
+}
+.tavern-scroll{
+  min-height:330px;
+  display:grid;
+  grid-template-columns:44% 56%;
+  position:relative;
+  padding:clamp(13px,1.2vw,22px);
+  background:radial-gradient(ellipse at 25% 2%,#f5e5c5,#e5cca1 53%,#cfab77 100%);
+  border:0;
+  border-radius:5px 9px 4px 7px;
+  color:var(--t-ink);
+  box-shadow:3px 9px 23px #100703a6,inset 0 0 26px #a57b463f;
+  transform:rotate(-.35deg);
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.tavern-scroll-warg{transform:rotate(.4deg)}
+.tavern-scroll:hover{transform:translateY(-3px) rotate(0);box-shadow:4px 13px 27px #100703af}
+.tavern-scroll::before{content:none}
+.tavern-metal-corner{
+  position:absolute;
+  z-index:3;
+  top:-7px;
+  width:16px;
+  height:16px;
+  background:radial-gradient(circle at 28% 27%,#f5eee2,#9c9b97 49%,#4c4c47 90%);
+  border:0;
+  border-radius:50%;
+  box-shadow:1px 3px 4px #0008;
+}
+.tavern-metal-corner.top-left{left:48%;right:auto}
+.tavern-scroll-portrait{
+  border:0;
+  min-width:0;
+  min-height:290px;
+  overflow:hidden;
+  box-shadow:none;
+  background:#312118;
+  border-radius:1px;
+}
+.tavern-scroll-portrait img{
+  display:block;
+  width:100%;
+  height:100%;
+  max-height:380px;
+  object-fit:cover;
+  object-position:43% center;
+  image-rendering:auto;
+}
 .tavern-scroll-warg .tavern-scroll-portrait img{object-position:55% center}
 .tavern-scroll-copy{padding:18px 18px 14px 27px;display:flex;flex-direction:column;align-items:flex-start}
-.tavern-scroll-overline{font:italic 17px Georgia,serif;color:#573e2a}.tavern-scroll h3{font:500 clamp(32px,2.6vw,50px)/1.1 Georgia,serif;margin:7px 0 13px}
+.tavern-scroll-overline{font:italic 17px Georgia,serif;color:#573e2a}
+.tavern-scroll h3{font:500 clamp(32px,2.6vw,50px)/1.1 Georgia,serif;margin:7px 0 13px}
 .tavern-scroll p{font:clamp(16px,1.04vw,20px)/1.5 Georgia,serif;margin:0 0 16px;color:#483522}
 .tavern-scroll-copy a{font:600 19px/1.4 Georgia,serif;margin-top:auto;color:#194338;text-decoration:underline;text-underline-offset:4px}
 .tavern-scroll-copy a:hover{color:#7c4528}
@@ -194,10 +382,10 @@ body.tavern-theme:before{content:"";position:fixed;inset:0;z-index:-1;pointer-ev
   .tavern-shortcuts{grid-template-columns:1fr 1fr;margin:0 4px}
   .tavern-shortcuts a{min-height:55px;font-size:15px;padding:9px;gap:6px}
   .tavern-shortcuts svg{width:18px;height:18px}
-  .tavern-board{margin-top:25px;border-width:6px;padding:22px 15px}
+  .tavern-board{margin-top:33px;padding:0 4px}
   .tavern-board-head h2{font-size:30px}
   .tavern-notes{grid-template-columns:1fr}.tavern-note-side{margin:0}
-  .tavern-map-sheet{border-width:4px}.tavern-map-callout{font-size:13px;padding:7px 12px;bottom:10px;right:10px}
+  .tavern-map-sheet{padding-bottom:40px}.tavern-map-callout{font-size:15px;padding:4px 0;bottom:2px;right:0}
   .tavern-section-divider{gap:8px}.tavern-section-divider h2{width:100%;text-align:center;font-size:31px}
   .tavern-chronicle-cards{gap:25px}
   .tavern-scroll{display:flex;flex-direction:column;padding:10px}
