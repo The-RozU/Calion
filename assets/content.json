@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.45",
+  "version": "0.0.46",
   "entries": [
     {
       "id": "miasto-calion",
@@ -207,7 +207,7 @@
       "tag": "Postacie Calionu",
       "teaser": "Daren Velk, znany jako Czarny Lis. \nZłodziej który wpadł po uszy w kłopoty.",
       "body": [
-        "Daren Velk, znany jako Czarny Lis, jest lisim bestioludem i byłym członkiem Noktusa. \nZłodziej o czujnym oku i ciętym języku, potrafi dostrzec pułapkę, zanim zrobi to reszta grupy. \nJako dziecko pomógł Olshii, a lata później współpracował ze strażnikiem Loranem i Poszukiwaczem Szymem przy śledztwie prowadzącym do Noktusa. \nGdy pułapka doprowadziła do zawalenia domu, ocalił Szyma, sam jednak zniknął. \nNoktus uznał go za zdrajcę, a Straż Calionu rozpoczęła poszukiwania. \nDaren nadal szuka odpowiedzi na pytanie, co stało się z jego mentorką, Kanarkiem."
+        "Daren Velk, znany jako Czarny Lis, jest lisim bestioludem i byłym członkiem Noktusa. \nZłodziej o czujnym oku i ciętym języku, potrafi dostrzec pułapkę, zanim zrobi to reszta grupy. \nJako dziecko pomógł Olshii Thornclaw, a lata później współpracował ze strażnikiem Loranem i Poszukiwaczem Thane Runehart przy śledztwie prowadzącym do Noktusa. \nGdy pułapka doprowadziła do zawalenia domu, ocalił Thane'a, sam jednak zniknął. \nNoktus uznał go za zdrajcę, a Straż Calionu rozpoczęła poszukiwania. \nDaren nadal szuka odpowiedzi na pytanie, co stało się z jego mentorką, Kanarkiem."
       ]
     },
     {
@@ -506,7 +506,7 @@
     }
   ],
   "lastSave": {
-    "requestId": "2e11d6ac-f5ea-457a-8663-bd7ce5d760a1",
+    "requestId": "d3686a68-f27a-4479-9b76-62b175c8bdc4",
     "entryId": "daren-velk"
   }
 }
