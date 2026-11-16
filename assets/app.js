@@ -12,16 +12,20 @@
   // City sublocations use the city overview until dedicated plans are available.
   const locationMaps={
     "miasto-calion":"calion",elderon:"elderon",durnhollow:"durnhollow",
-    "strefy-calionu":"calion",slumsy:"calion","gildyjna-karczma":"calion"
+    "strefy-calionu":"calion",slumsy:"calion","gildyjna-karczma":"calion",
+    "bagna-milczenia":"bagna-milczenia","las-orklag":"orklag",vellan:"vellan"
   };
   const locationMap=(entry)=>"./assets/images/mapa-"+locationMaps[entry.id]+".webp";
   const entries=[
     {id:"miasto-calion",cat:"swiat",title:"Calion",sub:"Portowe miasto-państwo",tag:"Południowe wybrzeże",teaser:"Bogate miasto nad szeroką zatoką, centrum handlu, rzemiosła i działalności Gildii Poszukiwaczy.",body:["Calion jest jednym z największych i najbogatszych miast-państw południowego wybrzeża. To ośrodek handlu morskiego, rzemiosła i działalności Gildii Poszukiwaczy.","Miasto otaczają dwa pierścienie murów. Wyróżnia się pięć głównych stref: handlowo-mieszkalną, strażniczą, szlachecką, zamkową i slumsy położone poza murami.","Po zmroku port rozświetlają tysiące żółtych klejnotów światła, a nad ulicami słychać rozmowy kupców, śpiew marynarzy i plotki o wyprawach."]},
     {id:"elderon",cat:"swiat",title:"Elderon",sub:"Dziki Las Północy",tag:"Północny wschód",teaser:"Najstarszy las w okolicy Calionu. Gęsta roślinność, zmienne ścieżki i niebezpieczne stworzenia.",body:["Elderon leży na północny wschód od Calionu, za doliną rzeki Mirdan i dawnym traktem kupieckim. To stary, gęsty las, w którym światło ledwie przebija przez korony drzew.","Miejscowi drwale i doświadczeni Poszukiwacze znają bezpieczne trakty. Pozostali łatwo się gubią: niektóre leśne ścieżki sprawiają wrażenie, jakby zmieniały swój przebieg.","W lesie żyją wilki, dziki, niedźwiedzie i inne dzikie stworzenia, a w głębi kryją się zagrożenia bardziej niezwykłe."]},
     {id:"durnhollow",cat:"swiat",title:"Durnhollow",sub:"Wioska w cieniu Kolosa",tag:"Góry północy",teaser:"Kamienna osada licząca około 200 mieszkańców, wzniesiona u stóp tajemniczego Kolosa Kamiennego.",body:["Durnhollow leży na północ od Calionu, w górzystym i leśnym regionie. Podróż z miasta zajmuje około 3–5 dni pieszo lub 2–3 dni konno, zależnie od pogody.","Wioskę zamieszkuje około 200 mieszkańców. Wśród nich są górnicy, kamieniarze, kowale runiczni i zielarze. Kamienne domy mają dachy pokryte łupkiem.","Nad osadą góruje Kolos Kamienny, ogromna humanoidalna sylwetka w skalnej ścianie. Mieszkańcy wierzą, że jest to uśpiony pradawny olbrzym, a nie zwykły posąg."]},
-    {id:"strefy-calionu",cat:"swiat",title:"Pięć stref Calionu",sub:"Dzielnice, bramy i mury",tag:"Miasto",teaser:"Od gwarnego rynku i zamku po strażnicę, bogate rezydencje i nieuznawane slumsy.",body:["Strefa handlowo-mieszkalna jest sercem codziennego życia miasta. Znajdują się tam targowiska, warsztaty, port, karczmy i siedziba Gildii Poszukiwaczy.","Strefa strażnicza obejmuje koszary, więzienie, plac musztry i plac egzekucyjny. Strefa szlachecka skupia zamożne rodziny i dworskie intrygi, a strefa zamkowa mieści królewski pałac.","Poza murami leżą slumsy, których istnienia oficjalne władze niechętnie uznają."]},
-    {id:"slumsy",cat:"swiat",title:"Slumsy Calionu",sub:"Cienie pod zewnętrznym murem",tag:"Poza murami",teaser:"Nieoficjalna dzielnica prowizorycznych chat, wyrzutków i czarnego rynku klejnotów.",body:["Slumsy wyrastają bezpośrednio pod murami Calionu. Tworzą je prowizoryczne chaty, szałasy i ruiny, wśród których mieszkają włóczędzy, zbiegowie i ludzie pozbawieni miejsca w oficjalnym porządku.","Krążą plotki o podziemnych tunelach prowadzących do portu, a także o czarnym rynku klejnotów, w którym działają dawni Poszukiwacze.","Straż Miejska patroluje okolicę murów, lecz rzadko zapuszcza się w głąb tej dzielnicy."]},
-    {id:"gildyjna-karczma",cat:"swiat",title:"Pod Znakiem Miecza",sub:"Karczma Gildii Poszukiwaczy",tag:"Calion / Gildia",teaser:"Miejsce spotkań Poszukiwaczy, w którym świętuje się udane wyprawy i omawia kolejne zlecenia.",body:["Na poziomie -1 siedziby Gildii Poszukiwaczy działa karczma „Pod Znakiem Miecza”. Kamienne ściany zdobią trofea przywiezione z niebezpiecznych wypraw.","W gwarze rozmów zacierają się granice między historią a plotką. Tutaj powstają drużyny, kończą się spory i zaczynają nowe wyprawy."]},
+    {id:"bagna-milczenia",cat:"swiat",title:"Bagna Milczenia",sub:"Mokradła we mgle",tag:"Zachód od Calionu",teaser:"Martwe ziemie, gdzie mgła nie znika nawet w południe, a ludzie przepadają bez śladu.",body:["Bagna Milczenia leżą na zachód od Calionu. Na mapie opisano je jako martwe ziemie, na których mgła nie znika nawet w południe.","Z zapisków na mapie wynika, że ludzie znikają tutaj bez śladu."]},
+    {id:"las-orklag",cat:"swiat",title:"Las Orklag",sub:"Gęstwina dawnych tajemnic",tag:"Północny zachód",teaser:"Gęsty, mroczny las pełen dawnych bitew i zapomnianych mogił orków. Miejsce Cieni i jaskiń Lizardów.",body:["Las Orklag rozciąga się na północny zachód od Calionu. To gęsty, mroczny las, którego opis na mapie wspomina dawne bitwy i zapomniane mogiły orków.","Mapa wskazuje ten obszar jako miejsce Cieni i jaskiń Lizardów."]},
+    {id:"vellan",cat:"swiat",title:"Vellan",sub:"Targowe miasteczko",tag:"Wschodnie trakty",teaser:"Miasteczko kupców i złodziei, w którym straż utrzymuje kruchą równowagę.",body:["Vellan jest targowym miasteczkiem na wschód od Calionu, położonym przy sieci traktów przecinających Ziemie Wschodnie.","Krótki zapis na mapie opisuje je jako miejsce kupców i złodziei, w którym straż utrzymuje równowagę."]},
+    {id:"strefy-calionu",cat:"swiat",parent:"miasto-calion",title:"Pięć stref Calionu",sub:"Dzielnice, bramy i mury",tag:"Miasto",teaser:"Od gwarnego rynku i zamku po strażnicę, bogate rezydencje i nieuznawane slumsy.",body:["Strefa handlowo-mieszkalna jest sercem codziennego życia miasta. Znajdują się tam targowiska, warsztaty, port, karczmy i siedziba Gildii Poszukiwaczy.","Strefa strażnicza obejmuje koszary, więzienie, plac musztry i plac egzekucyjny. Strefa szlachecka skupia zamożne rodziny i dworskie intrygi, a strefa zamkowa mieści królewski pałac.","Poza murami leżą slumsy, których istnienia oficjalne władze niechętnie uznają."]},
+    {id:"slumsy",cat:"swiat",parent:"miasto-calion",title:"Slumsy Calionu",sub:"Cienie pod zewnętrznym murem",tag:"Poza murami",teaser:"Nieoficjalna dzielnica prowizorycznych chat, wyrzutków i czarnego rynku klejnotów.",body:["Slumsy wyrastają bezpośrednio pod murami Calionu. Tworzą je prowizoryczne chaty, szałasy i ruiny, wśród których mieszkają włóczędzy, zbiegowie i ludzie pozbawieni miejsca w oficjalnym porządku.","Krążą plotki o podziemnych tunelach prowadzących do portu, a także o czarnym rynku klejnotów, w którym działają dawni Poszukiwacze.","Straż Miejska patroluje okolicę murów, lecz rzadko zapuszcza się w głąb tej dzielnicy."]},
+    {id:"gildyjna-karczma",cat:"swiat",parent:"miasto-calion",title:"Pod Znakiem Miecza",sub:"Karczma Gildii Poszukiwaczy",tag:"Calion / Gildia",teaser:"Miejsce spotkań Poszukiwaczy, w którym świętuje się udane wyprawy i omawia kolejne zlecenia.",body:["Na poziomie -1 siedziby Gildii Poszukiwaczy działa karczma „Pod Znakiem Miecza”. Kamienne ściany zdobią trofea przywiezione z niebezpiecznych wypraw.","W gwarze rozmów zacierają się granice między historią a plotką. Tutaj powstają drużyny, kończą się spory i zaczynają nowe wyprawy."]},
     {id:"rok-zero",cat:"historia",title:"Wielka Wojna z Demonami",sub:"Około roku –30 do 0",tag:"Przed kalendarzem",teaser:"Wielki konflikt zakończony rozejmem, od którego zaczęto liczyć lata nowej ery.",body:["Wielka Wojna z Demonami trwała w przybliżeniu od roku –30 do roku 0.","Zawarcie rozejmu w roku 0 zakończyło konflikt i wyznaczyło początek używanego współcześnie kalendarza. Wspomnienie wojny wciąż wpływa na stosunek wielu ludów do demonów i ich potomków."]},
     {id:"wojny-run",cat:"historia",title:"Wojny Run",sub:"Lata 200–239",tag:"Wojny i magia",teaser:"Seria konfliktów o runy, artefakty i źródła dzikiej magii.",body:["W latach 200–239 wybuchały konflikty nazywane Wojnami Run.","Ich przyczyną były runy, magiczne artefakty i niebezpieczne zasoby dzikiej magii. Wojny pozostawiły po sobie opowieści o dawnych mocach i przedmiotach poszukiwanych przez kolejne pokolenia."]},
     {id:"straznica",cat:"historia",title:"Atak na Strażnicę Południową",sub:"Rok 328",tag:"Najazdy",teaser:"Pierwszy duży udokumentowany atak goblinów na strażnicę.",body:["W roku 328 kronikarze odnotowali pierwszy duży, udokumentowany atak goblinów na Strażnicę Południową.","Wydarzenie stało się jednym z ważnych punktów odniesienia dla późniejszych zapisów o zagrożeniach na pograniczu."]},
@@ -79,17 +83,20 @@
       if(on)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");
     });
   }
+  function createLocationCard(entry){
+    const card=document.createElement("a");
+    card.className="entry-card world-card";card.href="#/swiat/"+entry.id;
+    card.innerHTML='<img class="world-card-map" src="'+locationMap(entry)+'" alt="" width="640" height="400" loading="lazy"><div class="world-card-copy"><span class="entry-tag">'+escapeHTML(entry.tag)+'</span><h3>'+escapeHTML(entry.title)+'</h3><span class="entry-subtitle">'+escapeHTML(entry.sub)+'</span><p>'+escapeHTML(entry.teaser)+'</p><span class="entry-more">POZNAJ MIEJSCE '+icon("i-arrow")+'</span></div>';
+    return card;
+  }
   function renderEntries(){
     const term=search.value.trim().toLocaleLowerCase("pl");
-    const filtered=entries.filter(e=>e.cat===currentSection && [e.title,e.sub,e.tag,e.teaser,...e.body].join(" ").toLocaleLowerCase("pl").includes(term));
+    const filtered=entries.filter(e=>e.cat===currentSection && !e.parent && [e.title,e.sub,e.tag,e.teaser,...e.body].join(" ").toLocaleLowerCase("pl").includes(term));
     const grid=$("#collection-grid");
     grid.replaceChildren();
     for(const e of filtered){
       if(e.cat==="swiat"){
-        const card=document.createElement("a");
-        card.className="entry-card world-card";card.href="#/swiat/"+e.id;
-        card.innerHTML='<img class="world-card-map" src="'+locationMap(e)+'" alt="" width="640" height="400" loading="lazy"><div class="world-card-copy"><span class="entry-tag">'+escapeHTML(e.tag)+'</span><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">POZNAJ MIEJSCE '+icon("i-arrow")+'</span></div>';
-        grid.append(card);continue;
+        grid.append(createLocationCard(e));continue;
       }
       const card=document.createElement("button");
       card.type="button";card.className="entry-card";
@@ -164,6 +171,13 @@
     map.alt="Fragment mapy okolic "+(locationMaps[entry.id]==="calion"?"Calionu":entry.title);
     const body=$("#location-body");body.replaceChildren();
     for(const paragraph of entry.body){const p=document.createElement("p");p.textContent=paragraph;body.append(p);}
+    const parent=entries.find(e=>e.id===entry.parent);
+    const back=$("#location-back");back.href=parent?"#/swiat/"+parent.id:"#/swiat";
+    back.textContent=parent?"← Wróć do "+parent.title:"← Wróć do atlasu świata";
+    const children=entries.filter(e=>e.parent===entry.id);
+    const related=$("#location-related-grid");related.replaceChildren();
+    for(const child of children)related.append(createLocationCard(child));
+    $("#location-related").hidden=children.length===0;
     document.title=entry.title+" | Atlas Calionu";
   }
   function router(){

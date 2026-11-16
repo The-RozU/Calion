@@ -1,6 +1,6 @@
 # Calion · portal uniwersum
 
-**Aktualny motyw: Karczma Calionu v0.0.31.**
+**Aktualny motyw: Karczma Calionu v0.0.32.**
 
 Strona internetowa poświęcona uniwersum Calionu, jego krainom, historii, postaciom, bestiariuszowi, rasom, frakcjom i przyszłym grom. Motyw wizualny łączy średniowieczną karczmę Gildii Poszukiwaczy, pikselowe ilustracje dark fantasy, miedziane i srebrne okucia, skórzane dodatki oraz pergaminowe kroniki.
 
@@ -89,3 +89,10 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Drewniane tło i osobne pergaminowe karty dopasowano do strony głównej.
 - Miejsca mają własne adresy `#/swiat/<id>`, istniejący pełny opis i mapę poglądową. Szczegółowe plany miejsc zostaną dodane później.
 - Zachowano sześć wpisów, wyszukiwanie oraz powiększaną mapę ogólną. Zmiany tylko na `dev-mode`.
+
+## 0.0.32 — Miejsca w mieście i regiony w atlasie
+
+- Wpisy „Pięć stref Calionu”, „Slumsy Calionu” i „Pod Znakiem Miecza” są dostępne w sekcji „Poznaj Calion bliżej” na stronie miasta. Zachowują własne adresy i opisy, z linkiem powrotnym do Calionu.
+- Atlas ogólny pokazuje Calion, Elderon, Durnhollow, Bagna Milczenia, Las Orklag i Vellan. Wyszukiwanie i licznik dotyczą miejsc tego poziomu.
+- Nowe wycinki WebP oraz krótkie opisy oparto na istniejącej mapie okolic. Dokument „Świat” nie zawiera szczegółowych wpisów o tych trzech regionach.
+- Zmiany tylko na `dev-mode`.
