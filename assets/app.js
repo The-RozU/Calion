@@ -41,6 +41,7 @@
     const card=document.createElement("a");
     card.className="entry-card world-card";card.href="#/swiat/"+entry.id;
     card.innerHTML='<img class="world-card-map" src="'+locationMap(entry)+'" alt="" width="640" height="400" loading="lazy"><div class="world-card-copy"><span class="entry-tag">'+escapeHTML(entry.tag)+'</span><h3>'+escapeHTML(entry.title)+'</h3><span class="entry-subtitle">'+escapeHTML(entry.sub)+'</span><p>'+escapeHTML(entry.teaser)+'</p><span class="entry-more">POZNAJ MIEJSCE '+icon("i-arrow")+'</span></div>';
+    const teaser=card.querySelector("p");teaser.replaceChildren();window.CalionRichText.inline(teaser,entry.teaser,true);
     return card;
   }
   function renderEntries(){
@@ -60,6 +61,7 @@
         card.classList.add("character-card-preview");
         card.innerHTML='<span class="character-portrait-slot has-portrait" aria-hidden="true"><img src="./assets/images/daren-velk.webp" alt="" width="1024" height="1536" loading="lazy"></span><div class="character-card-copy"><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">OTWÓRZ KRONIKĘ '+icon("i-arrow")+'</span></div>';
       }
+      const teaser=card.querySelector("p");teaser.replaceChildren();window.CalionRichText.inline(teaser,e.teaser,true);
       card.addEventListener("click",()=>openEntry(e));
       grid.append(card);
     }
@@ -80,7 +82,7 @@
     const heading=document.createElement("h2");heading.textContent=entry.title;
     const tag=document.createElement("p");tag.className="history-tag";tag.textContent=entry.tag;
     detail.append(date,heading,tag);
-    for(const text of entry.body){const p=document.createElement("p");p.textContent=text;detail.append(p);}
+    window.CalionRichText.blocks(detail,entry.body);
     const at=historyEntries.indexOf(entry);
     $("#history-prev").disabled=at===0;$("#history-next").disabled=at===historyEntries.length-1;
     $("#history-position").textContent=(at+1)+" / "+historyEntries.length;
@@ -117,7 +119,7 @@
     $("#dialog-title").textContent=entry.title;
     $("#dialog-subtitle").textContent=entry.sub;
     const body=$("#dialog-body");body.replaceChildren();
-    for(const paragraph of entry.body){const p=document.createElement("p");p.textContent=paragraph;body.append(p);}
+    window.CalionRichText.blocks(body,entry.body);
     const dialog=$("#lore-dialog");if(!dialog.open)dialog.showModal();
   }
   function renderGames(){
@@ -172,7 +174,7 @@
     const map=$("#location-map");map.src=locationMap(entry);
     map.alt="Fragment mapy okolic "+(entry.map==="calion"?"Calionu":entry.title);
     const body=$("#location-body");body.replaceChildren();
-    for(const paragraph of entry.body){const p=document.createElement("p");p.textContent=paragraph;body.append(p);}
+    window.CalionRichText.blocks(body,entry.body);
     const parent=entries.find(e=>e.id===entry.parent);
     const back=$("#location-back");back.href=parent?"#/swiat/"+parent.id:"#/swiat";
     back.textContent=parent?"← Wróć do "+parent.title:"← Wróć do atlasu świata";

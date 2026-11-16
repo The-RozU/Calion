@@ -1,0 +1,10 @@
+/* Shared renderer styles; approved colors are chosen for parchment backgrounds. */
+.calion-richtext{overflow-wrap:anywhere}
+.calion-richtext strong,.entry-card strong{font-weight:700}
+.calion-richtext em{font-style:italic}
+.calion-richtext u{text-decoration:underline;text-underline-offset:3px}
+.calion-richtext .rt-brown{color:#50321e}.calion-richtext .rt-green{color:#214b35}.calion-richtext .rt-burgundy{color:#742c35}.calion-richtext .rt-copper{color:#81441f}
+.calion-richtext .rt-small{font-size:.85em}.calion-richtext .rt-normal{font-size:1em}.calion-richtext .rt-large{font-size:1.25em}
+.calion-richtext h3,.calion-richtext h4,.calion-richtext h5{font-family:Georgia,serif;line-height:1.35;letter-spacing:normal;margin:1em 0 .55em;color:inherit}
+.calion-richtext h3{font-size:1.45em}.calion-richtext h4{font-size:1.25em}.calion-richtext h5{font-size:1.1em}
+.calion-richtext ul,.calion-richtext ol{padding-left:1.55em;margin:1em 0}.calion-richtext li{margin:.35em 0;line-height:1.8}
