@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.46",
+  "version": "0.0.47",
   "entries": [
     {
       "id": "miasto-calion",
@@ -503,10 +503,21 @@
         "Półdemony są obecne w uniwersum Calionu. Ich pochodzenie budzi lęk i nieufność części mieszkańców świata.",
         "Ślady Wielkiej Wojny z Demonami nadal wpływają na to, jak inne rasy postrzegają istoty mające demoniczne cechy."
       ]
+    },
+    {
+      "id": "olshia-thornclaw",
+      "cat": "postacie",
+      "title": "Olshia Thornclaw",
+      "sub": "Kotka",
+      "tag": "Postacie Calionu",
+      "teaser": "Olshia jest Kotką z rasy bestioludzi.\nJest lekko naiwna ale dobroduszna, pomaga sierotom kradnąc dla nich jedzenie.",
+      "body": [
+        "Pełen opis wkrótce."
+      ]
     }
   ],
   "lastSave": {
-    "requestId": "d3686a68-f27a-4479-9b76-62b175c8bdc4",
-    "entryId": "daren-velk"
+    "requestId": "5e0ed962-8738-4803-9c8b-d1e7d517defb",
+    "entryId": "olshia-thornclaw"
   }
 }
