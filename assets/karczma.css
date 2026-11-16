@@ -745,3 +745,160 @@ body.tavern-theme::before {
   .tavern-note-sheet { padding: 32px 23px 27px; }
   .tavern-note-side .tavern-note-sheet { padding: 30px 24px 24px; }
 }
+
+
+/* v0.0.30 — Osobne deseczki, dyskretne miedziane gwoździe.
+   Każdy skrót to osobny drewniany szyld, nie część jednego panelu. */
+.tavern-theme .site-header::before,
+.tavern-theme .site-header::after {
+  content:"";
+  position:absolute;
+  z-index:1;
+  top:50%;
+  width:12px;
+  height:12px;
+  margin-top:-6px;
+  border:1px solid #39251b;
+  border-radius:50%;
+  background:
+    linear-gradient(155deg,transparent 43%,#422b20ad 46% 54%,transparent 57%) center / 6px 6px no-repeat,
+    radial-gradient(circle at 33% 27%,#f2d5a9 0%,#b58556 35%,#65412a 75%,#2d201a 100%);
+  box-shadow:inset 0 1px 1px #f9dfa54d,0 2px 2px #0e0705b0;
+}
+.tavern-theme .site-header::before {left:clamp(8px,1.2vw,19px)}
+.tavern-theme .site-header::after {right:clamp(8px,1.2vw,19px)}
+
+/* Zastępujemy ozdobne kwadratowe zaczepy na ramie hero małymi nitami. */
+.tavern-hero::before {
+  background:
+    radial-gradient(circle at 16px 16px,#d4ae7e 0 3px,#674831 4px 5px,transparent 6px),
+    radial-gradient(circle at calc(100% - 16px) 16px,#d4ae7e 0 3px,#674831 4px 5px,transparent 6px),
+    radial-gradient(circle at 16px calc(100% - 16px),#d4ae7e 0 3px,#674831 4px 5px,transparent 6px),
+    radial-gradient(circle at calc(100% - 16px) calc(100% - 16px),#d4ae7e 0 3px,#674831 4px 5px,transparent 6px);
+}
+
+/* Usuń wspólną tablicę i jej stare gwoździe, pozostaw niezależne deski. */
+.tavern-shortcuts {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:clamp(10px,1.2vw,20px);
+  margin:14px 12px 0;
+  padding:0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+}
+.tavern-shortcuts::before,
+.tavern-shortcuts::after {content:none;display:none}
+.tavern-shortcuts a,
+.tavern-shortcuts a:last-child {
+  position:relative;
+  isolation:isolate;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(7px,1vw,14px);
+  min-width:0;
+  min-height:94px;
+  padding:16px 25px;
+  border:1px solid #7a4930;
+  border-radius:2px;
+  color:#f4deb7;
+  background:
+    linear-gradient(180deg,#12080324,#00000025),
+    url("./images/drewno-bezszwowe.webp") center center / 650px auto;
+  box-shadow:
+    inset 0 2px 0 #d4a06d5c,
+    inset 0 -4px 0 #1a0b07b8,
+    0 5px 0 #1b0b07,
+    0 10px 15px #12080594;
+  text-decoration:none;
+  text-shadow:0 2px 3px #110704dc;
+  transition:transform .17s ease,filter .17s ease,box-shadow .17s ease;
+}
+.tavern-shortcuts a::before,
+.tavern-shortcuts a::after {
+  content:"";
+  position:absolute;
+  z-index:2;
+  top:10px;
+  width:9px;
+  height:9px;
+  border:1px solid #4b3223;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 30% 26%,#e6d6bb 0%,#aa9b84 38%,#676058 72%,#342a24 100%);
+  box-shadow:0 1px 2px #140904be;
+  pointer-events:none;
+}
+.tavern-shortcuts a::before{left:10px}
+.tavern-shortcuts a::after{right:10px}
+.tavern-shortcuts a > svg {
+  position:relative;
+  z-index:1;
+  flex:0 0 auto;
+  width:24px;
+  height:24px;
+  color:#d8a36c;
+}
+.tavern-shortcuts a > span {
+  position:relative;
+  z-index:1;
+  font:500 clamp(16px,1.25vw,22px)/1.2 Georgia,serif;
+  color:#f4deb7;
+  white-space:normal;
+}
+.tavern-shortcuts a:hover {
+  transform:translateY(-2px);
+  filter:brightness(1.15);
+  background-color:#603b25;
+  box-shadow:
+    inset 0 2px 0 #e5b2795c,
+    inset 0 -4px 0 #1a0b07,
+    0 7px 0 #1b0b07,
+    0 12px 17px #12080594;
+}
+.tavern-shortcuts a:focus-visible {
+  outline:2px solid #e4bc84;
+  outline-offset:4px;
+}
+@media (max-width:960px) {
+  .tavern-shortcuts {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+  }
+  .tavern-shortcuts a {min-height:84px;padding:15px 24px}
+  .tavern-shortcuts a > span {font-size:clamp(17px,2vw,23px)}
+}
+@media (max-width:670px) {
+  .tavern-theme .site-header::before,
+  .tavern-theme .site-header::after {
+    top:50%;
+    margin-top:-5px;
+    width:10px;
+    height:10px;
+  }
+  .tavern-theme .site-header::before{left:6px}
+  .tavern-theme .site-header::after{right:6px}
+  .tavern-shortcuts {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    margin:13px 4px 0;
+    gap:11px;
+  }
+  .tavern-shortcuts a,
+  .tavern-shortcuts a:last-child {
+    min-height:76px;
+    padding:13px 16px;
+    gap:8px;
+    border:1px solid #75492f;
+  }
+  .tavern-shortcuts a > svg{width:19px;height:19px}
+  .tavern-shortcuts a > span{font-size:clamp(14px,3.7vw,19px);line-height:1.18}
+  .tavern-shortcuts a::before,
+  .tavern-shortcuts a::after {top:7px;width:7px;height:7px}
+  .tavern-shortcuts a::before{left:7px}
+  .tavern-shortcuts a::after{right:7px}
+}
+@media (prefers-reduced-motion:reduce) {
+  .tavern-shortcuts a{transition:none}
+}
