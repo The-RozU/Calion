@@ -1,6 +1,6 @@
 # Calion · portal uniwersum
 
-**Aktualny motyw: Karczma Calionu v0.0.38.**
+**Aktualny motyw: Karczma Calionu v0.0.39.**
 
 Strona internetowa poświęcona uniwersum Calionu, jego krainom, historii, postaciom, bestiariuszowi, rasom, frakcjom i przyszłym grom. Motyw wizualny łączy średniowieczną karczmę Gildii Poszukiwaczy, pikselowe ilustracje dark fantasy, miedziane i srebrne okucia, skórzane dodatki oraz pergaminowe kroniki.
 
@@ -125,3 +125,9 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Rozwinięto nazwiska Ralfora i Leoryka, zachowując ich identyfikatory i dotychczasowe opisy. Opisy strażników oparto na dokumencie Świat.
 - Daren zachowuje potwierdzone miano Czarny Lis; pełne biografie Darena i Lokara pozostają do uzupełnienia. Pozostali bohaterowie mogą zostać przywróceni z historii Git przy rozbudowie listy.
 - Bez zmian w pozostałych działach; tylko dev-mode.
+
+## 0.0.39 — Test kafelka Darena
+
+- Wyłącznie Daren Velk otrzymuje dwukolumnowy kafelek: miejsce na portret po lewej, nazwa u góry i krótki opis u dołu prawej części.
+- Układ pozostaje poziomy również na telefonie. Portret jest na razie oznaczonym pustym miejscem; zachowano otwieranie kroniki i wyszukiwanie.
+- Pozostałe postacie i działy bez zmiany układu. Tylko dev-mode.

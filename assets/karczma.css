@@ -1008,3 +1008,14 @@ body.tavern-theme::before {
 @media(max-width:1050px){.lore-collection .collection-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.lore-collection .collection-grid{grid-template-columns:1fr;gap:24px}.tavern-theme .lore-collection .entry-card{min-height:0;padding:32px 24px 24px}.tavern-theme .lore-collection .inner-hero p{font-size:17px}.history-board{padding:18px 12px}.history-board .history-navigation{flex-direction:column;gap:16px}.history-board .history-controls{align-self:flex-end}.history-board .history-navigation small{max-width:none}.history-board .history-scroll{padding-bottom:12px}}
 @media(prefers-reduced-motion:reduce){.tavern-theme .lore-collection .entry-card{transition:none}.tavern-theme .lore-collection .entry-card:hover{transform:none}}
+
+/* 0.0.39 — próbny poziomy kafelek wyłącznie Darena Velka. */
+.tavern-theme .lore-collection .entry-card.character-card-preview{display:grid;grid-template-columns:minmax(82px,.8fr) minmax(0,1.2fr);gap:18px;padding:30px 20px 22px;min-height:320px}
+.character-portrait-slot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;align-self:stretch;min-height:170px;padding:12px 8px;border:1px solid #9d784b;outline:1px solid #ae8d5b;outline-offset:-5px;background:linear-gradient(155deg,#294336,#15281f);color:var(--t-cream);text-align:center}
+.character-portrait-slot>span{font-size:32px;color:#c69b65}
+.character-portrait-slot small{font:13px/1.5 Georgia,serif;max-width:90px}
+.character-card-copy{display:flex;flex-direction:column;min-width:0}
+.tavern-theme .lore-collection .character-card-preview h3{font-size:clamp(24px,2vw,30px);margin:0 0 8px}
+.tavern-theme .lore-collection .character-card-preview p{margin:auto 0 16px;font-size:16px;line-height:1.65;-webkit-line-clamp:5}
+.tavern-theme .lore-collection .character-card-preview .entry-more{font-size:10px;margin-top:0;padding-top:12px}
+@media(max-width:650px){.tavern-theme .lore-collection .entry-card.character-card-preview{grid-template-columns:minmax(88px,.72fr) minmax(0,1.28fr);gap:16px;padding:28px 18px 20px;min-height:260px}.tavern-theme .lore-collection .character-card-preview h3{font-size:26px}.character-portrait-slot{min-height:190px}}
