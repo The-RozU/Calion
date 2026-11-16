@@ -946,3 +946,40 @@ body.tavern-theme::before {
 
 /* 0.0.33 — Recoverable content loading. */
 .content-load-error{margin:20px;padding:22px;background:#e5cba0;color:#302417;border:1px solid #a67d4c}.content-load-error button{min-height:44px;padding:10px 16px;background:#23473b;color:#f3ddae;border:1px solid #987046;font:17px Georgia,serif}
+
+/* Kroniki: miedziana oś na karczemnym stole; jeden otwarty pergamin. */
+.tavern-theme .inner-page.history-chronicles{background:none;border:0;box-shadow:none;padding:clamp(12px,2.5vw,40px);color:var(--t-cream)}
+.history-chronicles .inner-hero{border:0;padding:22px 0 20px;max-width:850px}
+.history-chronicles .inner-hero:after{display:none}
+.tavern-theme .history-chronicles .inner-hero h1,.tavern-theme .history-chronicles .inner-hero h1 em{color:var(--t-cream);text-shadow:0 3px 5px #000}
+.tavern-theme .history-chronicles .inner-hero p{color:#e2c69e}
+.tavern-theme .history-chronicles .eyebrow,.tavern-theme .history-chronicles .archive-count{color:#d9b783}
+.history-navigation{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:12px 0 20px}
+.history-navigation p{margin:0;font-size:20px;color:var(--t-cream)}
+.history-navigation small{display:block;color:#d3b493;font-size:14px;margin-top:6px;max-width:540px}
+.history-controls{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.history-controls button{width:46px;height:46px;background:var(--t-green);color:var(--t-cream);border:1px solid var(--t-copper);font:24px Georgia,serif;cursor:pointer}
+.history-controls button:disabled{opacity:.4;cursor:default}
+#history-position{font-size:14px;min-width:42px;text-align:center;font-variant-numeric:tabular-nums}
+.history-scroll{overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;position:relative;padding:6px 4px 16px;scrollbar-color:var(--t-copper) var(--t-wood-dark);scrollbar-width:auto}
+.history-scroll::-webkit-scrollbar{height:10px}.history-scroll::-webkit-scrollbar-track{background:var(--t-wood-dark)}.history-scroll::-webkit-scrollbar-thumb{background:var(--t-copper);border:2px solid var(--t-wood-dark);border-radius:8px}
+.history-track{display:flex;list-style:none;padding:0;margin:0;min-width:100%;width:max-content}
+.history-track li{position:relative;flex:1 0 220px;max-width:280px;scroll-snap-align:center}
+.history-track li:before{content:"";position:absolute;left:0;right:0;top:85px;height:3px;background:linear-gradient(#ecc38a,#9a6038);box-shadow:0 2px 3px #000}
+.history-track li:first-child:before{left:50%}.history-track li:last-child:before{right:50%}
+.history-point{position:relative;display:grid;grid-template-rows:44px 38px 1fr;gap:12px;width:100%;min-height:216px;padding:10px 16px 18px;text-align:center;background:none;border:0;color:var(--t-cream);font-family:Georgia,serif;cursor:pointer}
+.history-point-date{align-self:end;display:block;color:#d9b783;font-size:16px;font-variant-numeric:tabular-nums}
+.history-pin{display:grid;place-items:center;justify-self:center;width:30px;height:30px;align-self:center;border:2px solid var(--t-copper);border-radius:50%;background:var(--t-wood-dark);color:var(--t-copper);font-size:18px;box-shadow:0 0 0 5px #29160d}
+.history-point strong{font-size:20px;line-height:1.4;font-weight:normal;max-width:240px;margin:0 auto}
+.history-point:hover .history-pin,.history-point[aria-pressed=true] .history-pin{background:var(--t-green);color:var(--t-cream);border-color:#f3ce91}
+.history-point[aria-pressed=true] strong{color:#ffe7b5;text-decoration:underline;text-decoration-color:var(--t-copper);text-underline-offset:7px}
+.history-point[aria-pressed=true] .history-point-date{color:#ffe7b5;font-weight:bold}
+.history-point:focus-visible,.history-controls button:focus-visible,.history-scroll:focus-visible{outline:2px solid var(--t-cream);outline-offset:-2px}
+.history-detail{position:relative;margin:34px auto 10px;max-width:980px;min-height:340px;padding:clamp(24px,4vw,58px);background:radial-gradient(ellipse at top left,#efdab1,var(--t-paper));color:var(--t-ink);border-top:3px solid #ae8452;box-shadow:0 10px 25px #0005}
+.history-detail:before{content:"✦";position:absolute;right:24px;top:20px;color:#815d37;font-size:22px}
+.history-detail h2{font:normal clamp(28px,3vw,43px)/1.2 Georgia,serif;margin:12px 22px 10px 0;overflow-wrap:anywhere}
+.history-detail p{font:18px/1.85 Georgia,serif;white-space:pre-wrap;overflow-wrap:anywhere;margin:16px 0}
+.history-detail .history-date{font-size:16px;color:#6d4526;margin:0;font-weight:bold}
+.history-detail .history-tag{color:#705333;font-size:14px;border-bottom:1px solid #a77f4c;padding-bottom:20px;margin:0 0 24px}
+@media(max-width:650px){.history-navigation{gap:14px;align-items:flex-start}.history-navigation p{font-size:18px}.history-navigation small{font-size:13px}.history-controls{gap:8px}.history-controls button{width:44px;height:44px}.history-track li{flex-basis:210px}.history-point strong{font-size:20px}.history-detail{margin-top:24px}.history-detail p{font-size:17px}.history-chronicles .collection-toolbar{margin:18px 0}.history-chronicles .inner-hero h1{font-size:36px}}
+@media(forced-colors:active){.history-track li:before{background:CanvasText}.history-pin{border-color:ButtonText}.history-point[aria-pressed=true] .history-pin{outline:3px solid Highlight}}

@@ -2,7 +2,7 @@
   "use strict";
   const sections={
     swiat:{kicker:"ATLAS CALIONU / ODKRYWAJ",title:"Świat i <em>krainy.</em>",desc:"Od gwarnego portu Calionu po chłodne góry Durnhollow. Poznaj miejsca, do których prowadzą szlaki i te, których nie pokazuje żadna mapa."},
-    historia:{kicker:"ZAPISKI KRONIKARZY / OŚ CZASU",title:"Kroniki <em>historii.</em>",desc:"Wojny, rozejmy, dawne tajemnice i wydarzenia, które ukształtowały świat w latach 824–825."},
+    historia:{kicker:"ZAPISKI KRONIKARZY / OŚ CZASU",title:"Kroniki <em>historii.</em>",desc:"Wojny, rozejmy, dawne tajemnice i wydarzenia, które ukształtowały Calion. Prześledź drogę od Wielkiej Wojny z Demonami do obecnej ery."},
     postacie:{kicker:"BIOGRAFIE / ZNANI I NIEZNANI",title:"Ludzie <em>legend.</em>",desc:"Władcy, dowódcy, magowie, kowale i poszukiwacze, których losy przecinają się w Calionie."},
     bestiariusz:{kicker:"ZAGROŻENIA / BESTIARIUSZ",title:"Cienie i <em>stworzenia.</em>",desc:"Dzikie zwierzęta, potwory i niepokojące osobliwości, jakie można napotkać poza miejskimi murami."},
     frakcje:{kicker:"WŁADZA / GILDIE / TAJEMNICE",title:"Frakcje i <em>organizacje.</em>",desc:"Kto strzeże miasta, kto szuka przygód, a kto działa w cieniu? Poznaj siły kształtujące oblicze królestwa."},
@@ -25,7 +25,7 @@
   const worldMapPanel=$("#world-map-panel"),mapDialog=$("#map-dialog");
   const escapeHTML=(s)=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const icon=(id)=>'<svg aria-hidden="true"><use href="#'+id+'"></use></svg>';
-  let currentSection="";
+  let currentSection="",historyEntries=[],selectedHistoryId=null;
   function closeMenu(){
     menu.classList.remove("open");
     $("#menu-toggle").setAttribute("aria-expanded","false");
@@ -46,6 +46,7 @@
   function renderEntries(){
     const term=search.value.trim().toLocaleLowerCase("pl");
     const filtered=entries.filter(e=>e.cat===currentSection && !e.parent && [e.title,e.sub,e.tag,e.teaser,...e.body].join(" ").toLocaleLowerCase("pl").includes(term));
+    if(currentSection==="historia"){renderTimeline(filtered);return;}
     const grid=$("#collection-grid");
     grid.replaceChildren();
     for(const e of filtered){
@@ -60,11 +61,51 @@
     }
     $("#archive-count").textContent=filtered.length+" "+(filtered.length===1?"WPIS":"WPISÓW");
     $("#empty-message").hidden=filtered.length!==0;
-    if(currentSection==="historia")$("#history-timeline").hidden=term.length>0;
   }
-  function renderTimeline(){
-    const facts=[["ROK 0","Rozejm z demonami","Początek kalendarza"],["200–239","Wojny Run","Magia, runy i artefakty"],["328","Strażnica Południowa","Udokumentowany atak goblinów"],["600+","Rozkwit handlu","Wzrost znaczenia Calionu"],["780–790","Powstanie Gildii","Formalne ukształtowanie organizacji"],["824–825","Obecna era","Czas dzisiejszych kronik"]];
-    $("#history-timeline").innerHTML=facts.map(f=>'<div class="timeline-block"><span>'+f[0]+'</span><strong>'+f[1]+'</strong><small>'+f[2]+'</small></div>').join("");
+  function historyYear(entry){
+    const match=entry.sub.replace(/[–−]/g,"-").match(/-?\d+/);
+    return match?Number(match[0]):Infinity;
+  }
+  function selectHistory(id,reveal=false){
+    const entry=historyEntries.find(e=>e.id===id);if(!entry)return;
+    selectedHistoryId=id;
+    const points=Array.from(document.querySelectorAll(".history-point"));
+    for(const point of points)point.setAttribute("aria-pressed",String(point.dataset.id===id));
+    const detail=$("#history-detail");detail.replaceChildren();detail.hidden=false;
+    const date=document.createElement("p");date.className="history-date";date.textContent=entry.sub;
+    const heading=document.createElement("h2");heading.textContent=entry.title;
+    const tag=document.createElement("p");tag.className="history-tag";tag.textContent=entry.tag;
+    detail.append(date,heading,tag);
+    for(const text of entry.body){const p=document.createElement("p");p.textContent=text;detail.append(p);}
+    const at=historyEntries.indexOf(entry);
+    $("#history-prev").disabled=at===0;$("#history-next").disabled=at===historyEntries.length-1;
+    $("#history-position").textContent=(at+1)+" / "+historyEntries.length;
+    if(reveal){const point=points.find(p=>p.dataset.id===id),scroll=$("#history-scroll");
+      if(point&&scroll.scrollTo)scroll.scrollTo({left:scroll.scrollLeft+point.getBoundingClientRect().left-scroll.getBoundingClientRect().left-(scroll.clientWidth-point.offsetWidth)/2,behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+    }
+  }
+  function stepHistory(direction){
+    const at=historyEntries.findIndex(e=>e.id===selectedHistoryId);
+    const entry=historyEntries[at+direction];if(entry)selectHistory(entry.id,true);
+  }
+  function renderTimeline(filtered){
+    historyEntries=filtered.slice().sort((a,b)=>historyYear(a)-historyYear(b));
+    const track=$("#history-track");track.replaceChildren();
+    for(const entry of historyEntries){
+      const item=document.createElement("li"),point=document.createElement("button");
+      point.type="button";point.className="history-point";point.dataset.id=entry.id;
+      point.setAttribute("aria-controls","history-detail");
+      point.innerHTML='<span class="history-point-date">'+escapeHTML(entry.sub)+'</span><span class="history-pin" aria-hidden="true">✦</span><strong>'+escapeHTML(entry.title)+'</strong>';
+      point.addEventListener("click",()=>selectHistory(entry.id));
+      point.addEventListener("keydown",event=>{if(event.key!=="ArrowLeft"&&event.key!=="ArrowRight")return;event.preventDefault();stepHistory(event.key==="ArrowRight"?1:-1);document.querySelector('.history-point[data-id="'+selectedHistoryId+'"]')?.focus({preventScroll:true});});
+      item.append(point);track.append(item);
+    }
+    const empty=historyEntries.length===0;
+    $("#archive-count").textContent=historyEntries.length+" "+(historyEntries.length===1?"WYDARZENIE":"WYDARZEŃ");
+    $("#empty-message").hidden=!empty;
+    $("#history-navigation").hidden=empty;$("#history-scroll").hidden=empty;$("#history-detail").hidden=empty;
+    if(empty){$("#history-detail").replaceChildren();return;}
+    selectHistory(historyEntries.some(e=>e.id===selectedHistoryId)?selectedHistoryId:historyEntries[0].id);
   }
   function openEntry(entry){
     $("#dialog-tag").textContent=entry.tag+" / ARCHIWUM CALIONU";
@@ -96,6 +137,7 @@
     const s=sections[section];
     currentSection=section;
     collection.classList.toggle("world-atlas",section==="swiat");
+    collection.classList.toggle("history-chronicles",section==="historia");
     $("#collection-eyebrow").textContent=s.kicker;
     $("#collection-title").innerHTML=s.title;
     $("#collection-desc").textContent=s.desc;
@@ -103,9 +145,9 @@
     worldMapPanel.hidden=section!=="swiat";
     search.placeholder=section==="gry"?"Szukaj gier...":"Szukaj w archiwum...";
     $("#game-library").hidden=section!=="gry";
-    $("#collection-grid").hidden=section==="gry";
+    $("#collection-grid").hidden=section==="gry"||section==="historia";
     $("#history-timeline").hidden=section!=="historia";
-    if(section==="gry")renderGames();else{if(section==="historia")renderTimeline();renderEntries();}
+    if(section==="gry")renderGames();else renderEntries();
   }
   function launchGame(id){
     const game=games.find(g=>g.id===id && g.available);if(!game)return false;
@@ -162,6 +204,8 @@
   $("#map-close").addEventListener("click",()=>mapDialog.close());
   mapDialog.addEventListener("click",event=>{if(event.target===mapDialog)mapDialog.close()});
   $("#menu-toggle").addEventListener("click",()=>{const open=menu.classList.toggle("open");$("#menu-toggle").setAttribute("aria-expanded",String(open));});
+  $("#history-prev").addEventListener("click",()=>stepHistory(-1));
+  $("#history-next").addEventListener("click",()=>stepHistory(1));
   search.addEventListener("input",()=>currentSection==="gry"?renderGames():renderEntries());
   $("#dialog-close").addEventListener("click",()=>$("#lore-dialog").close());
   $("#dialog-close-bottom").addEventListener("click",()=>$("#lore-dialog").close());

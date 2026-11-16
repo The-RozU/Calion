@@ -1,6 +1,6 @@
 # Calion · portal uniwersum
 
-**Aktualny motyw: Karczma Calionu v0.0.33.**
+**Aktualny motyw: Karczma Calionu v0.0.36.**
 
 Strona internetowa poświęcona uniwersum Calionu, jego krainom, historii, postaciom, bestiariuszowi, rasom, frakcjom i przyszłym grom. Motyw wizualny łączy średniowieczną karczmę Gildii Poszukiwaczy, pikselowe ilustracje dark fantasy, miedziane i srebrne okucia, skórzane dodatki oraz pergaminowe kroniki.
 
@@ -103,3 +103,11 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Link w stopce prowadzi do prywatnego panelu redaktora, dostosowanego do telefonu. Panel obsługuje nowe wpisy, działy, opisy, mapy i miejsca nadrzędne.
 - Panel zapisuje wyłącznie treści w `dev-mode`; publikacja na `main` nadal jest osobną decyzją. Każdy zapis inkrementuje wersję treści.
 - Jednorazowa konfiguracja w panelu: utworzenie prywatnej GitHub App i instalacja tylko w repozytorium Calion. Dane dostępowe przechowuje szyfrowany magazyn serwerowy, nie publiczny portal.
+
+## 0.0.36 — Pozioma oś Kronik
+
+- Drewniane tło, miedziana oś i pergamin opisu dopasowane do strony głównej.
+- Zamiast kafelków: przewijana poziomo oś z datami i klikalnymi wydarzeniami. Poniżej pełny opis wybranego punktu.
+- Dane i daty pochodzą z istniejących wpisów historii w content.json, także nowych dodanych w panelu; wyszukiwanie filtruje oś. Punkty są chronologiczne, z umownymi odstępami.
+- Przyciski poprzednie/następne oraz strzałki klawiatury uzupełniają przewijanie dotykowe.
+- Tylko dev-mode. Wersje 0.0.34–35 dotyczą oddzielnego panelu redaktora.
