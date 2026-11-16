@@ -3,7 +3,7 @@
   const sections={
     swiat:{kicker:"ATLAS CALIONU / ODKRYWAJ",title:"Świat i <em>krainy.</em>",desc:"Od gwarnego portu Calionu po chłodne góry Durnhollow. Poznaj miejsca, do których prowadzą szlaki i te, których nie pokazuje żadna mapa."},
     historia:{kicker:"ZAPISKI KRONIKARZY / OŚ CZASU",title:"Kroniki <em>historii.</em>",desc:"Wojny, rozejmy, dawne tajemnice i wydarzenia, które ukształtowały Calion. Prześledź drogę od Wielkiej Wojny z Demonami do obecnej ery."},
-    postacie:{kicker:"BIOGRAFIE / ZNANI I NIEZNANI",title:"Ludzie <em>legend.</em>",desc:"Władcy, dowódcy, magowie, kowale i poszukiwacze, których losy przecinają się w Calionie."},
+    postacie:{kicker:"BIOGRAFIE / ZNANI I NIEZNANI",title:"Postacie <em>Calionu.</em>",desc:"Poznaj postacie, których losy splatają się na ulicach miasta, przy gildyjnych stołach i na szlakach Calionu."},
     bestiariusz:{kicker:"ZAGROŻENIA / BESTIARIUSZ",title:"Cienie i <em>stworzenia.</em>",desc:"Dzikie zwierzęta, potwory i niepokojące osobliwości, jakie można napotkać poza miejskimi murami."},
     frakcje:{kicker:"WŁADZA / GILDIE / TAJEMNICE",title:"Frakcje i <em>organizacje.</em>",desc:"Kto strzeże miasta, kto szuka przygód, a kto działa w cieniu? Poznaj siły kształtujące oblicze królestwa."},
     rasy:{kicker:"LUDY ŚWIATA / KOMPENDIUM",title:"Rasy i <em>ludy.</em>",desc:"Calion zamieszkują przedstawiciele różnych ludów, których historie splatają się na ulicach miast i szlakach przygód."},

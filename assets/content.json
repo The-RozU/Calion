@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.37",
+  "version": "0.0.38",
   "entries": [
     {
       "id": "miasto-calion",
@@ -200,88 +200,88 @@
       ]
     },
     {
-      "id": "arthel",
+      "id": "daren-velk",
       "cat": "postacie",
-      "title": "Arthel IV",
-      "sub": "Król Calionu",
-      "tag": "Rodzina królewska",
-      "teaser": "Władca uważany za łagodnego i mądrego, choć zdaniem niektórych zbyt pobłażliwego.",
+      "title": "Daren Velk",
+      "sub": "Czarny Lis",
+      "tag": "Postacie Calionu",
+      "teaser": "Daren Velk, znany jako Czarny Lis. Jego kronika czeka na uzupełnienie.",
       "body": [
-        "Król Arthel IV sprawuje władzę nad Calionem. W kronikach opisywany jest jako łagodny, mądry monarcha, którego pobłażliwość bywa przedmiotem krytyki.",
-        "Podlega mu formalnie Straż Miejska, a Gildia Poszukiwaczy działa na mocy królewskiego dekretu."
-      ]
-    },
-    {
-      "id": "serena",
-      "cat": "postacie",
-      "title": "Serena",
-      "sub": "Królowa Calionu",
-      "tag": "Rodzina królewska",
-      "teaser": "Życzliwa władczyni, znana z troski o ubogich mieszkańców miasta.",
-      "body": [
-        "Królowa Serena jest znana z życzliwości i zainteresowania losem ubogich mieszkańców Calionu.",
-        "Na tle przepychu strefy szlacheckiej jej troska o potrzebujących jest często przywoływana jako cecha dworu."
-      ]
-    },
-    {
-      "id": "alarion",
-      "cat": "postacie",
-      "title": "Alarion",
-      "sub": "Książę Calionu",
-      "tag": "Rodzina królewska",
-      "teaser": "Młody, ambitny następca dworu zafascynowany Poszukiwaczami i wyprawami.",
-      "body": [
-        "Książę Alarion jest młody, ambitny i zafascynowany światem Poszukiwaczy.",
-        "Przygoda i życie poza pałacowymi murami przyciągają jego uwagę znacznie bardziej, niż można by oczekiwać od członka rodziny królewskiej."
-      ]
-    },
-    {
-      "id": "leoryk",
-      "cat": "postacie",
-      "title": "Kapitan Leoryk",
-      "sub": "Dowódca Straży Miejskiej",
-      "tag": "Wojsko i porządek",
-      "teaser": "Doświadczony kapitan, który odpowiada za bezpieczeństwo miasta i jego murów.",
-      "body": [
-        "Leoryk stoi na czele Straży Miejskiej Calionu, liczącej w przybliżeniu 600 żołnierzy regularnych, rezerwowych i elitarnych.",
-        "Formalnie podlega królowi Arthelowi IV, ale w codziennych sprawach bezpieczeństwa to jego decyzje mają ogromną wagę.",
-        "Choć ze względu na wiek nie wyrusza już na patrole, zna imiona wielu podległych mu żołnierzy."
+        "Daren Velk jest znany jako Czarny Lis.",
+        "Pełna historia tej postaci zostanie uzupełniona."
       ]
     },
     {
       "id": "ralfor",
       "cat": "postacie",
-      "title": "Ralfor",
+      "title": "Ralfor Żelaznobrody",
       "sub": "Krasnoludzki mistrz kowali",
       "tag": "Rzemieślnicy",
       "teaser": "Słynny kowal, którego warsztat współpracuje z Gildią Poszukiwaczy.",
       "body": [
-        "Ralfor jest starym krasnoludem i mistrzem kowalskim Calionu. Prowadzi warsztat współpracujący z Gildią Poszukiwaczy.",
+        "Ralfor Żelaznobrody jest starym krasnoludem i mistrzem kowalskim Calionu. Prowadzi warsztat współpracujący z Gildią Poszukiwaczy.",
         "Oficjalnie naprawia i konserwuje ekwipunek, lecz wśród Poszukiwaczy krążą opowieści o wyjątkowej jakości wykonywanej przez niego broni."
       ]
     },
     {
-      "id": "seris",
+      "id": "leoryk",
       "cat": "postacie",
-      "title": "Seris Kel",
-      "sub": "Archmag Klejnotów",
-      "tag": "Magowie",
-      "teaser": "Badacz magicznych klejnotów o siwych włosach i przenikliwym spojrzeniu.",
+      "title": "Leoryk Thalborn",
+      "sub": "Dowódca Straży Miejskiej",
+      "tag": "Wojsko i porządek",
+      "teaser": "Doświadczony kapitan, który odpowiada za bezpieczeństwo miasta i jego murów.",
       "body": [
-        "Seris Kel jest Archmagiem Klejnotów w Gildii Poszukiwaczy.",
-        "Bada i ocenia magiczne klejnoty znajdowane podczas wypraw do Dungeonów. Krążą pogłoski, że potrafi w pewien sposób „rozmawiać” z klejnotami."
+        "Leoryk Thalborn stoi na czele Straży Miejskiej Calionu, liczącej w przybliżeniu 600 żołnierzy regularnych, rezerwowych i elitarnych.",
+        "Formalnie podlega królowi Arthelowi IV, ale w codziennych sprawach bezpieczeństwa to jego decyzje mają ogromną wagę.",
+        "Choć ze względu na wiek nie wyrusza już na patrole, zna imiona wielu podległych mu żołnierzy."
       ]
     },
     {
-      "id": "stary-bron",
+      "id": "elmera-valen",
       "cat": "postacie",
-      "title": "Stary Bron",
-      "sub": "Karczmarz i dawny wojownik",
-      "tag": "Gildia Poszukiwaczy",
-      "teaser": "Weteran z blizną na twarzy stojący za barem gildyjnej karczmy.",
+      "title": "Elmera Valen",
+      "sub": "Porucznik Straży Szlacheckiej",
+      "tag": "Straż Miejska Calionu",
+      "teaser": "Wywodząca się ze szlachty dowódczyni straży odpowiedzialnej za dzielnicę szlachecką.",
       "body": [
-        "Stary Bron jest emerytowanym wojownikiem, którego wyróżnia blizna biegnąca przez twarz.",
-        "Dziś stoi za barem karczmy Gildii Poszukiwaczy, gdzie bywa świadkiem historii rodzących się nad kuflami i mapami."
+        "Elmera Valen pochodzi z rodziny szlacheckiej i pełni funkcję porucznika Straży Szlacheckiej Calionu. Dowodzi oddziałem liczącym około stu ludzi.",
+        "Jej formacja chroni dzielnicę szlachecką i jej mieszkańców, eskortuje ważne osoby oraz nadzoruje bezpieczeństwo podczas bali i uroczystości. Odpowiada także za kontrolę ruchu między strefą strażniczą a szlachecką."
+      ]
+    },
+    {
+      "id": "geran-voss",
+      "cat": "postacie",
+      "title": "Geran Voss",
+      "sub": "Porucznik Straży Portowej",
+      "tag": "Straż Miejska Calionu",
+      "teaser": "Dowódca straży portowej, odpowiedzialny za bezpieczeństwo nabrzeży, magazynów i targu morskiego.",
+      "body": [
+        "Geran Voss jest porucznikiem dowodzącym Strażą Portową Calionu. Pod jego rozkazami służy około stu pięćdziesięciu strażników.",
+        "Jego oddział patroluje port, magazyny i targ morski, zwalcza przemyt oraz kradzieże towarów. Współpracuje z Gildią Poszukiwaczy przy kontroli transportów potworów i klejnotów, a podczas nadbrzeżnych festiwali dba o bezpieczeństwo.",
+        "Pod rozkazami Gerana Vossa służy sierżant Loran Dask."
+      ]
+    },
+    {
+      "id": "loran-dask",
+      "cat": "postacie",
+      "title": "Loran Dask",
+      "sub": "Sierżant Straży Portowej",
+      "tag": "Straż Miejska Calionu",
+      "teaser": "Sierżant działający w porcie, zajmujący się pracą w terenie i śledztwami.",
+      "body": [
+        "Loran Dask jest sierżantem Straży Miejskiej Calionu i podlega porucznikowi Geranowi Vossowi.",
+        "Działa na terenie portu. Zajmuje się pracą w terenie i śledztwami, a raporty przekazuje swojemu dowódcy."
+      ]
+    },
+    {
+      "id": "lokar",
+      "cat": "postacie",
+      "title": "Lokar",
+      "sub": "Kronika w przygotowaniu",
+      "tag": "Postacie Calionu",
+      "teaser": "Postać świata Calionu. Jej historia czeka na uzupełnienie.",
+      "body": [
+        "Opis Lokara zostanie uzupełniony."
       ]
     },
     {

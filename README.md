@@ -1,6 +1,6 @@
 # Calion · portal uniwersum
 
-**Aktualny motyw: Karczma Calionu v0.0.37.**
+**Aktualny motyw: Karczma Calionu v0.0.38.**
 
 Strona internetowa poświęcona uniwersum Calionu, jego krainom, historii, postaciom, bestiariuszowi, rasom, frakcjom i przyszłym grom. Motyw wizualny łączy średniowieczną karczmę Gildii Poszukiwaczy, pikselowe ilustracje dark fantasy, miedziane i srebrne okucia, skórzane dodatki oraz pergaminowe kroniki.
 
@@ -118,3 +118,10 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Postacie, Bestiariusz, Frakcje i Rasy mają drewniane tło i osobne pergaminowe karty z miedzianymi mocowaniami, większymi nagłówkami i czytelnymi opisami.
 - Wspólna responsywna siatka (3/2/1 kolumny), kolory i typografia zgodne ze stroną główną.
 - Treści, wyszukiwanie i szczegóły wpisów zachowane; dopracowanie poszczególnych działów pozostaje na kolejny etap. Tylko dev-mode.
+
+## 0.0.38 — Pierwsze siedem postaci
+
+- Dział Postacie zawiera wskazaną listę w kolejności: Daren Velk, Ralfor Żelaznobrody, Leoryk Thalborn, Elmera Valen, Geran Voss, Loran Dask, Lokar.
+- Rozwinięto nazwiska Ralfora i Leoryka, zachowując ich identyfikatory i dotychczasowe opisy. Opisy strażników oparto na dokumencie Świat.
+- Daren zachowuje potwierdzone miano Czarny Lis; pełne biografie Darena i Lokara pozostają do uzupełnienia. Pozostali bohaterowie mogą zostać przywróceni z historii Git przy rozbudowie listy.
+- Bez zmian w pozostałych działach; tylko dev-mode.
