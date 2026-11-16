@@ -983,3 +983,28 @@ body.tavern-theme::before {
 .history-detail .history-tag{color:#705333;font-size:14px;border-bottom:1px solid #a77f4c;padding-bottom:20px;margin:0 0 24px}
 @media(max-width:650px){.history-navigation{gap:14px;align-items:flex-start}.history-navigation p{font-size:18px}.history-navigation small{font-size:13px}.history-controls{gap:8px}.history-controls button{width:44px;height:44px}.history-track li{flex-basis:210px}.history-point strong{font-size:20px}.history-detail{margin-top:24px}.history-detail p{font-size:17px}.history-chronicles .collection-toolbar{margin:18px 0}.history-chronicles .inner-hero h1{font-size:36px}}
 @media(forced-colors:active){.history-track li:before{background:CanvasText}.history-pin{border-color:ButtonText}.history-point[aria-pressed=true] .history-pin{outline:3px solid Highlight}}
+
+/* 0.0.37 — spokojne tło pod osią i pergaminowe karty kompendium. */
+.history-board{padding:clamp(18px,2.5vw,32px);background:linear-gradient(135deg,#202b25,#151c18);border:1px solid #735638;box-shadow:0 7px 20px #0005,inset 0 1px 0 #b58b5240}
+.history-board .history-navigation{margin:0 0 20px}
+.history-board .history-pin{box-shadow:0 0 0 5px #18211c}
+.history-board .history-point-date{color:#e0c39b}
+.tavern-theme .inner-page.lore-collection{background:none;border:0;box-shadow:none;padding:clamp(12px,2.5vw,40px);color:var(--t-cream)}
+.lore-collection .inner-hero{border:0;padding:22px 0 28px;max-width:850px}
+.lore-collection .inner-hero:after{display:none}
+.tavern-theme .lore-collection .inner-hero h1,.tavern-theme .lore-collection .inner-hero h1 em{color:var(--t-cream);text-shadow:0 3px 5px #000}
+.tavern-theme .lore-collection .inner-hero p{color:#e2c69e}
+.tavern-theme .lore-collection .eyebrow,.tavern-theme .lore-collection .archive-count{color:#d9b783}
+.lore-collection .collection-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(22px,2.8vw,38px)}
+.tavern-theme .lore-collection .entry-card{min-height:320px;padding:34px 26px 24px;background:linear-gradient(125deg,#efdbb6,var(--t-paper) 75%,#cfad7a);border:0;border-radius:2px 7px 3px 2px;box-shadow:0 6px 16px #0005,inset 0 0 24px #ae86551f;color:var(--t-ink)}
+.lore-collection .entry-card:before{content:"";position:absolute;top:10px;right:calc(50% - 4px);width:8px;height:8px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#f3d09c,#a96f40 48%,#4f2c19 85%);box-shadow:1px 2px 3px #52351c80}
+.tavern-theme .lore-collection .entry-card h3{font:normal clamp(25px,2.3vw,32px)/1.25 Georgia,serif;color:var(--t-ink);margin:15px 0 8px;overflow-wrap:anywhere}
+.tavern-theme .lore-collection .entry-tag{font:600 11px/1.6 Georgia,serif;letter-spacing:.09em;color:#70502e}
+.tavern-theme .lore-collection .entry-subtitle{font:italic 15px/1.6 Georgia,serif;color:#674c30;margin-bottom:14px}
+.tavern-theme .lore-collection .entry-card p{font:17px/1.7 Georgia,serif;color:#503b27;margin:0 0 22px;-webkit-line-clamp:4}
+.tavern-theme .lore-collection .entry-more{font:600 11px/1.5 Georgia,serif;letter-spacing:.06em;color:#254b3c;border-color:#af8c5c;padding-top:16px}
+.tavern-theme .lore-collection .entry-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px #0007,inset 0 0 24px #ae86551f}
+.lore-collection .entry-card:focus-visible{outline:3px solid var(--t-cream);outline-offset:5px}
+@media(max-width:1050px){.lore-collection .collection-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.lore-collection .collection-grid{grid-template-columns:1fr;gap:24px}.tavern-theme .lore-collection .entry-card{min-height:0;padding:32px 24px 24px}.tavern-theme .lore-collection .inner-hero p{font-size:17px}.history-board{padding:18px 12px}.history-board .history-navigation{flex-direction:column;gap:16px}.history-board .history-controls{align-self:flex-end}.history-board .history-navigation small{max-width:none}.history-board .history-scroll{padding-bottom:12px}}
+@media(prefers-reduced-motion:reduce){.tavern-theme .lore-collection .entry-card{transition:none}.tavern-theme .lore-collection .entry-card:hover{transform:none}}

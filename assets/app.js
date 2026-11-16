@@ -101,6 +101,7 @@
       item.append(point);track.append(item);
     }
     const empty=historyEntries.length===0;
+    $(".history-board").hidden=empty;
     $("#archive-count").textContent=historyEntries.length+" "+(historyEntries.length===1?"WYDARZENIE":"WYDARZEŃ");
     $("#empty-message").hidden=!empty;
     $("#history-navigation").hidden=empty;$("#history-scroll").hidden=empty;$("#history-detail").hidden=empty;
@@ -138,6 +139,7 @@
     currentSection=section;
     collection.classList.toggle("world-atlas",section==="swiat");
     collection.classList.toggle("history-chronicles",section==="historia");
+    collection.classList.toggle("lore-collection",["postacie","bestiariusz","frakcje","rasy"].includes(section));
     $("#collection-eyebrow").textContent=s.kicker;
     $("#collection-title").innerHTML=s.title;
     $("#collection-desc").textContent=s.desc;
