@@ -943,3 +943,6 @@ body.tavern-theme::before {
 .location-related-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
 .location-related-grid .world-card{box-shadow:0 4px 12px #60432340}
 @media(max-width:650px){.location-related-grid{grid-template-columns:1fr;gap:20px}}
+
+/* 0.0.33 — Recoverable content loading. */
+.content-load-error{margin:20px;padding:22px;background:#e5cba0;color:#302417;border:1px solid #a67d4c}.content-load-error button{min-height:44px;padding:10px 16px;background:#23473b;color:#f3ddae;border:1px solid #987046;font:17px Georgia,serif}
