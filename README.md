@@ -1,6 +1,6 @@
 # Calion · portal uniwersum
 
-**Aktualny motyw: Karczma Calionu v0.0.40.**
+**Aktualny motyw: Karczma Calionu v0.0.41.**
 
 Strona internetowa poświęcona uniwersum Calionu, jego krainom, historii, postaciom, bestiariuszowi, rasom, frakcjom i przyszłym grom. Motyw wizualny łączy średniowieczną karczmę Gildii Poszukiwaczy, pikselowe ilustracje dark fantasy, miedziane i srebrne okucia, skórzane dodatki oraz pergaminowe kroniki.
 
@@ -38,7 +38,7 @@ Wersję v0.0.25 wdrożono do `dev-mode` i `main`, zachowując w historii `main` 
 
 ### Tekstura drewna
 
-Tło witryny wykorzystuje `assets/images/drewno-bezszwowe.webp`, przygotowane do płynnego powtarzania na obu osiach. Na komputerze pozostaje nieruchome podczas przewijania, a na telefonach przewija się wraz ze stroną.
+Tło witryny wykorzystuje `assets/images/drewno-bezszwowe.webp`, przygotowane do płynnego powtarzania na obu osiach. Na komputerze i telefonie deski są zakotwiczone w stronie i przewijają się razem z jej zawartością, bez efektu podążania za oknem przeglądarki.
 
 ## Uruchomienie lokalne
 
@@ -137,3 +137,8 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Wstawiono przesłaną ilustrację Darena do lewego pola próbnego kafelka jako WebP.
 - Oryginalny obraz zachowano w całości; kadr na popiersie wybiera CSS w oknie portretu, z uszami u góry i górą tułowia poniżej.
 - Zmiana wyłącznie Darena; treści i pozostałe karty zachowane. Tylko dev-mode.
+
+## 0.0.41 — Spójne przewijanie drewnianego tła
+
+- Na PC ustawiono ten sam sposób przewijania tła co na telefonie: background-attachment: scroll dla obu warstw.
+- Usunięto zbędny osobny wyjątek mobilny. Tekstura, kolory i układ strony zachowane. Tylko dev-mode.
