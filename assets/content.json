@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.47",
+  "version": "0.0.48",
   "entries": [
     {
       "id": "miasto-calion",
@@ -508,7 +508,7 @@
       "id": "olshia-thornclaw",
       "cat": "postacie",
       "title": "Olshia Thornclaw",
-      "sub": "Kotka",
+      "sub": "Kocia złodziejka",
       "tag": "Postacie Calionu",
       "teaser": "Olshia jest Kotką z rasy bestioludzi.\nJest lekko naiwna ale dobroduszna, pomaga sierotom kradnąc dla nich jedzenie.",
       "body": [
@@ -517,7 +517,7 @@
     }
   ],
   "lastSave": {
-    "requestId": "5e0ed962-8738-4803-9c8b-d1e7d517defb",
+    "requestId": "e1a8fd3e-8a95-4634-bfa9-272df8015a52",
     "entryId": "olshia-thornclaw"
   }
 }
