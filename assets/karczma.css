@@ -902,3 +902,37 @@ body.tavern-theme::before {
 @media (prefers-reduced-motion:reduce) {
   .tavern-shortcuts a{transition:none}
 }
+
+/* 0.0.31 — Atlas: map crops and parchment on the tavern table. */
+.tavern-theme .inner-page.world-atlas{background:none;border:0;box-shadow:none;padding:clamp(12px,2.5vw,40px);color:var(--t-cream)}
+.world-atlas .inner-hero{border:0;padding:22px 0 28px;max-width:850px}
+.world-atlas .inner-hero:after{display:none}
+.tavern-theme .world-atlas .inner-hero h1,.tavern-theme .world-atlas .inner-hero h1 em{color:var(--t-cream);text-shadow:0 3px 5px #000}
+.tavern-theme .world-atlas .inner-hero p{color:#e2c69e}
+.tavern-theme .world-atlas .inner-hero .eyebrow,.tavern-theme .world-atlas .archive-count{color:#d9b783}
+.world-atlas .collection-grid{gap:clamp(20px,2.5vw,36px);grid-template-columns:repeat(3,minmax(0,1fr))}
+.tavern-theme .world-card{display:flex;flex-direction:column;padding:0;min-width:0;overflow:hidden;border:1px solid #a77d48;border-radius:2px 2px 7px 3px;background:radial-gradient(ellipse at top,#f2ddb3,#d0ad75);box-shadow:0 7px 16px #0006;text-decoration:none;min-height:0}
+.world-card:before{display:none}
+.world-card-map{display:block;width:100%;height:auto;aspect-ratio:8/5;object-fit:cover;border-bottom:1px solid #87623d}
+.world-card-copy{display:flex;flex:1;flex-direction:column;padding:22px 24px 20px}
+.tavern-theme .world-card h3{font-size:clamp(27px,2.4vw,36px);line-height:1.15;margin:12px 0 7px;overflow-wrap:anywhere}
+.world-card .entry-subtitle{display:block;font-size:16px;line-height:1.4;margin-bottom:13px}
+.tavern-theme .world-card p{font-size:17px;line-height:1.55;display:block;overflow:visible;margin-bottom:22px}
+.world-card .entry-tag{font-size:10px;line-height:1.6}
+.world-card .entry-more{font-size:11px;min-height:44px;line-height:1.5}
+.world-card:focus-visible,.location-back:focus-visible{outline:3px solid #f6d591;outline-offset:5px}
+.tavern-theme .world-atlas .world-map-panel{padding:clamp(12px,2vw,26px);border:1px solid #ac8957;box-shadow:0 6px 18px #0005;margin-bottom:32px}
+.world-atlas .world-map-panel>img{border:0}
+.location-page{padding:clamp(16px,3vw,44px);max-width:1180px;margin:auto}
+.location-back{display:inline-flex;align-items:center;min-height:44px;margin-bottom:18px;color:var(--t-cream);font:17px Georgia,serif}
+.location-sheet{background:radial-gradient(ellipse at top,#f2ddb3,#d0ad75);padding:clamp(22px,4vw,60px);color:var(--t-ink);box-shadow:0 8px 25px #0007;border:1px solid #a77d48}
+.location-sheet h1{font:600 clamp(36px,5vw,60px)/1.15 Georgia,serif;margin:14px 0;overflow-wrap:anywhere}
+.location-sheet .entry-subtitle{font-size:20px;line-height:1.5}
+.location-sheet figure{margin:28px 0}
+.location-sheet figure img{width:100%;height:auto;display:block}
+.location-sheet figcaption{font:italic 14px/1.5 Georgia,serif;margin-top:10px;color:#5a4029}
+.location-body{max-width:760px;font:19px/1.8 Georgia,serif}
+.location-body p{margin:0 0 20px}
+@media(max-width:1050px){.world-atlas .collection-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.world-atlas .collection-grid{grid-template-columns:1fr}.world-card-copy{padding:20px}.tavern-theme .world-card h3{font-size:32px}.tavern-theme .world-atlas .inner-hero p{font-size:17px}.location-page{padding:16px 6px}.location-body{font-size:18px}.world-map-heading .atlas-paper-button{min-height:44px}}
+@media(prefers-reduced-motion:reduce){.world-card{transition:none}.world-card:hover{transform:none}}

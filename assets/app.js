@@ -9,6 +9,12 @@
     rasy:{kicker:"LUDY ŚWIATA / KOMPENDIUM",title:"Rasy i <em>ludy.</em>",desc:"Calion zamieszkują przedstawiciele różnych ludów, których historie splatają się na ulicach miast i szlakach przygód."},
     gry:{kicker:"CALION GAMES / GRAJ W PRZEGLĄDARCE",title:"Twoja <em>przygoda.</em>",desc:"Wszystkie gry osadzone w uniwersum Calionu. Uruchom wybrany tytuł tutaj, bez instalacji, a potem rozwiń go na pełny ekran."}
   };
+  // City sublocations use the city overview until dedicated plans are available.
+  const locationMaps={
+    "miasto-calion":"calion",elderon:"elderon",durnhollow:"durnhollow",
+    "strefy-calionu":"calion",slumsy:"calion","gildyjna-karczma":"calion"
+  };
+  const locationMap=(entry)=>"./assets/images/mapa-"+locationMaps[entry.id]+".webp";
   const entries=[
     {id:"miasto-calion",cat:"swiat",title:"Calion",sub:"Portowe miasto-państwo",tag:"Południowe wybrzeże",teaser:"Bogate miasto nad szeroką zatoką, centrum handlu, rzemiosła i działalności Gildii Poszukiwaczy.",body:["Calion jest jednym z największych i najbogatszych miast-państw południowego wybrzeża. To ośrodek handlu morskiego, rzemiosła i działalności Gildii Poszukiwaczy.","Miasto otaczają dwa pierścienie murów. Wyróżnia się pięć głównych stref: handlowo-mieszkalną, strażniczą, szlachecką, zamkową i slumsy położone poza murami.","Po zmroku port rozświetlają tysiące żółtych klejnotów światła, a nad ulicami słychać rozmowy kupców, śpiew marynarzy i plotki o wyprawach."]},
     {id:"elderon",cat:"swiat",title:"Elderon",sub:"Dziki Las Północy",tag:"Północny wschód",teaser:"Najstarszy las w okolicy Calionu. Gęsta roślinność, zmienne ścieżki i niebezpieczne stworzenia.",body:["Elderon leży na północny wschód od Calionu, za doliną rzeki Mirdan i dawnym traktem kupieckim. To stary, gęsty las, w którym światło ledwie przebija przez korony drzew.","Miejscowi drwale i doświadczeni Poszukiwacze znają bezpieczne trakty. Pozostali łatwo się gubią: niektóre leśne ścieżki sprawiają wrażenie, jakby zmieniały swój przebieg.","W lesie żyją wilki, dziki, niedźwiedzie i inne dzikie stworzenia, a w głębi kryją się zagrożenia bardziej niezwykłe."]},
@@ -79,6 +85,12 @@
     const grid=$("#collection-grid");
     grid.replaceChildren();
     for(const e of filtered){
+      if(e.cat==="swiat"){
+        const card=document.createElement("a");
+        card.className="entry-card world-card";card.href="#/swiat/"+e.id;
+        card.innerHTML='<img class="world-card-map" src="'+locationMap(e)+'" alt="" width="640" height="400" loading="lazy"><div class="world-card-copy"><span class="entry-tag">'+escapeHTML(e.tag)+'</span><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">POZNAJ MIEJSCE '+icon("i-arrow")+'</span></div>';
+        grid.append(card);continue;
+      }
       const card=document.createElement("button");
       card.type="button";card.className="entry-card";
       card.innerHTML='<span class="entry-tag">'+escapeHTML(e.tag)+'</span><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">OTWÓRZ KRONIKĘ '+icon("i-arrow")+'</span>';
@@ -122,6 +134,7 @@
   function loadCollection(section){
     const s=sections[section];
     currentSection=section;
+    collection.classList.toggle("world-atlas",section==="swiat");
     $("#collection-eyebrow").textContent=s.kicker;
     $("#collection-title").innerHTML=s.title;
     $("#collection-desc").textContent=s.desc;
@@ -143,21 +156,38 @@
     $("#external-game-link").hidden=false;
     return true;
   }
+  function renderLocation(entry){
+    $("#location-title").textContent=entry.title;
+    $("#location-tag").textContent=entry.tag;
+    $("#location-subtitle").textContent=entry.sub;
+    const map=$("#location-map");map.src=locationMap(entry);
+    map.alt="Fragment mapy okolic "+(locationMaps[entry.id]==="calion"?"Calionu":entry.title);
+    const body=$("#location-body");body.replaceChildren();
+    for(const paragraph of entry.body){const p=document.createElement("p");p.textContent=paragraph;body.append(p);}
+    document.title=entry.title+" | Atlas Calionu";
+  }
   function router(){
     const parts=decodeURIComponent(location.hash.replace(/^#\/?/,"")).split("/").filter(Boolean);
     const route=parts[0]||"start";
     const sub=parts[1];
+    const locationEntry=route==="swiat" && sub?entries.find(e=>e.cat==="swiat" && e.id===sub):null;
+    if(route==="swiat" && sub && !locationEntry){location.replace("#/swiat");return;}
+    $("#location-view").hidden=!locationEntry;
     const gameAvailable=route==="gry" && sub && games.some(g=>g.id===sub && g.available);
     const valid=route==="start"||Boolean(sections[route]);
     if(!valid){location.hash="#/";return;}
-    home.hidden=route!=="start";collection.hidden=route==="start"||Boolean(gameAvailable);player.hidden=!gameAvailable;
-    if(gameAvailable){launchGame(sub);document.title=games.find(g=>g.id===sub).name+" | Calion";}
+    home.hidden=route!=="start";collection.hidden=route==="start"||Boolean(gameAvailable)||Boolean(locationEntry);player.hidden=!gameAvailable;
+    if(locationEntry){renderLocation(locationEntry);}
+    else if(gameAvailable){launchGame(sub);document.title=games.find(g=>g.id===sub).name+" | Calion";}
     else{
       const frame=$("#game-iframe");if(frame.hasAttribute("src"))frame.removeAttribute("src");
       if(route!=="start"){loadCollection(route);document.title=sections[route].kicker.split("/")[0].trim()+" | Calion";}
       else document.title="Karczma Calionu | Kroniki świata";
     }
+    const loreDialog=$("#lore-dialog");if(loreDialog.open)loreDialog.close();
+    if(mapDialog.open)mapDialog.close();
     setActiveNav(route);closeMenu();window.scrollTo(0,0);
+    if(locationEntry)$("#location-title").focus({preventScroll:true});
   }
   $("#map-expand").addEventListener("click",()=>mapDialog.showModal());
   $("#map-close").addEventListener("click",()=>mapDialog.close());
