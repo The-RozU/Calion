@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.41",
+  "version": "0.0.42",
   "entries": [
     {
       "id": "miasto-calion",
@@ -205,7 +205,7 @@
       "title": "Daren Velk",
       "sub": "Czarny Lis",
       "tag": "Postacie Calionu",
-      "teaser": "Daren Velk, znany jako Czarny Lis. Jego kronika czeka na uzupełnienie.",
+      "teaser": "Daren Velk, znany jako Czarny Lis. \nZłodziej który wpadł po uszy w kłopoty",
       "body": [
         "Daren Velk jest znany jako Czarny Lis.",
         "Pełna historia tej postaci zostanie uzupełniona."
@@ -505,5 +505,9 @@
         "Ślady Wielkiej Wojny z Demonami nadal wpływają na to, jak inne rasy postrzegają istoty mające demoniczne cechy."
       ]
     }
-  ]
+  ],
+  "lastSave": {
+    "requestId": "8f1d2647-2ff0-4c71-8674-485990f33b59",
+    "entryId": "daren-velk"
+  }
 }
