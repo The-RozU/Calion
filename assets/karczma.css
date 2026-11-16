@@ -1019,3 +1019,7 @@ body.tavern-theme::before {
 .tavern-theme .lore-collection .character-card-preview p{margin:auto 0 16px;font-size:16px;line-height:1.65;-webkit-line-clamp:5}
 .tavern-theme .lore-collection .character-card-preview .entry-more{font-size:10px;margin-top:0;padding-top:12px}
 @media(max-width:650px){.tavern-theme .lore-collection .entry-card.character-card-preview{grid-template-columns:minmax(88px,.72fr) minmax(0,1.28fr);gap:16px;padding:28px 18px 20px;min-height:260px}.tavern-theme .lore-collection .character-card-preview h3{font-size:26px}.character-portrait-slot{min-height:190px}}
+
+/* 0.0.40 — oryginalny portret Darena, kadrowany w oknie kafelka na popiersie. */
+.character-portrait-slot.has-portrait{position:relative;display:block;overflow:hidden;padding:0}
+.character-portrait-slot.has-portrait img{position:absolute;top:0;left:50%;transform:translateX(-50%);width:auto;max-width:none;height:190%;object-fit:cover}

@@ -1,6 +1,6 @@
 # Calion · portal uniwersum
 
-**Aktualny motyw: Karczma Calionu v0.0.39.**
+**Aktualny motyw: Karczma Calionu v0.0.40.**
 
 Strona internetowa poświęcona uniwersum Calionu, jego krainom, historii, postaciom, bestiariuszowi, rasom, frakcjom i przyszłym grom. Motyw wizualny łączy średniowieczną karczmę Gildii Poszukiwaczy, pikselowe ilustracje dark fantasy, miedziane i srebrne okucia, skórzane dodatki oraz pergaminowe kroniki.
 
@@ -131,3 +131,9 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Wyłącznie Daren Velk otrzymuje dwukolumnowy kafelek: miejsce na portret po lewej, nazwa u góry i krótki opis u dołu prawej części.
 - Układ pozostaje poziomy również na telefonie. Portret jest na razie oznaczonym pustym miejscem; zachowano otwieranie kroniki i wyszukiwanie.
 - Pozostałe postacie i działy bez zmiany układu. Tylko dev-mode.
+
+## 0.0.40 — Portret Darena Velka
+
+- Wstawiono przesłaną ilustrację Darena do lewego pola próbnego kafelka jako WebP.
+- Oryginalny obraz zachowano w całości; kadr na popiersie wybiera CSS w oknie portretu, z uszami u góry i górą tułowia poniżej.
+- Zmiana wyłącznie Darena; treści i pozostałe karty zachowane. Tylko dev-mode.

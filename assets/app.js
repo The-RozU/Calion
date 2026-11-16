@@ -58,7 +58,7 @@
       card.innerHTML='<span class="entry-tag">'+escapeHTML(e.tag)+'</span><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">OTWÓRZ KRONIKĘ '+icon("i-arrow")+'</span>';
       if(e.cat==="postacie"&&e.id==="daren-velk"){
         card.classList.add("character-card-preview");
-        card.innerHTML='<span class="character-portrait-slot" aria-hidden="true"><span>✦</span><small>Miejsce na portret</small></span><div class="character-card-copy"><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">OTWÓRZ KRONIKĘ '+icon("i-arrow")+'</span></div>';
+        card.innerHTML='<span class="character-portrait-slot has-portrait" aria-hidden="true"><img src="./assets/images/daren-velk.webp" alt="" width="1024" height="1536" loading="lazy"></span><div class="character-card-copy"><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">OTWÓRZ KRONIKĘ '+icon("i-arrow")+'</span></div>';
       }
       card.addEventListener("click",()=>openEntry(e));
       grid.append(card);
