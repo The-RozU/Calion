@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.53",
+  "version": "0.0.54",
   "entries": [
     {
       "id": "miasto-calion",
@@ -525,10 +525,23 @@
       "body": [
         "Kanarek jest złodziejką która próbowała odejść z Noktusa.\nPrzygarnęła Darena I nauczyła go wszystkiego co potrafi.\n-Zaginiona-"
       ]
+    },
+    {
+      "id": "kael-dravos",
+      "cat": "postacie",
+      "title": "Kael Dravos",
+      "sub": "Razor",
+      "tag": "Postacie Calionu",
+      "teaser": "Przywódca drużyny Impostorów",
+      "body": [
+        "Kael jest przywódcą jednej z największej drużyny najemników \"Impostorzy\".",
+        "Jest powiązany ze starą legendą o Niebieskim Wilku.",
+        "Ludzie mówią że mają wrażenie jakby w jego pobliżu czasami widzieli ducha wilka."
+      ]
     }
   ],
   "lastSave": {
-    "requestId": "2358b80b-90f2-4f54-b8ae-48bd1f45cdad",
-    "entryId": "kanarek"
+    "requestId": "bec7d441-46b6-4058-ad9d-5edee493896d",
+    "entryId": "kael-dravos"
   }
 }
