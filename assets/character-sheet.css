@@ -299,7 +299,7 @@
 }
 
 
-/* v0.0.63 • Gildyjne rozdziały i pergaminowe zakładki. */
+/* v0.0.64 • Zwięzłe szyldy rozdziałów, bez opisów i liczników. */
 /* Filtry są czytelne, ale zamiast zwykłych przycisków przypominają zakładki księgi. */
 .character-filter-bar[hidden]{display:none!important}
 .character-roster .character-filter-bar{
@@ -360,14 +360,6 @@
   cursor:pointer;
   transition:background .16s ease,color .16s ease;
 }
-.character-filter small{
-  min-width:21px;
-  padding:3px 5px;
-  color:#614222;
-  background:#8b643322;
-  font:bold 11px/1 Georgia,serif;
-  text-align:center;
-}
 .character-filter:hover{
   color:#2a392a;
   background:#fff0d3;
@@ -380,10 +372,6 @@
   background:linear-gradient(155deg,#3a5845,#1c3228);
   box-shadow:inset 0 1px 0 #c4a06a65;
 }
-.character-filter[aria-pressed="true"] small{
-  color:#f3d8a5;
-  background:#d6b47c3b;
-}
 .character-filter:focus-visible{
   z-index:3;
   outline:3px solid #d89841;
@@ -395,68 +383,40 @@
   font:italic 12px/1.5 Georgia,serif;
 }
 .character-roster .collection-grid{display:block;min-width:0}
-.character-group{margin:0 0 38px}
+.character-group{margin:0 0 33px}
 .character-group-header{
   display:flex;
-  flex-direction:column;
-  align-items:center;
   justify-content:center;
-  gap:7px;
-  text-align:center;
-  margin:0 0 23px;
-  padding:17px clamp(16px,2.5vw,27px) 19px;
-  border:1px solid #c398614d;
-  border-radius:2px;
-  background:
-    linear-gradient(155deg,rgba(39,22,12,.94),rgba(53,31,18,.9)),
-    url("./images/drewno-bezszwowe.webp") center / 750px auto;
-  box-shadow:0 7px 14px #190a0640,inset 0 1px 0 #e4b48033;
-}
-.character-group-title-block{min-width:0;width:100%}
-.character-group-overline{
-  display:block;
-  margin:0 0 7px;
-  color:#d4ae7d;
-  font:bold 10px/1.55 Georgia,serif;
-  letter-spacing:.19em;
-}
-.character-group-title-block h2,
-.character-group-title-block .character-group-fancy-title{
-  display:block;
-  margin:0;
-  color:#f7e6c7;
+  align-items:center;
+  max-width:100%;
+  margin:0 0 18px;
+  padding:0;
+  border:0;
+  border-radius:0;
   background:transparent;
-  font:normal clamp(25px,2.8vw,38px)/1.2 Georgia,serif;
-  text-shadow:0 2px 5px #110905ae;
+  box-shadow:none;
+  text-align:center;
+}
+.character-group-header .character-group-fancy-title{
+  display:inline-block;
+  max-width:100%;
+  margin:0;
+  padding:9px clamp(15px,2.5vw,26px) 11px;
+  border:0;
+  border-radius:2px;
+  color:#f8e7c7;
+  background:linear-gradient(145deg,rgba(29,17,11,.83),rgba(43,24,15,.76));
+  box-shadow:0 3px 9px rgba(15,7,3,.3);
+  font:normal clamp(24px,2.7vw,36px)/1.2 Georgia,serif;
+  text-shadow:0 2px 4px rgba(10,5,2,.75);
   overflow-wrap:break-word;
 }
 .character-group-fancy-title::before,
 .character-group-fancy-title::after{
   content:"–";
-  display:inline-block;
-  margin:0 .36em;
-  color:#cfa36f;
-  font-size:.85em;
-  vertical-align:5%;
-}
-.character-group-title-block p{
-  margin:8px auto 0;
-  max-width:640px;
-  padding:0;
-  color:#e5cba4;
-  font:italic 15px/1.5 Georgia,serif;
-  text-shadow:0 1px 3px #160c09aa;
-}
-.character-group-count{
-  align-self:center;
-  display:inline-block;
-  margin-top:4px;
-  padding:3px 12px;
-  color:#cfaf83;
-  border:0;
-  background:rgba(15,9,6,.35);
-  font:700 10px/1.55 Georgia,serif;
-  letter-spacing:.1em;
+  display:inline;
+  margin:0 .38em;
+  color:#d8b17d;
 }
 .character-group-grid{
   display:grid;
@@ -493,20 +453,17 @@
     display:block;
     margin:9px 0 10px;
   }
-  .character-group-header{
-    padding:14px 12px 17px;
-    margin-bottom:20px;
+  .character-group-header{margin-bottom:16px;padding:0}
+  .character-group-header .character-group-fancy-title{
+    padding:8px 12px 9px;
+    font-size:clamp(22px,6.4vw,28px);
   }
-  .character-group-overline{font-size:10px}
-  .character-group-title-block h2,
-  .character-group-title-block .character-group-fancy-title{
-    font-size:clamp(24px,6.5vw,30px);
-  }
-  .character-group-title-block p{font-size:13px}
-  .character-group-count{font-size:10px;padding:3px 8px}
   .character-group-grid{gap:18px}
   .character-group{margin-bottom:32px}
 }
 @media(prefers-reduced-motion:reduce){
   .character-filter{transition:none}
 }
+
+/* Licznik wyników jest niewidoczny wyłącznie w dziale Postacie. */
+#archive-count[hidden]{display:none!important}

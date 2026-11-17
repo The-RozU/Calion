@@ -30,16 +30,14 @@
     buttons.replaceChildren();
     const all=entries.filter(e=>e.cat==="postacie"&&!e.parent);
     const active=characterGroups.filter(g=>all.some(e=>characterGroup(e)===g.id));
-    const items=[{id:"wszystkie",title:"Wszystkie",count:all.length},...active.map(g=>({id:g.id,title:g.title,count:all.filter(e=>characterGroup(e)===g.id).length}))];
+    const items=[{id:"wszystkie",title:"Wszystkie"},...active.map(g=>({id:g.id,title:g.title}))];
     for(const item of items){
       const button=document.createElement("button");button.type="button";
       button.className="character-filter";
       button.dataset.group=item.id;
       button.setAttribute("aria-pressed",String(selectedCharacterGroup===item.id));
       const name=document.createElement("span");name.textContent=item.title;
-      const count=document.createElement("small");count.textContent=String(item.count);
-      count.setAttribute("aria-label",item.count+" postaci");
-      button.append(name,count);
+      button.append(name);
       button.addEventListener("click",()=>{
         selectedCharacterGroup=item.id;
         buttons.querySelectorAll(".character-filter").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.group===item.id)));
@@ -48,10 +46,6 @@
       buttons.append(button);
     }
   }
-  function characterCountLabel(count){
-    const last=count%10,hundred=count%100;
-    return count+" "+(count===1?"POSTAĆ":last>=2&&last<=4&&(hundred<12||hundred>14)?"POSTACIE":"POSTACI");
-  }
   function renderCharacterRoster(filtered,grid){
     const groups=selectedCharacterGroup==="wszystkie"?characterGroups:characterGroups.filter(g=>g.id===selectedCharacterGroup);
     for(const group of groups){
@@ -59,13 +53,8 @@
       if(!items.length)continue;
       const section=document.createElement("section");section.className="character-group";section.dataset.group=group.id;
       const header=document.createElement("header");header.className="character-group-header";
-      const titleBlock=document.createElement("div");titleBlock.className="character-group-title-block";
-      const overline=document.createElement("span");overline.className="character-group-overline";overline.textContent="KSIĘGA OSÓB / DZIAŁ "+String(characterGroups.indexOf(group)+1).padStart(2,"0");
       const title=document.createElement("h2");title.className="character-group-fancy-title";title.textContent=group.title;
-      const desc=document.createElement("p");desc.textContent=group.description;
-      titleBlock.append(overline,title,desc);
-      const count=document.createElement("span");count.className="character-group-count";count.textContent=characterCountLabel(items.length);
-      header.append(titleBlock,count);
+      header.append(title);
       const cards=document.createElement("div");cards.className="character-group-grid";
       for(const e of items)cards.append(createArchiveCard(e));
       section.append(header,cards);grid.append(section);
@@ -125,13 +114,13 @@
   function renderEntries(){
     const term=search.value.trim().toLocaleLowerCase("pl");
     const filtered=entries.filter(e=>e.cat===currentSection && !e.parent && [e.title,e.sub,e.tag,e.teaser,...e.body].join(" ").toLocaleLowerCase("pl").includes(term));
+    $("#archive-count").hidden=currentSection==="postacie";
     if(currentSection==="historia"){renderTimeline(filtered);return;}
     const grid=$("#collection-grid");
     grid.replaceChildren();
     if(currentSection==="postacie"){
       const narrowed=selectedCharacterGroup==="wszystkie"?filtered:filtered.filter(e=>characterGroup(e)===selectedCharacterGroup);
       renderCharacterRoster(narrowed,grid);
-      $("#archive-count").textContent=characterCountLabel(narrowed.length);
       $("#empty-message").hidden=narrowed.length!==0;
       return;
     }
