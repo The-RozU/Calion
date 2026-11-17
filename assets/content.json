@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.67",
+  "version": "0.0.68",
   "entries": [
     {
       "id": "miasto-calion",
@@ -588,11 +588,12 @@
       "teaser": "Dowódca więzienia i nadzoru przesłuchań",
       "body": [
         "Renar jest lisem z razy Bestioludzi, dowodzi jednostką ktora nadzoruje obszar więzienny w Calionie"
-      ]
+      ],
+      "characterGroup": "straz"
     }
   ],
   "lastSave": {
-    "requestId": "06807082-3e5c-40af-93de-8d5ad55db545",
+    "requestId": "d46242b1-0019-454a-9e47-f83c296d1d21",
     "entryId": "renar-orek"
   }
 }
