@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.71",
+  "version": "0.0.72",
   "entries": [
     {
       "id": "miasto-calion",
@@ -627,10 +627,22 @@
         "*\"Nie jestem potworem. Ja po prostu robię miejsce ludziom.\"*"
       ],
       "characterGroup": "polswiatek"
+    },
+    {
+      "id": "dorian-flinch",
+      "cat": "postacie",
+      "title": "Dorian Flinch",
+      "sub": "Mr.Fox",
+      "tag": "Postacie Calionu",
+      "teaser": "Mag krwi, nalezy do Noktusa",
+      "body": [
+        "Nie mamy w Gildii za duzo informacji o nim.\nWiemy tylko ze jako dziecko był niewolnikiem w kopalni kryształów niedaleko Durnhollow."
+      ],
+      "characterGroup": "polswiatek"
     }
   ],
   "lastSave": {
-    "requestId": "36453ed7-0c8f-491e-b8a9-3a0ed32ab466",
-    "entryId": "varek-czysty"
+    "requestId": "5981ed71-5626-4d67-bcd1-2e4cb6934ff0",
+    "entryId": "dorian-flinch"
   }
 }
