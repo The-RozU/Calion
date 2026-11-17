@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.54",
+  "version": "0.0.55",
   "entries": [
     {
       "id": "miasto-calion",
@@ -207,7 +207,7 @@
       "tag": "Postacie Calionu",
       "teaser": "Daren Velk, znany jako Czarny Lis. \nZłodziej który wpadł po uszy w kłopoty.",
       "body": [
-        "**Daren Velk**, znany jako *Czarny Lis*, jest lisem z razy bestioludzi i byłym członkiem **Noktusa**. \nZłodziej o czujnym oku i ciętym języku, potrafi dostrzec pułapkę, zanim zrobi to reszta grupy. \nJako dziecko pomógł **Olshii Thornclaw**, a lata później współpracował ze strażnikiem **Loranem Dask'iem** i Poszukiwaczem **Thane Runehart'em** przy śledztwie prowadzącym do **Noktusa**. \nGdy pułapka doprowadziła do zawalenia domu, ocalił **Thane'a**, sam jednak zniknął. \n**Noktus** uznał go za zdrajcę, a Straż Calionu rozpoczęła poszukiwania. \n**Daren** nadal szuka odpowiedzi na pytanie, co stało się z jego mentorką, **Kanarkiem**."
+        "**Daren Velk**, znany jako *Czarny Lis*, jest lisem z razy bestioludzi i byłym członkiem **Noktusa**. \nZłodziej o czujnym oku i ciętym języku, potrafi dostrzec pułapkę, zanim zrobi to reszta grupy. \nJako dziecko pomógł **Olshii Thornclaw**, a lata później współpracował ze strażnikiem **Loranem Dask'iem** i Poszukiwaczem **Thane Runehart'em** przy śledztwie prowadzącym do **Noktusa**. \nGdy pułapka doprowadziła do zawalenia domu, ocalił **Thane'a**, sam jednak zniknął. \n**Noktus** uznał go za zdrajcę, a Straż Calionu rozpoczęła poszukiwania."
       ]
     },
     {
@@ -541,7 +541,7 @@
     }
   ],
   "lastSave": {
-    "requestId": "bec7d441-46b6-4058-ad9d-5edee493896d",
-    "entryId": "kael-dravos"
+    "requestId": "9dfaa529-8922-4897-9797-1634f3867e88",
+    "entryId": "daren-velk"
   }
 }
