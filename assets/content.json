@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.68",
+  "version": "0.0.69",
   "entries": [
     {
       "id": "miasto-calion",
@@ -590,10 +590,22 @@
         "Renar jest lisem z razy Bestioludzi, dowodzi jednostką ktora nadzoruje obszar więzienny w Calionie"
       ],
       "characterGroup": "straz"
+    },
+    {
+      "id": "rendal-korr",
+      "cat": "postacie",
+      "title": "Rendal Korr",
+      "sub": "Sierżant",
+      "tag": "Postacie Calionu",
+      "teaser": "Jego dewizą jest powiedzenie\n\"Sprawiedliwość bez bólu nie działa\".",
+      "body": [
+        "Bezkompromisowy, surowy, chłodny w obyciu, kieruje się zasadą: „prawo bez litości”."
+      ],
+      "characterGroup": "straz"
     }
   ],
   "lastSave": {
-    "requestId": "d46242b1-0019-454a-9e47-f83c296d1d21",
-    "entryId": "renar-orek"
+    "requestId": "18318677-8341-40af-8eb3-8d479be527c9",
+    "entryId": "rendal-korr"
   }
 }
