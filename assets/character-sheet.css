@@ -1,4 +1,4 @@
-/* Calion v0.0.51: osobny arkusz postaci, inspirowany kartami fantasy RPG. */
+/* Calion v0.0.52: gildyjne akta osobowe, bez elementów mechaniki gry. */
 .character-sheet-dialog{
   box-sizing:border-box;width:min(1120px,calc(100vw - 24px));max-width:none;
   max-height:calc(100dvh - 22px);margin:auto;padding:0;overflow-y:auto;
@@ -67,24 +67,6 @@
   margin:22px 0 0;padding:13px 18px;border-left:3px solid #956b43;
   background:#9e794c16;color:#53402a;font:italic 18px/1.5 Georgia,serif;
 }
-.cs-stats-section{
-  margin:34px 0 32px;padding:22px 24px 18px;border-block:2px solid #987246;
-  background:linear-gradient(#d4b48b30,#fff2ce31);
-}
-.cs-heading-line{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px 16px}
-.cs-heading-line h3{margin:0 0 16px;color:#30241a;font:normal clamp(24px,2.5vw,31px)/1.25 Georgia,serif}
-#cs-hp{font:bold 12px/1.5 Georgia,serif;letter-spacing:.07em;color:#76502b}
-.cs-stats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
-.cs-stat{
-  display:flex;flex-direction:column;justify-content:center;align-items:center;
-  min-width:0;padding:13px 5px 12px;border:1px solid #8c6843;
-  background:linear-gradient(155deg,#f8eac7,#e6c99a);
-  box-shadow:inset 0 0 0 3px #f1ddb6,0 2px 4px #613d252e;
-}
-.cs-stat span{font:bold 11px Georgia,serif;letter-spacing:.13em;color:#70502e}
-.cs-stat strong{font:normal clamp(28px,3vw,38px)/1.2 Georgia,serif;color:#243e32;margin:4px 0}
-.cs-stat small{font:12px/1.3 Georgia,serif;color:#6a4b2e;text-align:center}
-.cs-rule-note{margin:13px 0 0;color:#725738;font:italic 13px/1.5 Georgia,serif}
 .cs-details{
   display:grid;grid-template-columns:minmax(0,1.25fr) minmax(245px,.9fr);
   align-items:start;gap:clamp(28px,4vw,55px);padding-top:7px;
@@ -121,7 +103,6 @@
   .cs-details{grid-template-columns:1fr}
   .cs-sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
   .cs-sidebar section:last-child:nth-child(odd){grid-column:1/-1}
-  .cs-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 @media(max-width:560px){
   .character-sheet-dialog{width:calc(100vw - 12px);max-height:calc(100dvh - 12px)}
@@ -137,12 +118,6 @@
   .cs-facts{grid-template-columns:minmax(82px,.8fr) minmax(0,1.2fr)}
   .cs-facts dt,.cs-facts dd{font-size:14px}
   .cs-summary{font-size:17px;margin-bottom:18px}
-  .cs-stats-section{margin:25px -5px;padding:20px 9px}
-  .cs-stats{gap:7px}
-  .cs-stat{padding:12px 3px}
-  .cs-stat strong{font-size:29px}
-  .cs-stat small{font-size:11px}
-  .cs-rule-note{font-size:12px}
   .cs-story{font-size:16px;line-height:1.7}
   .cs-sidebar{display:flex}
   .cs-footer{padding:18px 19px}
@@ -220,4 +195,52 @@
 }
 @media(prefers-reduced-motion:reduce){
   .tavern-theme .character-roster .character-card-preview:hover{transform:none}
+}
+
+
+/* Dyskretny znak archiwum i układ przypominający pozbierane raporty. */
+.cs-paper:before{
+  content:"";
+  position:absolute;
+  width:130px;
+  height:130px;
+  right:clamp(23px,3.9vw,56px);
+  bottom:88px;
+  border:2px solid #80552e26;
+  border-radius:50%;
+  opacity:.6;
+  pointer-events:none;
+  box-shadow:inset 0 0 0 8px #80552e12,inset 0 0 0 10px #80552e26;
+}
+.cs-story-section{
+  padding-top:3px;
+}
+.cs-story-section h3{
+  padding-bottom:14px;
+  border-bottom:1px solid #9e794e83;
+}
+.cs-sidebar section{
+  background:linear-gradient(140deg,#ad8c6021,#fff5d51d);
+  border-top:2px solid #99734c;
+  box-shadow:inset 0 1px 0 #f4e2b9aa;
+}
+.cs-sidebar h3{
+  color:#4d321d;
+  font-variant:small-caps;
+}
+.cs-quote:before{
+  content:"❝";
+  display:inline-block;
+  margin-right:7px;
+  color:#956b43;
+  font-size:23px;
+  line-height:0;
+  vertical-align:-.15em;
+}
+@media(max-width:560px){
+  .cs-paper:before{
+    width:90px;
+    height:90px;
+    bottom:99px;
+  }
 }

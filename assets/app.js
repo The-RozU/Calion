@@ -62,7 +62,7 @@
         const portrait=e.id==="daren-velk"?"daren-velk.webp":e.id==="ralfor"?"ralfor.webp":null;
         if(e.id==="ralfor")card.classList.add("character-card-ralfor");
         const portraitBox=portrait?'<span class="character-portrait-slot has-portrait" aria-hidden="true"><img src="./assets/images/'+portrait+'" alt="" loading="lazy"></span>':'<span class="character-portrait-slot" aria-hidden="true"><span>✥</span><small>PORTRET NIEZACHOWANY</small></span>';
-        card.innerHTML=portraitBox+'<div class="character-card-copy"><span class="character-mini-label">KARTA POSTACI / CALION</span><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">OTWÓRZ KARTĘ '+icon("i-arrow")+'</span></div>';
+        card.innerHTML=portraitBox+'<div class="character-card-copy"><span class="character-mini-label">Z REJESTRU GILDII</span><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">CZYTAJ AKTA '+icon("i-arrow")+'</span></div>';
       }
       const teaser=card.querySelector("p");teaser.replaceChildren();window.CalionRichText.inline(teaser,e.teaser,true);
       card.addEventListener("click",()=>openEntry(e));

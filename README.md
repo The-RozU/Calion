@@ -1,6 +1,6 @@
 # Calion · portal uniwersum
 
-**Aktualny motyw: Karczma Calionu v0.0.51.**
+**Aktualny motyw: Karczma Calionu v0.0.52.**
 
 Strona internetowa poświęcona uniwersum Calionu, jego krainom, historii, postaciom, bestiariuszowi, rasom, frakcjom i przyszłym grom. Motyw wizualny łączy średniowieczną karczmę Gildii Poszukiwaczy, pikselowe ilustracje dark fantasy, miedziane i srebrne okucia, skórzane dodatki oraz pergaminowe kroniki.
 
@@ -156,3 +156,10 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Daren Velk ma sześć potwierdzonych cech Calionu (STR 4, DEX 13, CON 4, INT 9, WIS 5, CHA 5), PŻ maksymalne według wzoru z zasad, opisane zdolności, ekwipunek i relacje. Ralfor także ma znane dane oraz portret.
 - Nieznane statystyki pozostałych postaci nie są wymyślane. Opisy wciąż pochodzą z `assets/content.json`, w tym formatowanie z panelu redaktora.
 - Moduł `assets/character-sheet.js` i styl `assets/character-sheet.css` są odseparowane od pozostałego portalu. Zmiany tylko na `dev-mode`.
+
+## 0.0.52 — Gildyjne akta osobowe zamiast karty RPG
+
+- Postacie otwierają teraz akta Gildii Poszukiwaczy. Usunięto sześć cech, HP, rangi gildyjne, zdolności i ekwipunek z kart czytanych przez odbiorców.
+- Układ zawiera wizerunek, informacje ze spisów, znane powiązania, wzmianki z kronik i zapisane opisy fabularne. Nazewnictwo jest pisane z perspektywy świata Calionu.
+- Dane zebrano wyłącznie z już ustalonych historii; brakujące informacje nie są uzupełniane fikcyjnymi danymi. Pozostałe działy bez zmian.
+- Tylko `dev-mode`.
