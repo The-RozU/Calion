@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.70",
+  "version": "0.0.71",
   "entries": [
     {
       "id": "miasto-calion",
@@ -614,10 +614,23 @@
         "."
       ],
       "characterGroup": "najemnicy"
+    },
+    {
+      "id": "varek-czysty",
+      "cat": "postacie",
+      "title": "Varek Czysty",
+      "sub": "Członek Noktusa",
+      "tag": "Postacie Calionu",
+      "teaser": "Nie zna pojęcia „honor”. Walczy podstępnie, z ukrycia, używając noży i igieł paraliżujących.",
+      "body": [
+        "Gardzi wszystkim, co nie jest człowiekiem – elfy, krasnoludy, bestioludzie, wszyscy są dla niego „błędem natury”.\nW Noktusie jest znany jako „czyściciel”, bo nigdy nie zostawia śladów po swoich zleceniach.",
+        "*\"Nie jestem potworem. Ja po prostu robię miejsce ludziom.\"*"
+      ],
+      "characterGroup": "polswiatek"
     }
   ],
   "lastSave": {
-    "requestId": "52813eca-b9b2-484d-b98a-6980f3f00047",
-    "entryId": "matthew-corven"
+    "requestId": "36453ed7-0c8f-491e-b8a9-3a0ed32ab466",
+    "entryId": "varek-czysty"
   }
 }
