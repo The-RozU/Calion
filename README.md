@@ -198,3 +198,11 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Panel pozwala przypisywać postacie do istniejących grup przez pole „Zakładka”: Najemnicy, Straż Miejska, Półświatek, Rzemieślnicy i Pozostałe akta.
 - Zapis zachowuje wybraną grupę (`characterGroup`), dotychczasową etykietę i zapisane plotki; starsze przypisania `poszukiwacze` odpowiadają Najemnikom.
 - Treści istniejących postaci pozostają bez zmian. Zapis panelu nadal trafia wyłącznie do `dev-mode`.
+
+## 0.0.74 — Nowe akta postaci i medycy
+
+- Wprowadzono nowy dział `Medycy i zielarze` (identyfikator `medycy`) przeznaczony dla uzdrowicieli, zielarzy i pracowników opieki medycznej. Lusianne Aerinvale została przypisana do tej grupy.
+- Uzupełniono urzędowe notatki dotyczące Renara Oreka, Rendala Korra, Matthew Corvena, Vareka Czystego, Doriana Flincha i Lusianne Aerinvale. Podstawą są istniejące opisy w `Postacie.txt`, `Historie i Legendy.txt` i wpisy autora z panelu redaktora. Plotki są oddzielone od oficjalnych informacji.
+- Dodano podstawowe dane tych postaci do `assets/character-sheet.js`; nie dodawano statystyk RPG ani niewiadomych faktów.
+- Obsługa starszego zapisu Lusianne z kategorią `pozostali` przenosi ją w widoku do `medycy`, aby nowe akta nie znikały przy zapisach z obecnej wersji zewnętrznego panelu redaktora. Aktualizacja listy wyboru w samym panelu redaktora jest osobnym zadaniem.
+- Pozostałe postacie, lokalizacje i kroniki bez zmian. Aktualizacja tylko na `dev-mode`.

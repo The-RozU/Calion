@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.73",
+  "version": "0.0.74",
   "entries": [
     {
       "id": "miasto-calion",
@@ -585,21 +585,28 @@
       "title": "Renar Orek",
       "sub": "Dowódca więzienia i nadzoru przesłuchań",
       "tag": "Straż Miejska Calionu",
-      "teaser": "Dowódca więzienia i nadzoru przesłuchań",
+      "teaser": "Porucznik Straży Więziennej, odpowiedzialny za więzienie, cele i nadzór przesłuchań w Calionie.",
       "body": [
-        "Renar jest lisem z razy Bestioludzi, dowodzi jednostką ktora nadzoruje obszar więzienny w Calionie"
+        "**Dane ze służby.** Renar Orek jest bestioludem o lisich cechach. Pełni funkcję porucznika Straży Więziennej Calionu. Dowodzi oddziałem odpowiedzialnym za teren więzienia, cele oraz nadzór przesłuchań i konwojów.",
+        "**Sposób pełnienia obowiązków.** W raportach służbowych opisuje się go jako dowódcę rzadko przebywającego przy biurku. Znaczną część zadań powierza podwładnym, sam zaś prowadzi obserwację terenu więzienia i jego okolic. Według dostępnych świadectw reaguje szybko w sytuacjach zagrożenia.",
+        "**Kontakty służbowe.** Renar pozostaje pod zwierzchnictwem **Leoryka Thalborna**, który przyjął go do straży. W ramach służby współpracuje z pozostałymi dowódcami miejskich oddziałów."
       ],
-      "characterGroup": "straz"
+      "characterGroup": "straz",
+      "rumors": [
+        "Wśród strażników powtarza się powiedzenie, że Renar nie chodzi na patrol, lecz po prostu pojawia się tam, gdzie jest potrzebny."
+      ]
     },
     {
       "id": "rendal-korr",
       "cat": "postacie",
       "title": "Rendal Korr",
       "sub": "Sierżant",
-      "tag": "Postacie Calionu",
-      "teaser": "Jego dewizą jest powiedzenie\n\"Sprawiedliwość bez bólu nie działa\".",
+      "tag": "Straż Miejska Calionu",
+      "teaser": "Sierżant Straży Miejskiej, znany z surowego podejścia do egzekwowania prawa.",
       "body": [
-        "Bezkompromisowy, surowy, chłodny w obyciu, kieruje się zasadą: „prawo bez litości”."
+        "**Dane ze służby.** Rendal Korr jest sierżantem Straży Miejskiej Calionu, podległym porucznikowi **Harlowi Davenowi**. Wcześniej służył na północnych rubieżach, gdzie brał udział w ochronie traktów przed bandami.",
+        "**Charakterystyka służbowa.** Sierżant znany jest z rygorystycznego traktowania przestępstw oraz stanowczego egzekwowania rozkazów. Jego sposób prowadzenia patroli i przesłuchań budzi zastrzeżenia części strażników.",
+        "**Sprawa Vareka Czystego.** W zapisach dotyczących wcześniejszego zatrzymania Vareka pojawia się nazwisko Korra. Podejrzanego zwolniono decyzją przełożonych z powodu niedostatecznych dowodów. Wydarzenie to stało się przyczyną napięć między sierżantem a Harl Davenem."
       ],
       "characterGroup": "straz"
     },
@@ -608,10 +615,12 @@
       "cat": "postacie",
       "title": "Matthew Corven",
       "sub": "Szef drużyny The Boss",
-      "tag": "Postacie Calionu",
-      "teaser": ".",
+      "tag": "Najemnicy",
+      "teaser": "Matthew Corven, zwany Awisem, stoi na czele najemniczej drużyny The Boss.",
       "body": [
-        "."
+        "**Tożsamość.** Matthew Corven, znany również jako *Awis*, jest człowiekiem pochodzącym z **Dravencji**. W dostępnych zapisach figuruje jako założyciel i dowódca drużyny **The Boss**.",
+        "**Przebieg służby.** Przed podjęciem działalności najemniczej służył w garnizonie Dravencji. Po odejściu z wojska zajął się organizowaniem wypraw i zleceń, gromadząc wokół siebie przyszłych członków drużyny.",
+        "**Odnotowane powiązania.** Wśród osób należących do The Boss wymieniany jest **Thane Runehart**. Corven występuje w dokumentach jako osoba odpowiadająca za prowadzenie drużyny i koordynację jej działań."
       ],
       "characterGroup": "najemnicy"
     },
@@ -620,23 +629,29 @@
       "cat": "postacie",
       "title": "Varek Czysty",
       "sub": "Członek Noktusa",
-      "tag": "Postacie Calionu",
-      "teaser": "Nie zna pojęcia „honor”. Walczy podstępnie, z ukrycia, używając noży i igieł paraliżujących.",
+      "tag": "Noktus",
+      "teaser": "Człowiek związany z Noktusem, wymieniany w materiałach o niebezpiecznych zleceniach podziemia.",
       "body": [
-        "Gardzi wszystkim, co nie jest człowiekiem – elfy, krasnoludy, bestioludzie, wszyscy są dla niego „błędem natury”.\nW Noktusie jest znany jako „czyściciel”, bo nigdy nie zostawia śladów po swoich zleceniach.",
-        "*\"Nie jestem potworem. Ja po prostu robię miejsce ludziom.\"*"
+        "**Dane z rejestru.** Varek Czysty jest człowiekiem powiązanym z organizacją **Noktus**. W doniesieniach dotyczących jej działalności pojawia się przydomek *Czyściciel*.",
+        "**Znane metody działania.** Według zebranych relacji posługuje się nożami i igłami zawierającymi środki paraliżujące. Wskazuje się na działania z ukrycia oraz unikanie otwartej konfrontacji.",
+        "**Wzmianka ze Straży Miejskiej.** Z dostępnych zapisów wynika, że Varek został w przeszłości zatrzymany przez sierżanta **Rendala Korra**, lecz zwolniono go z powodu niewystarczających dowodów. Nie należy przedstawiać wysuwanych wobec niego oskarżeń jako prawomocnego wyroku."
       ],
-      "characterGroup": "polswiatek"
+      "characterGroup": "polswiatek",
+      "rumors": [
+        "W półświatku przypisuje mu się udział w brutalnych zleceniach Noktusa. Wiele z tych relacji nie zostało potwierdzonych."
+      ]
     },
     {
       "id": "dorian-flinch",
       "cat": "postacie",
       "title": "Dorian Flinch",
       "sub": "Mr.Fox",
-      "tag": "Postacie Calionu",
-      "teaser": "Mag krwi, nalezy do Noktusa",
+      "tag": "Noktus",
+      "teaser": "Dorian Flinch, nazywany Mr. Foxem, jest magiem związanym z Noktusem. Zachowało się niewiele pewnych wiadomości na jego temat.",
       "body": [
-        "Nie mamy w Gildii za duzo informacji o nim.\nWiemy tylko ze jako dziecko był niewolnikiem w kopalni kryształów niedaleko Durnhollow."
+        "**Tożsamość.** Dorian Flinch występuje w aktach również pod pseudonimem *Mr. Fox*. Dostępne informacje wiążą go z **Noktusem** oraz praktykami magicznymi określanymi mianem magii krwi.",
+        "**Ustalenia dotyczące przeszłości.** Według skąpych materiałów, jakie dotarły do Gildii, w dzieciństwie przebywał jako niewolnik w kopalni kryształów niedaleko **Durnhollow**.",
+        "**Stan akt.** Dalszy przebieg jego losów jest niedostatecznie udokumentowany. Kartoteka wymaga uzupełnienia na podstawie wiarygodnych relacji."
       ],
       "characterGroup": "polswiatek"
     },
@@ -645,12 +660,18 @@
       "cat": "postacie",
       "title": "Lusianne Aerinvale",
       "sub": "Lusia",
-      "tag": "Postacie Calionu",
-      "teaser": "Elfka, pracuje w szpitalu Calionu",
+      "tag": "Medycy i zielarze",
+      "teaser": "Lusianne „Lusia” Aerinvale, elfka i zielarka związana ze szpitalem Calionu.",
       "body": [
-        "Lusia jest dobrotliwą elfką która handlowała ziołami i medykamentami ktore sama przetwarzają, z czasem została zatrudniona w szpitalu i została tam na stałe"
+        "**Dane z rejestru.** Lusianne Aerinvale, zwana *Lusią*, jest elfką zajmującą się zielarstwem i przygotowywaniem medykamentów. Początkowo handlowała własnymi mieszankami ziołowymi, później podjęła stałą pracę w **szpitalu Calionu**.",
+        "**Działalność w mieście.** W szpitalu pomaga przy sporządzaniu mikstur i opatrywaniu rannych. Odnotowano również jej pomoc mieszkańcom portu. Wśród sprzedawanych przez nią preparatów szczególną popularność zdobyła mieszanka łagodząca dolegliwości po nadmiernym piciu.",
+        "**Ustalenia urzędowe.** Według informacji Straży Portowej mieszanka została sprawdzona, a Lusianne otrzymała zgodę na sprzedaż preparatu z warsztatu przy szpitalu oraz przez upoważnionych pośredników. Dokładne miejsce jej pochodzenia pozostaje w miejskich aktach nieustalone."
       ],
-      "characterGroup": "pozostali"
+      "characterGroup": "medycy",
+      "rumors": [
+        "Wśród mieszkańców portu Lusianne nazywana bywa *dobrym duchem portu* albo *zieloną czarownicą*.",
+        "Na targu można usłyszeć, że elfka rozumie mowę drzew. Doniesień tych nie potwierdzono."
+      ]
     }
   ],
   "lastSave": {

@@ -14,6 +14,7 @@
     {id:"straz",title:"Straż Miejska",description:"Dowódcy i strażnicy pełniący służbę w Calionie."},
     {id:"polswiatek",title:"Półświatek",description:"Złodzieje i osoby związane z działalnością w cieniu."},
     {id:"rzemieslnicy",title:"Rzemieślnicy",description:"Twórcy, mistrzowie warsztatu i współpracownicy Gildii."},
+    {id:"medycy",title:"Medycy i zielarze",description:"Uzdrowiciele, medycy, zielarze i osoby pracujące przy sporządzaniu lekarstw."},
     {id:"pozostali",title:"Pozostałe akta",description:"Osoby, których przynależność nie została jeszcze ustalona."}
   ];
   const characterCollator=new Intl.Collator("pl",{sensitivity:"base",numeric:true});
@@ -21,6 +22,7 @@
   function characterGroup(entry){
     // Stare wpisy "poszukiwacze" też trafiają do Najemników.
     if(entry.characterGroup==="poszukiwacze")return "najemnicy";
+    if(entry.id==="lusianne-aerinvale"&&(entry.characterGroup==="pozostali"||!entry.characterGroup))return "medycy";
     return characterGroups.some(group=>group.id===entry.characterGroup)?entry.characterGroup:"pozostali";
   }
   function renderCharacterFilters(){

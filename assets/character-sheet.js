@@ -1,4 +1,4 @@
-/* Calion v0.0.61 • Notatki Gildii i oddzielone niepotwierdzone pogłoski. */
+/* Calion v0.0.74 • Notatki Gildii i oddzielone niepotwierdzone pogłoski. */
 (function(){
   "use strict";
   // W aktach znajdują się wyłącznie informacje fabularne dostępne w kronikach.
@@ -55,6 +55,29 @@
     "thane-runehart":{facts:[["Pochodzenie","Durnhollow"],["Drużyna","The Boss"]]},
     "kanarek":{facts:[["Dawne powiązania","Noktus"],["Stan akt","Zaginiona"]]},
     "lokar":{facts:[["Stan akt","Wpis niepełny"]]},
+    "renar-orek":{
+      facts:[["Rasa","Bestiolud (lis)"],["Funkcja","Porucznik Straży Więziennej"],["Miejsce służby","Więzienie Calionu"]],
+      relations:[["Leoryk Thalborn","Dowódca Straży Miejskiej, przełożony Renara."]]
+    },
+    "rendal-korr":{
+      facts:[["Funkcja","Sierżant Straży Miejskiej"],["Przełożony","Harl Daven"],["Dawna służba","Północne rubieże Calionu"]],
+      mentions:[["Zatrzymanie Vareka Czystego","Po decyzji o zwolnieniu zatrzymanego z powodu braku dowodów narastał spór pomiędzy Korrem a przełożonym."]]
+    },
+    "matthew-corven":{
+      facts:[["Znany jako","Awis"],["Pochodzenie","Dravencia"],["Drużyna","The Boss"],["Funkcja","Założyciel i dowódca"]],
+      relations:[["Thane Runehart","Członek drużyny The Boss."]]
+    },
+    "varek-czysty":{
+      facts:[["Rasa","Człowiek"],["Powiązania","Noktus"],["Znany jako","Czyściciel"]],
+      mentions:[["Zatrzymanie","W przeszłości zatrzymany przez Rendala Korra; zwolniony wobec niewystarczających dowodów."]]
+    },
+    "dorian-flinch":{
+      facts:[["Znany jako","Mr. Fox"],["Powiązania","Noktus"],["Dziedzina","Magia krwi"],["Stan akt","Niepełne"]]
+    },
+    "lusianne-aerinvale":{
+      facts:[["Rasa","Elfka"],["Zajęcie","Zielarka i pomoc szpitalna"],["Miejsce pracy","Szpital Calionu"],["Miejsce pochodzenia","Nieustalone w miejskich aktach"]],
+      mentions:[["Preparaty zielarskie","Wykonuje i sprzedaje mieszanki ziołowe, w tym preparat łagodzący dolegliwości po nadmiernym spożyciu alkoholu."]]
+    },
     "olshia-thornclaw":{
       facts:[["Rasa","Bestiolud (kotka)"],["Zajęcie","Złodziejka"]],
       mentions:[]
