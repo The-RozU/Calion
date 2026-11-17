@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.72",
+  "version": "0.0.73",
   "entries": [
     {
       "id": "miasto-calion",
@@ -639,10 +639,22 @@
         "Nie mamy w Gildii za duzo informacji o nim.\nWiemy tylko ze jako dziecko był niewolnikiem w kopalni kryształów niedaleko Durnhollow."
       ],
       "characterGroup": "polswiatek"
+    },
+    {
+      "id": "lusianne-aerinvale",
+      "cat": "postacie",
+      "title": "Lusianne Aerinvale",
+      "sub": "Lusia",
+      "tag": "Postacie Calionu",
+      "teaser": "Elfka, pracuje w szpitalu Calionu",
+      "body": [
+        "Lusia jest dobrotliwą elfką która handlowała ziołami i medykamentami ktore sama przetwarzają, z czasem została zatrudniona w szpitalu i została tam na stałe"
+      ],
+      "characterGroup": "pozostali"
     }
   ],
   "lastSave": {
-    "requestId": "5981ed71-5626-4d67-bcd1-2e4cb6934ff0",
-    "entryId": "dorian-flinch"
+    "requestId": "52af1bca-0326-47c2-b037-b87bb4546750",
+    "entryId": "lusianne-aerinvale"
   }
 }
