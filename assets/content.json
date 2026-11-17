@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.59",
+  "version": "0.0.60",
   "entries": [
     {
       "id": "miasto-calion",
@@ -407,7 +407,7 @@
       "tag": "Drużyny",
       "teaser": "Jedna z opisanych w kronikach drużyn działających w świecie Calionu.",
       "body": [
-        "Drużyna The Boss należy do znanych zespołów Poszukiwaczy, których losy i relacje są rozwijane w kronikach Calionu.",
+        "Drużyna The Boss należy do znanych zespołów Najemników, których losy i relacje są rozwijane w kronikach Calionu.",
         "Pełne biografie członków, relacje między nimi i historia siedziby stanowią osobny rozdział materiałów świata. Ten wpis zapowiada ich przyszłą prezentację w portalu."
       ]
     },
@@ -557,7 +557,7 @@
     }
   ],
   "lastSave": {
-    "requestId": "a36d9423-ebb3-4278-9ceb-aeaaa6e752b8",
+    "requestId": "dba60c8c-6ee9-436a-ba08-f9cfaa9f248c",
     "entryId": "the-boss"
   }
 }
