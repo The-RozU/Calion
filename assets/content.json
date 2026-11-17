@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.56",
+  "version": "0.0.57",
   "entries": [
     {
       "id": "miasto-calion",
@@ -541,10 +541,22 @@
         "Jest powiązany ze starą legendą o Niebieskim Wilku.",
         "Ludzie mówią że mają wrażenie jakby w jego pobliżu czasami widzieli ducha wilka."
       ]
+    },
+    {
+      "id": "thane-runehart",
+      "cat": "postacie",
+      "title": "Thane Runehart",
+      "sub": "Szym",
+      "tag": "Postacie Calionu",
+      "teaser": "Należy do drużyny The Boss\nPochodzi z miasta Durnhollow.",
+      "body": [
+        "Thane dołączył do druzyny \"The Boss\" kilka lat temu, kilka razy pomógł Gildii z potworami w pobliżu Calionu.",
+        "Pochodzi z miasta Durnhollow, jego walczy dwoma krótkimi mieczami z wygrawerowanymi Runami, jest silny als sądzimy że nie ujawnił swoich prawdziwych zdolności."
+      ]
     }
   ],
   "lastSave": {
-    "requestId": "b18c8583-e5cb-498d-ab6e-a95628439d7d",
-    "entryId": "daren-velk"
+    "requestId": "1c9eafa0-d3da-4461-b873-c05756d088d4",
+    "entryId": "thane-runehart"
   }
 }
