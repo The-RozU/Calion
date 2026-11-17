@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.69",
+  "version": "0.0.70",
   "entries": [
     {
       "id": "miasto-calion",
@@ -602,10 +602,22 @@
         "Bezkompromisowy, surowy, chłodny w obyciu, kieruje się zasadą: „prawo bez litości”."
       ],
       "characterGroup": "straz"
+    },
+    {
+      "id": "matthew-corven",
+      "cat": "postacie",
+      "title": "Matthew Corven",
+      "sub": "Szef drużyny The Boss",
+      "tag": "Postacie Calionu",
+      "teaser": ".",
+      "body": [
+        "."
+      ],
+      "characterGroup": "najemnicy"
     }
   ],
   "lastSave": {
-    "requestId": "18318677-8341-40af-8eb3-8d479be527c9",
-    "entryId": "rendal-korr"
+    "requestId": "52813eca-b9b2-484d-b98a-6980f3f00047",
+    "entryId": "matthew-corven"
   }
 }
