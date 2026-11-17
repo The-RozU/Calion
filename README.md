@@ -1,6 +1,6 @@
 # Calion · portal uniwersum
 
-**Aktualny motyw: Karczma Calionu v0.0.49.**
+**Aktualny motyw: Karczma Calionu v0.0.51.**
 
 Strona internetowa poświęcona uniwersum Calionu, jego krainom, historii, postaciom, bestiariuszowi, rasom, frakcjom i przyszłym grom. Motyw wizualny łączy średniowieczną karczmę Gildii Poszukiwaczy, pikselowe ilustracje dark fantasy, miedziane i srebrne okucia, skórzane dodatki oraz pergaminowe kroniki.
 
@@ -149,3 +149,10 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Panel i portal współdzielą bezpieczny renderer oznaczeń w tekście; HTML, linki, skrypty i dowolne style nie są interpretowane. Zwykły tekst i dotychczasowe opisy działają bez migracji.
 - Zaznacz tekst w panelu i wybierz przycisk; oznaczenia są widoczne w edycji, a ich efekt w Podglądzie i po zapisie na stronie dev-mode.
 - Testy renderera: `npm ci && npm test` (zależność wyłącznie deweloperska). Tylko dev-mode.
+
+## 0.0.51 — Karty postaci w stylu fantasy RPG
+
+- Lista postaci ma teraz osobne portretowe dossier: 2 kolumny na PC, 1 na mniejszych ekranach; Daren i Ralfor wykorzystują istniejące portrety. Każda postać otwiera nową kartę bohatera z portretem lub oznaczeniem braku portretu, danymi i kroniką. Pozostałe działy zachowują dotychczasowe okna.
+- Daren Velk ma sześć potwierdzonych cech Calionu (STR 4, DEX 13, CON 4, INT 9, WIS 5, CHA 5), PŻ maksymalne według wzoru z zasad, opisane zdolności, ekwipunek i relacje. Ralfor także ma znane dane oraz portret.
+- Nieznane statystyki pozostałych postaci nie są wymyślane. Opisy wciąż pochodzą z `assets/content.json`, w tym formatowanie z panelu redaktora.
+- Moduł `assets/character-sheet.js` i styl `assets/character-sheet.css` są odseparowane od pozostałego portalu. Zmiany tylko na `dev-mode`.

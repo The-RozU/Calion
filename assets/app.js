@@ -57,9 +57,12 @@
       const card=document.createElement("button");
       card.type="button";card.className="entry-card";
       card.innerHTML='<span class="entry-tag">'+escapeHTML(e.tag)+'</span><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">OTWÓRZ KRONIKĘ '+icon("i-arrow")+'</span>';
-      if(e.cat==="postacie"&&e.id==="daren-velk"){
+      if(e.cat==="postacie"){
         card.classList.add("character-card-preview");
-        card.innerHTML='<span class="character-portrait-slot has-portrait" aria-hidden="true"><img src="./assets/images/daren-velk.webp" alt="" width="1024" height="1536" loading="lazy"></span><div class="character-card-copy"><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">OTWÓRZ KRONIKĘ '+icon("i-arrow")+'</span></div>';
+        const portrait=e.id==="daren-velk"?"daren-velk.webp":e.id==="ralfor"?"ralfor.webp":null;
+        if(e.id==="ralfor")card.classList.add("character-card-ralfor");
+        const portraitBox=portrait?'<span class="character-portrait-slot has-portrait" aria-hidden="true"><img src="./assets/images/'+portrait+'" alt="" loading="lazy"></span>':'<span class="character-portrait-slot" aria-hidden="true"><span>✥</span><small>PORTRET NIEZACHOWANY</small></span>';
+        card.innerHTML=portraitBox+'<div class="character-card-copy"><span class="character-mini-label">KARTA POSTACI / CALION</span><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">OTWÓRZ KARTĘ '+icon("i-arrow")+'</span></div>';
       }
       const teaser=card.querySelector("p");teaser.replaceChildren();window.CalionRichText.inline(teaser,e.teaser,true);
       card.addEventListener("click",()=>openEntry(e));
@@ -115,6 +118,7 @@
     selectHistory(historyEntries.some(e=>e.id===selectedHistoryId)?selectedHistoryId:historyEntries[0].id);
   }
   function openEntry(entry){
+    if(entry.cat==="postacie"&&window.CalionCharacterSheet){window.CalionCharacterSheet.open(entry);return;}
     $("#dialog-tag").textContent=entry.tag+" / ARCHIWUM CALIONU";
     $("#dialog-title").textContent=entry.title;
     $("#dialog-subtitle").textContent=entry.sub;
@@ -146,6 +150,7 @@
     collection.classList.toggle("world-atlas",section==="swiat");
     collection.classList.toggle("history-chronicles",section==="historia");
     collection.classList.toggle("lore-collection",["postacie","bestiariusz","frakcje","rasy"].includes(section));
+    collection.classList.toggle("character-roster",section==="postacie");
     $("#collection-eyebrow").textContent=s.kicker;
     $("#collection-title").innerHTML=s.title;
     $("#collection-desc").textContent=s.desc;
@@ -204,6 +209,7 @@
       else document.title="Karczma Calionu | Kroniki świata";
     }
     const loreDialog=$("#lore-dialog");if(loreDialog.open)loreDialog.close();
+    window.CalionCharacterSheet?.close();
     if(mapDialog.open)mapDialog.close();
     setActiveNav(route);closeMenu();window.scrollTo(0,0);
     if(locationEntry)$("#location-title").focus({preventScroll:true});
