@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.52",
+  "version": "0.0.53",
   "entries": [
     {
       "id": "miasto-calion",
@@ -514,10 +514,21 @@
       "body": [
         "Pełen opis wkrótce."
       ]
+    },
+    {
+      "id": "kanarek",
+      "cat": "postacie",
+      "title": "Kanarek",
+      "sub": ".",
+      "tag": "Postacie Calionu",
+      "teaser": "Zlodziejka z Noktusa - Zaginiona",
+      "body": [
+        "Kanarek jest złodziejką która próbowała odejść z Noktusa.\nPrzygarnęła Darena I nauczyła go wszystkiego co potrafi.\n-Zaginiona-"
+      ]
     }
   ],
   "lastSave": {
-    "requestId": "c38030f0-8bac-48b9-b81c-319325c77a68",
-    "entryId": "daren-velk"
+    "requestId": "2358b80b-90f2-4f54-b8ae-48bd1f45cdad",
+    "entryId": "kanarek"
   }
 }
