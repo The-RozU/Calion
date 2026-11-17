@@ -47,6 +47,10 @@
       buttons.append(button);
     }
   }
+  function characterCountLabel(count){
+    const last=count%10,hundred=count%100;
+    return count+" "+(count===1?"POSTAĆ":last>=2&&last<=4&&(hundred<12||hundred>14)?"POSTACIE":"POSTACI");
+  }
   function renderCharacterRoster(filtered,grid){
     const groups=selectedCharacterGroup==="wszystkie"?characterGroups:characterGroups.filter(g=>g.id===selectedCharacterGroup);
     for(const group of groups){
@@ -59,7 +63,7 @@
       const title=document.createElement("h2");title.textContent=group.title;
       const desc=document.createElement("p");desc.textContent=group.description;
       titleBlock.append(overline,title,desc);
-      const count=document.createElement("span");count.className="character-group-count";count.textContent=items.length+" "+(items.length===1?"AKTA":"AKT");
+      const count=document.createElement("span");count.className="character-group-count";count.textContent=characterCountLabel(items.length);
       header.append(titleBlock,count);
       const cards=document.createElement("div");cards.className="character-group-grid";
       for(const e of items)cards.append(createArchiveCard(e));
@@ -126,7 +130,7 @@
     if(currentSection==="postacie"){
       const narrowed=selectedCharacterGroup==="wszystkie"?filtered:filtered.filter(e=>characterGroup(e)===selectedCharacterGroup);
       renderCharacterRoster(narrowed,grid);
-      $("#archive-count").textContent=narrowed.length+" "+(narrowed.length===1?"POSTAĆ":"POSTACI");
+      $("#archive-count").textContent=characterCountLabel(narrowed.length);
       $("#empty-message").hidden=narrowed.length!==0;
       return;
     }
