@@ -467,3 +467,7 @@
 
 /* Licznik wyników jest niewidoczny wyłącznie w dziale Postacie. */
 #archive-count[hidden]{display:none!important}
+
+/* Portrety dopasowane w panelu: zachowaj wybrany kadr. */
+.character-roster .character-card-custom-portrait .character-portrait-slot img{left:0;top:0;transform:none;width:100%;height:100%;object-fit:cover;object-position:center}
+.cs-portrait img.custom-portrait{aspect-ratio:4/5;object-position:center}

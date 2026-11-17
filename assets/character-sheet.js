@@ -150,11 +150,12 @@
     $("#cs-name").textContent=entry.title;
     $("#cs-subtitle").textContent=entry.sub||"";
     $("#cs-summary").textContent=entry.teaser||"Zapis z kronik Calionu.";
-    const img=$("#cs-image"),placeholder=$("#cs-no-image");
-    img.hidden=!profile.portrait;
-    placeholder.hidden=!!profile.portrait;
+    const img=$("#cs-image"),placeholder=$("#cs-no-image"),portrait=window.CalionPortraits.source(entry);
+    img.classList.toggle("custom-portrait",Boolean(entry.portrait));
+    img.hidden=!portrait;
+    placeholder.hidden=!!portrait;
     img.onerror=()=>{img.hidden=true;placeholder.hidden=false;};
-    if(profile.portrait){img.src=profile.portrait;img.alt="Portret: "+entry.title;}
+    if(portrait){img.src=portrait;img.alt="Portret: "+entry.title;}
     else{img.removeAttribute("src");img.alt="";}
     const facts=$("#cs-facts");facts.replaceChildren();
     for(const [label,value] of (profile.facts||[["Rola",entry.sub||"Nieznana"],["Dział",entry.tag||"Postacie Calionu"]])){
