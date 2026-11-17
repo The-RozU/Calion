@@ -1,6 +1,6 @@
 # Calion · portal uniwersum
 
-**Aktualny motyw: Karczma Calionu v0.0.67.**
+**Aktualny motyw: Karczma Calionu v0.0.75.**
 
 Strona internetowa poświęcona uniwersum Calionu, jego krainom, historii, postaciom, bestiariuszowi, rasom, frakcjom i przyszłym grom. Motyw wizualny łączy średniowieczną karczmę Gildii Poszukiwaczy, pikselowe ilustracje dark fantasy, miedziane i srebrne okucia, skórzane dodatki oraz pergaminowe kroniki.
 
@@ -206,3 +206,11 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Dodano podstawowe dane tych postaci do `assets/character-sheet.js`; nie dodawano statystyk RPG ani niewiadomych faktów.
 - Obsługa starszego zapisu Lusianne z kategorią `pozostali` przenosi ją w widoku do `medycy`, aby nowe akta nie znikały przy zapisach z obecnej wersji zewnętrznego panelu redaktora. Aktualizacja listy wyboru w samym panelu redaktora jest osobnym zadaniem.
 - Pozostałe postacie, lokalizacje i kroniki bez zmian. Aktualizacja tylko na `dev-mode`.
+
+## 0.0.75 — Szersza kategoria „Mieszkańcy”
+
+- Zastąpiono zakładkę `Medycy i zielarze` bardziej ogólną kategorią **Mieszkańcy** (`characterGroup: "mieszkancy"`).
+- Lusianne Aerinvale pozostaje w nowej grupie. Jej profesja zielarki i praca w szpitalu pozostają opisane w aktach, bez zmian biografii i plotek.
+- Strona rozpoznaje dawne oznaczenie `medycy` jako `mieszkancy`, a dla Lusianne wspiera również stary zapis `pozostali` pochodzący z panelu redaktora.
+- **Zewnętrzny Panel redaktora** nie został zmieniony i może wymagać osobnego dodania tej grupy do listy wyboru.
+- Zmiany wyłącznie na `dev-mode`, `main` bez zmian.

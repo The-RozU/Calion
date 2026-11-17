@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.74",
+  "version": "0.0.75",
   "entries": [
     {
       "id": "miasto-calion",
@@ -660,14 +660,14 @@
       "cat": "postacie",
       "title": "Lusianne Aerinvale",
       "sub": "Lusia",
-      "tag": "Medycy i zielarze",
+      "tag": "Mieszkańcy",
       "teaser": "Lusianne „Lusia” Aerinvale, elfka i zielarka związana ze szpitalem Calionu.",
       "body": [
         "**Dane z rejestru.** Lusianne Aerinvale, zwana *Lusią*, jest elfką zajmującą się zielarstwem i przygotowywaniem medykamentów. Początkowo handlowała własnymi mieszankami ziołowymi, później podjęła stałą pracę w **szpitalu Calionu**.",
         "**Działalność w mieście.** W szpitalu pomaga przy sporządzaniu mikstur i opatrywaniu rannych. Odnotowano również jej pomoc mieszkańcom portu. Wśród sprzedawanych przez nią preparatów szczególną popularność zdobyła mieszanka łagodząca dolegliwości po nadmiernym piciu.",
         "**Ustalenia urzędowe.** Według informacji Straży Portowej mieszanka została sprawdzona, a Lusianne otrzymała zgodę na sprzedaż preparatu z warsztatu przy szpitalu oraz przez upoważnionych pośredników. Dokładne miejsce jej pochodzenia pozostaje w miejskich aktach nieustalone."
       ],
-      "characterGroup": "medycy",
+      "characterGroup": "mieszkancy",
       "rumors": [
         "Wśród mieszkańców portu Lusianne nazywana bywa *dobrym duchem portu* albo *zieloną czarownicą*.",
         "Na targu można usłyszeć, że elfka rozumie mowę drzew. Doniesień tych nie potwierdzono."
