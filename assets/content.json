@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.60",
+  "version": "0.0.61",
   "entries": [
     {
       "id": "miasto-calion",
@@ -205,12 +205,11 @@
       "title": "Daren Velk",
       "sub": "Czarny Lis",
       "tag": "Postacie Calionu",
-      "teaser": "Daren Velk, znany jako Czarny Lis. \nZłodziej który wpadł po uszy w kłopoty.",
+      "teaser": "W aktach odnotowany w związku ze śledztwem dotyczącym Noktusa. Po zawaleniu jednego z domów zniknął.",
       "body": [
-        "**Daren Velk**, znany jako *Czarny Lis*, jest lisem z razy bestioludzi i byłym członkiem **Noktusa**.",
-        "Złodziej o czujnym oku i ciętym języku, potrafi dostrzec pułapkę, zanim zrobi to reszta grupy.",
-        "Współpracował ze strażnikiem **Loranem Dask'iem** i Poszukiwaczem **Thane Runehart'em** przy śledztwie prowadzącym do **Noktusa**. \nGdy pułapka doprowadziła do zawalenia domu, ocalił **Thane'a**, sam jednak zniknął.",
-        "**Noktus** uznał go za zdrajcę, a Straż Calionu rozpoczęła poszukiwania."
+        "**Tożsamość.** Daren Velk, nazywany *Czarnym Lisem*, jest bestioludem o lisich cechach. Według posiadanych informacji należał wcześniej do organizacji zwanej **Noktusem**.",
+        "**Przebieg sprawy.** Podczas dochodzenia dotyczącego Noktusa współpracował z sierżantem **Loranem Daskiem** oraz Poszukiwaczem **Thanem Runehartem**. Gdy w wyniku uruchomienia pułapki zawalił się dom, Daren uratował Runeharta. Sam zniknął po zdarzeniu.",
+        "**Stan akt.** Straż Calionu rozpoczęła poszukiwania Darena Velka. Według dostępnych wiadomości Noktus uznał go za zdrajcę. Jego dalsze losy pozostają nieustalone."
       ]
     },
     {
@@ -219,10 +218,13 @@
       "title": "Ralfor Żelaznobrody",
       "sub": "Krasnoludzki mistrz kowali",
       "tag": "Rzemieślnicy",
-      "teaser": "Słynny kowal, którego warsztat współpracuje z Gildią Poszukiwaczy.",
+      "teaser": "Mistrz kowalstwa prowadzący warsztat współpracujący z Gildią Poszukiwaczy.",
       "body": [
-        "Ralfor Żelaznobrody jest starym krasnoludem i mistrzem kowalskim Calionu. Prowadzi warsztat współpracujący z Gildią Poszukiwaczy.",
-        "Oficjalnie naprawia i konserwuje ekwipunek, lecz wśród Poszukiwaczy krążą opowieści o wyjątkowej jakości wykonywanej przez niego broni."
+        "**Dane z rejestru.** Ralfor Żelaznobrody jest krasnoludem i mistrzem kowalskim pracującym w Calionie.",
+        "**Współpraca z Gildią.** Prowadzi warsztat, w którym naprawia się i konserwuje wyposażenie Poszukiwaczy. W rejestrach Gildii figuruje jako współpracujący rzemieślnik."
+      ],
+      "rumors": [
+        "Wśród Poszukiwaczy krążą opowieści o wyjątkowej jakości broni wykonywanej przez Ralfora."
       ]
     },
     {
@@ -231,11 +233,11 @@
       "title": "Leoryk Thalborn",
       "sub": "Dowódca Straży Miejskiej",
       "tag": "Wojsko i porządek",
-      "teaser": "Doświadczony kapitan, który odpowiada za bezpieczeństwo miasta i jego murów.",
+      "teaser": "Dowódca Straży Miejskiej Calionu, odpowiedzialny za bezpieczeństwo miasta i jego murów.",
       "body": [
-        "Leoryk Thalborn stoi na czele Straży Miejskiej Calionu, liczącej w przybliżeniu 600 żołnierzy regularnych, rezerwowych i elitarnych.",
-        "Formalnie podlega królowi Arthelowi IV, ale w codziennych sprawach bezpieczeństwa to jego decyzje mają ogromną wagę.",
-        "Choć ze względu na wiek nie wyrusza już na patrole, zna imiona wielu podległych mu żołnierzy."
+        "**Pełniona funkcja.** Leoryk Thalborn stoi na czele Straży Miejskiej Calionu, liczącej w przybliżeniu sześciuset żołnierzy regularnych, rezerwowych i elitarnych.",
+        "**Podległość służbowa.** Formalnie odpowiada przed królem **Arthelem IV**. W codziennych sprawach bezpieczeństwa miasta to do niego należą najważniejsze decyzje.",
+        "**Uwagi służbowe.** Z uwagi na wiek nie bierze już udziału w patrolach. Według posiadanych informacji zna z imienia wielu służących pod jego rozkazami."
       ]
     },
     {
@@ -244,10 +246,10 @@
       "title": "Elmera Valen",
       "sub": "Porucznik Straży Szlacheckiej",
       "tag": "Straż Miejska Calionu",
-      "teaser": "Wywodząca się ze szlachty dowódczyni straży odpowiedzialnej za dzielnicę szlachecką.",
+      "teaser": "Porucznik Straży Szlacheckiej, dowodząca ochroną dzielnicy szlacheckiej Calionu.",
       "body": [
-        "Elmera Valen pochodzi z rodziny szlacheckiej i pełni funkcję porucznika Straży Szlacheckiej Calionu. Dowodzi oddziałem liczącym około stu ludzi.",
-        "Jej formacja chroni dzielnicę szlachecką i jej mieszkańców, eskortuje ważne osoby oraz nadzoruje bezpieczeństwo podczas bali i uroczystości. Odpowiada także za kontrolę ruchu między strefą strażniczą a szlachecką."
+        "**Pełniona funkcja.** Elmera Valen pochodzi z rodziny szlacheckiej. Sprawuje funkcję porucznika Straży Szlacheckiej i dowodzi oddziałem liczącym około stu osób.",
+        "**Zakres służby.** Jej podwładni chronią dzielnicę szlachecką, eskortują ważne osoby oraz czuwają nad bezpieczeństwem bali i uroczystości. Oddział nadzoruje również ruch między strefą strażniczą a szlachecką."
       ]
     },
     {
@@ -256,11 +258,11 @@
       "title": "Geran Voss",
       "sub": "Porucznik Straży Portowej",
       "tag": "Straż Miejska Calionu",
-      "teaser": "Dowódca straży portowej, odpowiedzialny za bezpieczeństwo nabrzeży, magazynów i targu morskiego.",
+      "teaser": "Porucznik Straży Portowej odpowiedzialny za nabrzeża, magazyny i targ morski.",
       "body": [
-        "Geran Voss jest porucznikiem dowodzącym Strażą Portową Calionu. Pod jego rozkazami służy około stu pięćdziesięciu strażników.",
-        "Jego oddział patroluje port, magazyny i targ morski, zwalcza przemyt oraz kradzieże towarów. Współpracuje z Gildią Poszukiwaczy przy kontroli transportów potworów i klejnotów, a podczas nadbrzeżnych festiwali dba o bezpieczeństwo.",
-        "Pod rozkazami Gerana Vossa służy sierżant Loran Dask."
+        "**Pełniona funkcja.** Geran Voss dowodzi Strażą Portową Calionu. Podlega mu około stu pięćdziesięciu strażników.",
+        "**Zakres służby.** Oddział patroluje port, magazyny i targ morski oraz przeciwdziała przemytowi i kradzieżom towarów. Przy kontroli transportów potworów i klejnotów współpracuje z Gildią Poszukiwaczy. Zapewnia także bezpieczeństwo podczas świąt i festiwali na nabrzeżu.",
+        "**Podlegli oficerowie.** Wśród strażników pod jego dowództwem znajduje się sierżant **Loran Dask**."
       ]
     },
     {
@@ -269,10 +271,11 @@
       "title": "Loran Dask",
       "sub": "Sierżant Straży Portowej",
       "tag": "Straż Miejska Calionu",
-      "teaser": "Sierżant działający w porcie, zajmujący się pracą w terenie i śledztwami.",
+      "teaser": "Sierżant Straży Portowej, prowadzący działania terenowe i śledztwa w Calionie.",
       "body": [
-        "Loran Dask jest sierżantem Straży Miejskiej Calionu i podlega porucznikowi Geranowi Vossowi.",
-        "Działa na terenie portu. Zajmuje się pracą w terenie i śledztwami, a raporty przekazuje swojemu dowódcy."
+        "**Pełniona funkcja.** Loran Dask jest sierżantem Straży Miejskiej Calionu, przydzielonym do służby w porcie. Podlega porucznikowi **Geranowi Vossowi**.",
+        "**Zakres służby.** Prowadzi działania terenowe i śledztwa na obszarze portu. Sporządzone raporty przekazuje dowódcy.",
+        "**Odnotowany udział.** Jego nazwisko pojawia się także w materiałach dotyczących śledztwa w sprawie Noktusa, prowadzonego z udziałem Darena Velka i Thane'a Runeharta."
       ]
     },
     {
@@ -281,9 +284,9 @@
       "title": "Lokar",
       "sub": "Kronika w przygotowaniu",
       "tag": "Postacie Calionu",
-      "teaser": "Postać świata Calionu. Jej historia czeka na uzupełnienie.",
+      "teaser": "W rejestrze Gildii zachowała się jedynie niepełna wzmianka o tej osobie.",
       "body": [
-        "Opis Lokara zostanie uzupełniony."
+        "**Stan kartoteki.** W dostępnych zapisach brak informacji wystarczających do sporządzenia wiarygodnej noty o Lokarze. Kartę pozostawiono do uzupełnienia po uzyskaniu potwierdzonych danych."
       ]
     },
     {
@@ -513,20 +516,25 @@
       "title": "Olshia Thornclaw",
       "sub": "Kocia złodziejka",
       "tag": "Postacie Calionu",
-      "teaser": "Olshia jest Kotką z rasy bestioludzi.\nJest lekko naiwna ale dobroduszna, pomaga sierotom kradnąc dla nich jedzenie.",
+      "teaser": "Bestioludka o kocich cechach, wymieniana wśród osób działających w Calionie.",
       "body": [
-        "Pełen opis wkrótce."
+        "**Dane z rejestru.** Olshia Thornclaw należy do bestioludzi o kocich cechach. W znanych opisach figuruje jako złodziejka. Brakuje szczegółowego zapisu jej działalności."
+      ],
+      "rumors": [
+        "W mieście opowiada się, że Olshia zdobywa żywność kradzieżą, aby pomagać osieroconym dzieciom z portu."
       ]
     },
     {
       "id": "kanarek",
       "cat": "postacie",
       "title": "Kanarek",
-      "sub": ".",
+      "sub": "Zaginiona złodziejka",
       "tag": "Postacie Calionu",
-      "teaser": "Zlodziejka z Noktusa - Zaginiona",
+      "teaser": "Była związana z Noktusem. W aktach widnieje jako osoba zaginiona.",
       "body": [
-        "Kanarek jest złodziejką która próbowała odejść z Noktusa.\nPrzygarnęła Darena I nauczyła go wszystkiego co potrafi.\n-Zaginiona-"
+        "**Odnotowane powiązania.** Kanarek była związana z Noktusem. Z dostępnych informacji wynika, że próbowała opuścić organizację.",
+        "**Znane kontakty.** Przyjęła pod opiekę młodego Darena Velka i przekazała mu własne umiejętności.",
+        "**Stan akt.** Miejsce pobytu Kanarka pozostaje nieznane. W rejestrze figuruje jako zaginiona."
       ]
     },
     {
@@ -535,11 +543,13 @@
       "title": "Kael Dravos",
       "sub": "Razor",
       "tag": "Postacie Calionu",
-      "teaser": "Przywódca drużyny Impostorów",
+      "teaser": "Kael Dravos, zwany Razorem, dowodzi najemniczą drużyną Impostorzy.",
       "body": [
-        "Kael jest przywódcą jednej z największej drużyny najemników \"Impostorzy\".",
-        "Jest powiązany ze starą legendą o Niebieskim Wilku.",
-        "Ludzie mówią że mają wrażenie jakby w jego pobliżu czasami widzieli ducha wilka."
+        "**Dane z rejestru.** Kael Dravos, znany jako *Razor*, stoi na czele drużyny najemników o nazwie **Impostorzy**. W dostępnych zapisach grupa wymieniana jest wśród największych drużyn najemniczych."
+      ],
+      "rumors": [
+        "Niektórzy łączą Kaela Dravosa z dawną legendą o **Niebieskim Wilku**. Charakter tego powiązania pozostaje niejasny.",
+        "Według krążących opowieści w pobliżu Razora bywa widywana zjawa wilka. Doniesień tych nie potwierdzono."
       ]
     },
     {
@@ -548,11 +558,14 @@
       "title": "Thane Runehart",
       "sub": "Szym",
       "tag": "Postacie Calionu",
-      "teaser": "Należy do drużyny The Boss\nPochodzi z miasta Durnhollow.",
+      "teaser": "Poszukiwacz pochodzący z Durnhollow. Członek drużyny The Boss, odnotowany w zadaniach Gildii.",
       "body": [
-        "Thane dołączył do druzyny \"The Boss\" kilka lat temu, kilka razy pomógł Gildii z potworami w pobliżu Calionu.",
-        "Pochodzi z miasta Durnhollow, jego walczy dwoma krótkimi mieczami z wygrawerowanymi Runami, jest silny als sądzimy że nie ujawnił swoich prawdziwych zdolności.",
-        "Został przydzielony do zadania pilnowania Darena Velka razem z sierżantem Loranem Dask'iem podczas zadania odkrycia spisku Noktusa."
+        "**Tożsamość i przynależność.** Thane Runehart, zwany *Szymem*, pochodzi z **Durnhollow**. Od kilku lat należy do drużyny **The Boss**.",
+        "**Współpraca z Gildią.** Niejednokrotnie pomagał Poszukiwaczom w działaniach przeciw potworom w okolicach Calionu. Walczy dwoma krótkimi mieczami ozdobionymi runami.",
+        "**Odnotowane zadanie.** Podczas dochodzenia dotyczącego spisku Noktusa powierzono mu, wspólnie z sierżantem **Loranem Daskiem**, nadzorowanie **Darena Velka**."
+      ],
+      "rumors": [
+        "Wśród członków Gildii pojawia się przypuszczenie, że Runehart nie ujawnił dotąd pełni swoich możliwości. Nie ma na to potwierdzonych zapisów."
       ]
     }
   ],

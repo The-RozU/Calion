@@ -1,4 +1,4 @@
-/* Calion v0.0.52: gildyjne akta osobowe, bez elementów mechaniki gry. */
+/* Calion v0.0.61: oficjalne notatki Gildii i wydzielone pogłoski. */
 .character-sheet-dialog{
   box-sizing:border-box;width:min(1120px,calc(100vw - 24px));max-width:none;
   max-height:calc(100dvh - 22px);margin:auto;padding:0;overflow-y:auto;
@@ -243,4 +243,57 @@
     height:90px;
     bottom:99px;
   }
+}
+
+
+/* Końcowa, odrębna część akt: pogłoski, nie zaś ustalenia Gildii. */
+.cs-rumors-section{
+  margin:35px 0 3px;
+  padding:22px clamp(16px,2.8vw,32px) 21px;
+  color:#533923;
+  border-top:2px solid #a9784b;
+  border-bottom:1px solid #b48a5c;
+  background:
+    radial-gradient(ellipse at 91% 8%,#a5703427,transparent 45%),
+    linear-gradient(130deg,#d5ae762c,#f0dfbd74);
+  position:relative;
+}
+.cs-rumors-section:after{
+  content:"✥";
+  position:absolute;
+  top:17px;
+  right:clamp(14px,2vw,26px);
+  font:28px Georgia,serif;
+  color:#976e4e5c;
+  pointer-events:none;
+}
+.cs-rumors-section .cs-section-no{
+  color:#8d5739;
+  margin-bottom:7px;
+}
+.cs-rumors-section h3{
+  margin:0 0 8px;
+  color:#593522;
+  font:italic normal clamp(24px,2.4vw,31px)/1.25 Georgia,serif;
+}
+.cs-rumors-disclaimer{
+  margin:0 0 16px;
+  font:italic 14px/1.55 Georgia,serif;
+  color:#846046;
+}
+.cs-rumors-section ul{
+  margin:0;
+  padding:0 0 0 20px;
+  list-style-type:"✦  ";
+}
+.cs-rumors-section li{
+  margin:0;
+  padding:5px 0 7px;
+  color:#513720;
+  font:italic 16px/1.65 Georgia,serif;
+}
+.cs-rumors-section li+li{border-top:1px solid #a87c513f;padding-top:11px}
+@media(max-width:560px){
+  .cs-rumors-section{margin:24px -4px 0;padding:20px 17px}
+  .cs-rumors-section li{font-size:15px}
 }

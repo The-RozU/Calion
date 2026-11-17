@@ -1,4 +1,4 @@
-/* Calion v0.0.52 • Akta osobowe Gildii Poszukiwaczy. */
+/* Calion v0.0.61 • Notatki Gildii i oddzielone niepotwierdzone pogłoski. */
 (function(){
   "use strict";
   // W aktach znajdują się wyłącznie informacje fabularne dostępne w kronikach.
@@ -32,7 +32,7 @@
       ],
       quote:"„Nie liczy się magia, tylko ręka, co nią kieruje.”",
       mentions:[
-        ["Kuźnia Ralfora","Warsztat współpracuje z Gildią Poszukiwaczy. Wśród jej członków broń tego kowala cieszy się znakomitą opinią."]
+        ["Kuźnia Ralfora","Warsztat współpracuje z Gildią Poszukiwaczy. Warsztat wykonuje także prace dla członków Gildii."]
       ],
       relations:[["Daren Velk","Wieloletni znajomy. Daren powierza mu swoją broń."]]
     },
@@ -51,9 +51,13 @@
       facts:[["Funkcja","Sierżant Straży Portowej"],["Rejon","Port Calionu"]],
       relations:[["Geran Voss","Przełożony Lorana."]]
     },
+    "kael-dravos":{facts:[["Przydomek","Razor"],["Drużyna","Impostorzy"]]},
+    "thane-runehart":{facts:[["Pochodzenie","Durnhollow"],["Drużyna","The Boss"]]},
+    "kanarek":{facts:[["Dawne powiązania","Noktus"],["Stan akt","Zaginiona"]]},
+    "lokar":{facts:[["Stan akt","Wpis niepełny"]]},
     "olshia-thornclaw":{
       facts:[["Rasa","Bestiolud (kotka)"],["Zajęcie","Złodziejka"]],
-      mentions:[["Działalność","Według kronik kradnie żywność, by pomagać sierotom z portu."]]
+      mentions:[]
     }
   };
   const dialog=document.createElement("dialog");
@@ -83,16 +87,22 @@
         </div>
         <div id="cs-details" class="cs-details">
           <section class="cs-story-section">
-            <span class="cs-section-no">II / ZEBRANE DONIESIENIA</span>
-            <h3>O osobie i jej losach</h3>
+            <span class="cs-section-no">II / NOTATKI ARCHIWISTY</span>
+            <h3>Ustalenia i przebieg sprawy</h3>
             <div id="cs-story" class="cs-story"></div>
           </section>
           <aside id="cs-sidebar" class="cs-sidebar" aria-label="Dodatkowe zapiski z archiwum">
-            <section id="cs-mentions-section" hidden><h3>Wzmianki w kronikach</h3><ul id="cs-mentions"></ul></section>
+            <section id="cs-mentions-section" hidden><h3>Odnotowane zdarzenia</h3><ul id="cs-mentions"></ul></section>
             
             <section id="cs-relations-section" hidden><h3>Znane powiązania</h3><ul id="cs-relations"></ul></section>
           </aside>
         </div>
+        <section id="cs-rumors-section" class="cs-rumors-section" hidden aria-labelledby="cs-rumors-title">
+          <span class="cs-section-no">III / WIADOMOŚCI NIESPRAWDZONE</span>
+          <h3 id="cs-rumors-title">Pogłoski i zasłyszane opowieści</h3>
+          <p class="cs-rumors-disclaimer">Poniższe relacje nie stanowią potwierdzonych ustaleń Gildii.</p>
+          <ul id="cs-rumors"></ul>
+        </section>
       </div>
       <footer class="cs-footer"><span>✦ &nbsp; Z ARCHIWÓW GILDII POSZUKIWACZY</span><button class="cs-close-footer" type="button">Odłóż kartę</button></footer>
     </article>`;
@@ -136,6 +146,16 @@
     addItems("#cs-relations-section","#cs-relations",profile.relations);
     $("#cs-sidebar").hidden=!(profile.mentions?.length||profile.relations?.length);
     $("#cs-details").classList.toggle("cs-details-no-sidebar",$("#cs-sidebar").hidden);
+    const rumorSection=$("#cs-rumors-section"),rumorList=$("#cs-rumors");
+    rumorList.replaceChildren();
+    const rumors=Array.isArray(entry.rumors)?entry.rumors.filter(x=>typeof x==="string"&&x.trim()):[];
+    rumorSection.hidden=rumors.length===0;
+    for(const rumor of rumors){
+      const li=document.createElement("li");
+      if(window.CalionRichText?.inline)window.CalionRichText.inline(li,rumor);
+      else li.textContent=rumor;
+      rumorList.append(li);
+    }
     if(!dialog.open)dialog.showModal();
     dialog.scrollTop=0;
   }
