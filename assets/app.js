@@ -10,16 +10,17 @@
     gry:{kicker:"CALION GAMES / GRAJ W PRZEGLĄDARCE",title:"Twoja <em>przygoda.</em>",desc:"Wszystkie gry osadzone w uniwersum Calionu. Uruchom wybrany tytuł tutaj, bez instalacji, a potem rozwiń go na pełny ekran."}
   };
   const characterGroups=[
-    {id:"poszukiwacze",title:"Poszukiwacze",description:"Osoby odnotowane przy wyprawach i zadaniach Gildii."},
+    {id:"najemnicy",title:"Najemnicy",description:"Łowcy zleceń, członkowie drużyn i wolni najemnicy działający w Calionie."},
     {id:"straz",title:"Straż Miejska",description:"Dowódcy i strażnicy pełniący służbę w Calionie."},
     {id:"polswiatek",title:"Półświatek",description:"Złodzieje i osoby związane z działalnością w cieniu."},
-    {id:"najemnicy",title:"Najemnicy",description:"Członkowie niezależnych drużyn najemniczych."},
     {id:"rzemieslnicy",title:"Rzemieślnicy",description:"Twórcy, mistrzowie warsztatu i współpracownicy Gildii."},
     {id:"pozostali",title:"Pozostałe akta",description:"Osoby, których przynależność nie została jeszcze ustalona."}
   ];
   const characterCollator=new Intl.Collator("pl",{sensitivity:"base",numeric:true});
   let selectedCharacterGroup="wszystkie";
   function characterGroup(entry){
+    // Stare wpisy "poszukiwacze" też trafiają do Najemników.
+    if(entry.characterGroup==="poszukiwacze")return "najemnicy";
     return characterGroups.some(group=>group.id===entry.characterGroup)?entry.characterGroup:"pozostali";
   }
   function renderCharacterFilters(){
@@ -59,8 +60,8 @@
       const section=document.createElement("section");section.className="character-group";section.dataset.group=group.id;
       const header=document.createElement("header");header.className="character-group-header";
       const titleBlock=document.createElement("div");titleBlock.className="character-group-title-block";
-      const overline=document.createElement("span");overline.className="character-group-overline";overline.textContent="Z REJESTRU GILDII / "+String(characterGroups.indexOf(group)+1).padStart(2,"0");
-      const title=document.createElement("h2");title.textContent=group.title;
+      const overline=document.createElement("span");overline.className="character-group-overline";overline.textContent="KSIĘGA OSÓB / DZIAŁ "+String(characterGroups.indexOf(group)+1).padStart(2,"0");
+      const title=document.createElement("h2");title.className="character-group-fancy-title";title.textContent=group.title;
       const desc=document.createElement("p");desc.textContent=group.description;
       titleBlock.append(overline,title,desc);
       const count=document.createElement("span");count.className="character-group-count";count.textContent=characterCountLabel(items.length);

@@ -299,88 +299,168 @@
 }
 
 
-/* v0.0.62 • Rejestr Gildii: osobne księgi postaci, filtrowanie bez ciężkich ramek. */
+/* v0.0.63 • Gildyjne rozdziały i pergaminowe zakładki. */
+/* Filtry są czytelne, ale zamiast zwykłych przycisków przypominają zakładki księgi. */
 .character-filter-bar[hidden]{display:none!important}
 .character-roster .character-filter-bar{
-  margin:27px 0 25px;
-  padding:17px 20px 16px;
-  border-block:1px solid #966a42;
-  background:linear-gradient(105deg,#e6ce9e8a,#f2dfbb9c);
+  margin:24px 0 32px;
+  padding:18px 20px 0;
+  border:1px solid rgba(137,99,58,.78);
+  border-bottom:2px solid #825735;
+  border-radius:3px 3px 1px 1px;
+  background:
+    radial-gradient(ellipse at 15% 10%,#fff2d9aa,transparent 55%),
+    linear-gradient(165deg,#f3dfbbf2,#dabc8cf0);
+  box-shadow:0 7px 16px #1709045e,inset 0 0 20px #8b602328;
 }
 .character-filter-heading{
-  display:flex;align-items:baseline;justify-content:space-between;gap:9px;
-  flex-wrap:wrap;margin:0 0 13px;color:#6e4b2d;
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:6px 15px;
+  margin:0 0 16px;
 }
-.character-filter-heading span{font:bold 11px/1.5 Georgia,serif;letter-spacing:.14em}
-.character-filter-heading small{font:italic 13px Georgia,serif}
-.character-filter-list{display:flex;flex-wrap:wrap;gap:9px}
+.character-filter-heading span{
+  color:#53371e;
+  font:bold 11px/1.55 Georgia,serif;
+  letter-spacing:.14em;
+}
+.character-filter-heading small{
+  color:#674b31;
+  font:italic 14px/1.4 Georgia,serif;
+}
+.character-filter-list{
+  display:flex;
+  align-items:end;
+  flex-wrap:wrap;
+  gap:7px;
+  margin:0;
+  padding:0;
+  border-bottom:1px solid #997144;
+}
 .character-filter{
-  display:inline-flex;align-items:center;justify-content:space-between;gap:12px;
-  min-height:45px;padding:9px 12px;
-  border:1px solid #a57c51;border-radius:2px;
-  background:linear-gradient(130deg,#f4e4bf,#ddbe8e);
-  color:#543921;
-  box-shadow:0 2px 0 #a57d5a66;
-  font:600 14px/1.3 Georgia,serif;
+  position:relative;
+  top:1px;
+  flex:0 0 auto;
+  display:inline-flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:11px;
+  min-height:46px;
+  padding:11px 14px;
+  border:1px solid #a77d4d;
+  border-bottom:1px solid #997144;
+  border-radius:7px 7px 0 0;
+  color:#51361e;
+  background:linear-gradient(#f9eacc,#e1c394);
+  font:600 14px/1.25 Georgia,serif;
   white-space:nowrap;
+  box-shadow:inset 0 2px #fff4daab;
   cursor:pointer;
-  transition:background .15s ease,transform .15s ease;
+  transition:background .16s ease,color .16s ease;
 }
 .character-filter small{
-  min-width:24px;
+  min-width:21px;
   padding:3px 5px;
-  border-radius:3px;
-  font:700 11px Georgia,serif;
-  color:#65442c;background:#aa83512d;
+  color:#614222;
+  background:#8b643322;
+  font:bold 11px/1 Georgia,serif;
   text-align:center;
 }
-.character-filter:hover{background:#f9e9c6;transform:translateY(-1px)}
+.character-filter:hover{
+  color:#2a392a;
+  background:#fff0d3;
+}
 .character-filter[aria-pressed="true"]{
-  color:#f5e3bd;
-  border-color:#b78b58;
-  background:linear-gradient(135deg,#264436,#132c23);
-  box-shadow:0 3px 0 #684f33;
+  z-index:1;
+  color:#f7e5c3;
+  border-color:#bb9563;
+  border-bottom-color:#243b2f;
+  background:linear-gradient(155deg,#3a5845,#1c3228);
+  box-shadow:inset 0 1px 0 #c4a06a65;
 }
-.character-filter[aria-pressed="true"] small{color:#f6e6c5;background:#e5bb7842}
-.character-filter:focus-visible{outline:3px solid #d69d58;outline-offset:3px}
-.character-filter-hint{display:none;color:#6e4b2d;font:italic 12px Georgia,serif}
-.character-roster .collection-grid{
-  display:block;
-  min-width:0;
+.character-filter[aria-pressed="true"] small{
+  color:#f3d8a5;
+  background:#d6b47c3b;
 }
-.character-group{margin:0 0 41px}
+.character-filter:focus-visible{
+  z-index:3;
+  outline:3px solid #d89841;
+  outline-offset:3px;
+}
+.character-filter-hint{
+  display:none;
+  color:#6b4b2c;
+  font:italic 12px/1.5 Georgia,serif;
+}
+.character-roster .collection-grid{display:block;min-width:0}
+.character-group{margin:0 0 38px}
 .character-group-header{
-  display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
-  margin:0 0 19px;
-  padding:0 2px 14px;
-  border-bottom:1px solid #a17a4b;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  text-align:center;
+  margin:0 0 23px;
+  padding:17px clamp(16px,2.5vw,27px) 19px;
+  border:1px solid #c398614d;
+  border-radius:2px;
+  background:
+    linear-gradient(155deg,rgba(39,22,12,.94),rgba(53,31,18,.9)),
+    url("./images/drewno-bezszwowe.webp") center / 750px auto;
+  box-shadow:0 7px 14px #190a0640,inset 0 1px 0 #e4b48033;
 }
-.character-group-title-block{min-width:0}
+.character-group-title-block{min-width:0;width:100%}
 .character-group-overline{
-  display:block;margin-bottom:6px;
-  color:#8d633a;
-  font:bold 11px/1.4 Georgia,serif;letter-spacing:.14em;
+  display:block;
+  margin:0 0 7px;
+  color:#d4ae7d;
+  font:bold 10px/1.55 Georgia,serif;
+  letter-spacing:.19em;
 }
-.character-group-title-block h2{
+.character-group-title-block h2,
+.character-group-title-block .character-group-fancy-title{
+  display:block;
   margin:0;
-  color:#33271d;
-  font:normal clamp(26px,2.6vw,39px)/1.2 Georgia,serif;
+  color:#f7e6c7;
+  background:transparent;
+  font:normal clamp(25px,2.8vw,38px)/1.2 Georgia,serif;
+  text-shadow:0 2px 5px #110905ae;
+  overflow-wrap:break-word;
+}
+.character-group-fancy-title::before,
+.character-group-fancy-title::after{
+  content:"–";
+  display:inline-block;
+  margin:0 .36em;
+  color:#cfa36f;
+  font-size:.85em;
+  vertical-align:5%;
 }
 .character-group-title-block p{
-  margin:6px 0 0;
-  color:#725639;
-  font:italic 15px/1.4 Georgia,serif;
+  margin:8px auto 0;
+  max-width:640px;
+  padding:0;
+  color:#e5cba4;
+  font:italic 15px/1.5 Georgia,serif;
+  text-shadow:0 1px 3px #160c09aa;
 }
 .character-group-count{
-  flex:0 0 auto;
-  padding:6px 10px;
-  color:#75502a;
-  border:1px solid #b48b58;
-  font:bold 11px/1.5 Georgia,serif;
-  letter-spacing:.07em;
+  align-self:center;
+  display:inline-block;
+  margin-top:4px;
+  padding:3px 12px;
+  color:#cfaf83;
+  border:0;
+  background:rgba(15,9,6,.35);
+  font:700 10px/1.55 Georgia,serif;
+  letter-spacing:.1em;
 }
 .character-group-grid{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:clamp(17px,2vw,30px);
 }
 @media(max-width:950px){
@@ -388,21 +468,45 @@
 }
 @media(max-width:650px){
   .character-roster .character-filter-bar{
-    margin:20px -4px 23px;padding:13px 12px;
+    margin:20px -4px 24px;
+    padding:14px 12px 0;
   }
+  .character-filter-heading{margin-bottom:12px}
+  .character-filter-heading span{font-size:10px;letter-spacing:.09em}
+  .character-filter-heading small{font-size:13px}
   .character-filter-list{
-    flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-inline:contain;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    overscroll-behavior-inline:contain;
     -webkit-overflow-scrolling:touch;
     scrollbar-width:thin;
-    padding:3px 2px 8px;
+    gap:6px;
+    padding:0 2px 7px;
   }
-  .character-filter{flex:0 0 auto;min-height:44px;font-size:13px}
-  .character-filter-hint{display:block;margin-top:7px}
-  .character-group-header{align-items:flex-start;gap:10px;padding-bottom:12px}
-  .character-group-title-block h2{font-size:27px}
+  .character-filter{
+    flex:0 0 auto;
+    min-height:46px;
+    padding:11px 12px;
+    font-size:13px;
+  }
+  .character-filter-hint{
+    display:block;
+    margin:9px 0 10px;
+  }
+  .character-group-header{
+    padding:14px 12px 17px;
+    margin-bottom:20px;
+  }
+  .character-group-overline{font-size:10px}
+  .character-group-title-block h2,
+  .character-group-title-block .character-group-fancy-title{
+    font-size:clamp(24px,6.5vw,30px);
+  }
   .character-group-title-block p{font-size:13px}
-  .character-group-count{font-size:10px;padding:5px 7px}
+  .character-group-count{font-size:10px;padding:3px 8px}
   .character-group-grid{gap:18px}
-  .character-group{margin-bottom:33px}
+  .character-group{margin-bottom:32px}
 }
-@media(prefers-reduced-motion:reduce){.character-filter{transition:none}.character-filter:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .character-filter{transition:none}
+}

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.62",
+  "version": "0.0.63",
   "entries": [
     {
       "id": "miasto-calion",
@@ -577,7 +577,7 @@
       "rumors": [
         "Wśród członków Gildii pojawia się przypuszczenie, że Runehart nie ujawnił dotąd pełni swoich możliwości. Nie ma na to potwierdzonych zapisów."
       ],
-      "characterGroup": "poszukiwacze"
+      "characterGroup": "najemnicy"
     }
   ],
   "lastSave": {

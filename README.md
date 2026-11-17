@@ -1,6 +1,6 @@
 # Calion · portal uniwersum
 
-**Aktualny motyw: Karczma Calionu v0.0.62.**
+**Aktualny motyw: Karczma Calionu v0.0.63.**
 
 Strona internetowa poświęcona uniwersum Calionu, jego krainom, historii, postaciom, bestiariuszowi, rasom, frakcjom i przyszłym grom. Motyw wizualny łączy średniowieczną karczmę Gildii Poszukiwaczy, pikselowe ilustracje dark fantasy, miedziane i srebrne okucia, skórzane dodatki oraz pergaminowe kroniki.
 
@@ -178,3 +178,10 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Każdy wpis postaci ma opcjonalne pole `characterGroup` w `assets/content.json`. Obsługiwane wartości: `poszukiwacze`, `straz`, `polswiatek`, `najemnicy`, `rzemieslnicy`, `pozostali`. Nieznana lub brakująca grupa trafia automatycznie do `Pozostałych akt`.
 - Grupowanie ma charakter porządkowy, nie oznacza członkostwa w danej organizacji. Opisy, plotki i portrety pozostały bez zmian.
 - Zmiany wyłącznie na `dev-mode`.
+
+## 0.0.63 — Najemnicy i czytelniejsze rozdziały archiwum
+
+- Poszukiwacze nie stanowią już osobnego działu. Thane Runehart i Kael Dravos są sklasyfikowani w dziale **Najemnicy**. Dotychczasowe wpisy z `characterGroup: "poszukiwacze"` są również automatycznie interpretowane jako `najemnicy`, aby przyszłe starsze dane nie ginęły z listy.
+- Nagłówki działów mają ciemne, półprzezroczyste drewniane tło oraz tytuły w formie „– Straż Miejska –”, z jasnym tekstem i bez ciężkiego poziomego separatora.
+- Wybór działu przypomina pergaminowe zakładki księgi. Mobilne zakładki można przesuwać poziomo; zachowano wyszukiwanie, liczniki i sortowanie alfabetyczne.
+- Nie zmieniono opowieści ani opisów postaci, nie przemianowano jeszcze pozostałych odniesień fabularnych do Poszukiwaczy. Zmiany tylko na `dev-mode`.
