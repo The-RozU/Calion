@@ -1,6 +1,6 @@
 # Calion · portal uniwersum
 
-**Aktualny motyw: Karczma Calionu v0.0.61.**
+**Aktualny motyw: Karczma Calionu v0.0.62.**
 
 Strona internetowa poświęcona uniwersum Calionu, jego krainom, historii, postaciom, bestiariuszowi, rasom, frakcjom i przyszłym grom. Motyw wizualny łączy średniowieczną karczmę Gildii Poszukiwaczy, pikselowe ilustracje dark fantasy, miedziane i srebrne okucia, skórzane dodatki oraz pergaminowe kroniki.
 
@@ -170,3 +170,11 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Sekcja `rumors` w `assets/content.json` zawiera wyłącznie niepotwierdzone doniesienia, pokazywane na końcu akt. Dotyczy to obecnie Kaela Dravosa, Thane’a Runeharta, Ralfora oraz Olshii Thornclaw.
 - Nie dodano nowych faktów ani plotek spoza wcześniejszych opisów. Pozostałe podstrony i pliki gry bez zmian.
 - Zmiany wprowadzone wyłącznie na `dev-mode`.
+
+## 0.0.62 — Grupowanie akt postaci
+
+- Dział `Postacie` pokazuje listę grupowaną w osobnych sekcjach, w kolejności: Poszukiwacze, Straż Miejska, Półświatek, Najemnicy, Rzemieślnicy, Pozostałe akta.
+- Filtry przy wyszukiwarce pozwalają przełączyć grupę. W każdej grupie postacie sortowane są alfabetycznie według polskich reguł; wyszukiwarka działa wewnątrz wybranej grupy.
+- Każdy wpis postaci ma opcjonalne pole `characterGroup` w `assets/content.json`. Obsługiwane wartości: `poszukiwacze`, `straz`, `polswiatek`, `najemnicy`, `rzemieslnicy`, `pozostali`. Nieznana lub brakująca grupa trafia automatycznie do `Pozostałych akt`.
+- Grupowanie ma charakter porządkowy, nie oznacza członkostwa w danej organizacji. Opisy, plotki i portrety pozostały bez zmian.
+- Zmiany wyłącznie na `dev-mode`.

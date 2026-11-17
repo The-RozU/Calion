@@ -9,6 +9,63 @@
     rasy:{kicker:"LUDY ŚWIATA / KOMPENDIUM",title:"Rasy i <em>ludy.</em>",desc:"Calion zamieszkują przedstawiciele różnych ludów, których historie splatają się na ulicach miast i szlakach przygód."},
     gry:{kicker:"CALION GAMES / GRAJ W PRZEGLĄDARCE",title:"Twoja <em>przygoda.</em>",desc:"Wszystkie gry osadzone w uniwersum Calionu. Uruchom wybrany tytuł tutaj, bez instalacji, a potem rozwiń go na pełny ekran."}
   };
+  const characterGroups=[
+    {id:"poszukiwacze",title:"Poszukiwacze",description:"Osoby odnotowane przy wyprawach i zadaniach Gildii."},
+    {id:"straz",title:"Straż Miejska",description:"Dowódcy i strażnicy pełniący służbę w Calionie."},
+    {id:"polswiatek",title:"Półświatek",description:"Złodzieje i osoby związane z działalnością w cieniu."},
+    {id:"najemnicy",title:"Najemnicy",description:"Członkowie niezależnych drużyn najemniczych."},
+    {id:"rzemieslnicy",title:"Rzemieślnicy",description:"Twórcy, mistrzowie warsztatu i współpracownicy Gildii."},
+    {id:"pozostali",title:"Pozostałe akta",description:"Osoby, których przynależność nie została jeszcze ustalona."}
+  ];
+  const characterCollator=new Intl.Collator("pl",{sensitivity:"base",numeric:true});
+  let selectedCharacterGroup="wszystkie";
+  function characterGroup(entry){
+    return characterGroups.some(group=>group.id===entry.characterGroup)?entry.characterGroup:"pozostali";
+  }
+  function renderCharacterFilters(){
+    const nav=$("#character-filters"),buttons=$("#character-filter-buttons");
+    nav.hidden=currentSection!=="postacie";
+    if(nav.hidden)return;
+    buttons.replaceChildren();
+    const all=entries.filter(e=>e.cat==="postacie"&&!e.parent);
+    const active=characterGroups.filter(g=>all.some(e=>characterGroup(e)===g.id));
+    const items=[{id:"wszystkie",title:"Wszystkie",count:all.length},...active.map(g=>({id:g.id,title:g.title,count:all.filter(e=>characterGroup(e)===g.id).length}))];
+    for(const item of items){
+      const button=document.createElement("button");button.type="button";
+      button.className="character-filter";
+      button.dataset.group=item.id;
+      button.setAttribute("aria-pressed",String(selectedCharacterGroup===item.id));
+      const name=document.createElement("span");name.textContent=item.title;
+      const count=document.createElement("small");count.textContent=String(item.count);
+      count.setAttribute("aria-label",item.count+" postaci");
+      button.append(name,count);
+      button.addEventListener("click",()=>{
+        selectedCharacterGroup=item.id;
+        buttons.querySelectorAll(".character-filter").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.group===item.id)));
+        renderEntries();
+      });
+      buttons.append(button);
+    }
+  }
+  function renderCharacterRoster(filtered,grid){
+    const groups=selectedCharacterGroup==="wszystkie"?characterGroups:characterGroups.filter(g=>g.id===selectedCharacterGroup);
+    for(const group of groups){
+      const items=filtered.filter(e=>characterGroup(e)===group.id).sort((a,b)=>characterCollator.compare(a.title,b.title));
+      if(!items.length)continue;
+      const section=document.createElement("section");section.className="character-group";section.dataset.group=group.id;
+      const header=document.createElement("header");header.className="character-group-header";
+      const titleBlock=document.createElement("div");titleBlock.className="character-group-title-block";
+      const overline=document.createElement("span");overline.className="character-group-overline";overline.textContent="Z REJESTRU GILDII / "+String(characterGroups.indexOf(group)+1).padStart(2,"0");
+      const title=document.createElement("h2");title.textContent=group.title;
+      const desc=document.createElement("p");desc.textContent=group.description;
+      titleBlock.append(overline,title,desc);
+      const count=document.createElement("span");count.className="character-group-count";count.textContent=items.length+" "+(items.length===1?"AKTA":"AKT");
+      header.append(titleBlock,count);
+      const cards=document.createElement("div");cards.className="character-group-grid";
+      for(const e of items)cards.append(createArchiveCard(e));
+      section.append(header,cards);grid.append(section);
+    }
+  }
   const mapNames=['calion','elderon','durnhollow','bagna-milczenia','orklag','vellan'];
   const locationMap=(entry)=>'./assets/images/mapa-'+(mapNames.includes(entry.map)?entry.map:'calion')+'.webp';
   let entries=[],contentReady=false;
@@ -44,30 +101,36 @@
     const teaser=card.querySelector("p");teaser.replaceChildren();window.CalionRichText.inline(teaser,entry.teaser,true);
     return card;
   }
+  function createArchiveCard(e){
+    if(e.cat==="swiat")return createLocationCard(e);
+    const card=document.createElement("button");
+    card.type="button";card.className="entry-card";
+    card.innerHTML='<span class="entry-tag">'+escapeHTML(e.tag)+'</span><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">OTWÓRZ KRONIKĘ '+icon("i-arrow")+'</span>';
+    if(e.cat==="postacie"){
+      card.classList.add("character-card-preview");
+      const portrait=e.id==="daren-velk"?"daren-velk.webp":e.id==="ralfor"?"ralfor.webp":null;
+      if(e.id==="ralfor")card.classList.add("character-card-ralfor");
+      const portraitBox=portrait?'<span class="character-portrait-slot has-portrait" aria-hidden="true"><img src="./assets/images/'+portrait+'" alt="" loading="lazy"></span>':'<span class="character-portrait-slot" aria-hidden="true"><span>✥</span><small>PORTRET NIEZACHOWANY</small></span>';
+      card.innerHTML=portraitBox+'<div class="character-card-copy"><span class="character-mini-label">Z REJESTRU GILDII</span><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">CZYTAJ AKTA '+icon("i-arrow")+'</span></div>';
+    }
+    const teaser=card.querySelector("p");teaser.replaceChildren();window.CalionRichText.inline(teaser,e.teaser,true);
+    card.addEventListener("click",()=>openEntry(e));
+    return card;
+  }
   function renderEntries(){
     const term=search.value.trim().toLocaleLowerCase("pl");
     const filtered=entries.filter(e=>e.cat===currentSection && !e.parent && [e.title,e.sub,e.tag,e.teaser,...e.body].join(" ").toLocaleLowerCase("pl").includes(term));
     if(currentSection==="historia"){renderTimeline(filtered);return;}
     const grid=$("#collection-grid");
     grid.replaceChildren();
-    for(const e of filtered){
-      if(e.cat==="swiat"){
-        grid.append(createLocationCard(e));continue;
-      }
-      const card=document.createElement("button");
-      card.type="button";card.className="entry-card";
-      card.innerHTML='<span class="entry-tag">'+escapeHTML(e.tag)+'</span><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">OTWÓRZ KRONIKĘ '+icon("i-arrow")+'</span>';
-      if(e.cat==="postacie"){
-        card.classList.add("character-card-preview");
-        const portrait=e.id==="daren-velk"?"daren-velk.webp":e.id==="ralfor"?"ralfor.webp":null;
-        if(e.id==="ralfor")card.classList.add("character-card-ralfor");
-        const portraitBox=portrait?'<span class="character-portrait-slot has-portrait" aria-hidden="true"><img src="./assets/images/'+portrait+'" alt="" loading="lazy"></span>':'<span class="character-portrait-slot" aria-hidden="true"><span>✥</span><small>PORTRET NIEZACHOWANY</small></span>';
-        card.innerHTML=portraitBox+'<div class="character-card-copy"><span class="character-mini-label">Z REJESTRU GILDII</span><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">CZYTAJ AKTA '+icon("i-arrow")+'</span></div>';
-      }
-      const teaser=card.querySelector("p");teaser.replaceChildren();window.CalionRichText.inline(teaser,e.teaser,true);
-      card.addEventListener("click",()=>openEntry(e));
-      grid.append(card);
+    if(currentSection==="postacie"){
+      const narrowed=selectedCharacterGroup==="wszystkie"?filtered:filtered.filter(e=>characterGroup(e)===selectedCharacterGroup);
+      renderCharacterRoster(narrowed,grid);
+      $("#archive-count").textContent=narrowed.length+" "+(narrowed.length===1?"POSTAĆ":"POSTACI");
+      $("#empty-message").hidden=narrowed.length!==0;
+      return;
     }
+    for(const e of filtered)grid.append(createArchiveCard(e));
     $("#archive-count").textContent=filtered.length+" "+(filtered.length===1?"WPIS":"WPISÓW");
     $("#empty-message").hidden=filtered.length!==0;
   }
@@ -155,6 +218,8 @@
     $("#collection-title").innerHTML=s.title;
     $("#collection-desc").textContent=s.desc;
     search.value="";
+    selectedCharacterGroup="wszystkie";
+    renderCharacterFilters();
     worldMapPanel.hidden=section!=="swiat";
     search.placeholder=section==="gry"?"Szukaj gier...":"Szukaj w archiwum...";
     $("#game-library").hidden=section!=="gry";

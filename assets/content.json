@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.61",
+  "version": "0.0.62",
   "entries": [
     {
       "id": "miasto-calion",
@@ -210,7 +210,8 @@
         "**Tożsamość.** Daren Velk, nazywany *Czarnym Lisem*, jest bestioludem o lisich cechach. Według posiadanych informacji należał wcześniej do organizacji zwanej **Noktusem**.",
         "**Przebieg sprawy.** Podczas dochodzenia dotyczącego Noktusa współpracował z sierżantem **Loranem Daskiem** oraz Poszukiwaczem **Thanem Runehartem**. Gdy w wyniku uruchomienia pułapki zawalił się dom, Daren uratował Runeharta. Sam zniknął po zdarzeniu.",
         "**Stan akt.** Straż Calionu rozpoczęła poszukiwania Darena Velka. Według dostępnych wiadomości Noktus uznał go za zdrajcę. Jego dalsze losy pozostają nieustalone."
-      ]
+      ],
+      "characterGroup": "polswiatek"
     },
     {
       "id": "ralfor",
@@ -225,7 +226,8 @@
       ],
       "rumors": [
         "Wśród Poszukiwaczy krążą opowieści o wyjątkowej jakości broni wykonywanej przez Ralfora."
-      ]
+      ],
+      "characterGroup": "rzemieslnicy"
     },
     {
       "id": "leoryk",
@@ -238,7 +240,8 @@
         "**Pełniona funkcja.** Leoryk Thalborn stoi na czele Straży Miejskiej Calionu, liczącej w przybliżeniu sześciuset żołnierzy regularnych, rezerwowych i elitarnych.",
         "**Podległość służbowa.** Formalnie odpowiada przed królem **Arthelem IV**. W codziennych sprawach bezpieczeństwa miasta to do niego należą najważniejsze decyzje.",
         "**Uwagi służbowe.** Z uwagi na wiek nie bierze już udziału w patrolach. Według posiadanych informacji zna z imienia wielu służących pod jego rozkazami."
-      ]
+      ],
+      "characterGroup": "straz"
     },
     {
       "id": "elmera-valen",
@@ -250,7 +253,8 @@
       "body": [
         "**Pełniona funkcja.** Elmera Valen pochodzi z rodziny szlacheckiej. Sprawuje funkcję porucznika Straży Szlacheckiej i dowodzi oddziałem liczącym około stu osób.",
         "**Zakres służby.** Jej podwładni chronią dzielnicę szlachecką, eskortują ważne osoby oraz czuwają nad bezpieczeństwem bali i uroczystości. Oddział nadzoruje również ruch między strefą strażniczą a szlachecką."
-      ]
+      ],
+      "characterGroup": "straz"
     },
     {
       "id": "geran-voss",
@@ -263,7 +267,8 @@
         "**Pełniona funkcja.** Geran Voss dowodzi Strażą Portową Calionu. Podlega mu około stu pięćdziesięciu strażników.",
         "**Zakres służby.** Oddział patroluje port, magazyny i targ morski oraz przeciwdziała przemytowi i kradzieżom towarów. Przy kontroli transportów potworów i klejnotów współpracuje z Gildią Poszukiwaczy. Zapewnia także bezpieczeństwo podczas świąt i festiwali na nabrzeżu.",
         "**Podlegli oficerowie.** Wśród strażników pod jego dowództwem znajduje się sierżant **Loran Dask**."
-      ]
+      ],
+      "characterGroup": "straz"
     },
     {
       "id": "loran-dask",
@@ -276,7 +281,8 @@
         "**Pełniona funkcja.** Loran Dask jest sierżantem Straży Miejskiej Calionu, przydzielonym do służby w porcie. Podlega porucznikowi **Geranowi Vossowi**.",
         "**Zakres służby.** Prowadzi działania terenowe i śledztwa na obszarze portu. Sporządzone raporty przekazuje dowódcy.",
         "**Odnotowany udział.** Jego nazwisko pojawia się także w materiałach dotyczących śledztwa w sprawie Noktusa, prowadzonego z udziałem Darena Velka i Thane'a Runeharta."
-      ]
+      ],
+      "characterGroup": "straz"
     },
     {
       "id": "lokar",
@@ -287,7 +293,8 @@
       "teaser": "W rejestrze Gildii zachowała się jedynie niepełna wzmianka o tej osobie.",
       "body": [
         "**Stan kartoteki.** W dostępnych zapisach brak informacji wystarczających do sporządzenia wiarygodnej noty o Lokarze. Kartę pozostawiono do uzupełnienia po uzyskaniu potwierdzonych danych."
-      ]
+      ],
+      "characterGroup": "pozostali"
     },
     {
       "id": "wargi",
@@ -522,7 +529,8 @@
       ],
       "rumors": [
         "W mieście opowiada się, że Olshia zdobywa żywność kradzieżą, aby pomagać osieroconym dzieciom z portu."
-      ]
+      ],
+      "characterGroup": "polswiatek"
     },
     {
       "id": "kanarek",
@@ -535,7 +543,8 @@
         "**Odnotowane powiązania.** Kanarek była związana z Noktusem. Z dostępnych informacji wynika, że próbowała opuścić organizację.",
         "**Znane kontakty.** Przyjęła pod opiekę młodego Darena Velka i przekazała mu własne umiejętności.",
         "**Stan akt.** Miejsce pobytu Kanarka pozostaje nieznane. W rejestrze figuruje jako zaginiona."
-      ]
+      ],
+      "characterGroup": "polswiatek"
     },
     {
       "id": "kael-dravos",
@@ -550,7 +559,8 @@
       "rumors": [
         "Niektórzy łączą Kaela Dravosa z dawną legendą o **Niebieskim Wilku**. Charakter tego powiązania pozostaje niejasny.",
         "Według krążących opowieści w pobliżu Razora bywa widywana zjawa wilka. Doniesień tych nie potwierdzono."
-      ]
+      ],
+      "characterGroup": "najemnicy"
     },
     {
       "id": "thane-runehart",
@@ -566,7 +576,8 @@
       ],
       "rumors": [
         "Wśród członków Gildii pojawia się przypuszczenie, że Runehart nie ujawnił dotąd pełni swoich możliwości. Nie ma na to potwierdzonych zapisów."
-      ]
+      ],
+      "characterGroup": "poszukiwacze"
     }
   ],
   "lastSave": {
