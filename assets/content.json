@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.64",
+  "version": "0.0.65",
   "entries": [
     {
       "id": "miasto-calion",
@@ -578,10 +578,21 @@
         "Wśród członków Gildii pojawia się przypuszczenie, że Runehart nie ujawnił dotąd pełni swoich możliwości. Nie ma na to potwierdzonych zapisów."
       ],
       "characterGroup": "najemnicy"
+    },
+    {
+      "id": "renar-orek",
+      "cat": "postacie",
+      "title": "Renar Orek",
+      "sub": "Dowódca więzienia i nadzoru przesłuchań",
+      "tag": "Postacie Calionu",
+      "teaser": "Dowódca więzienia i nadzoru przesłuchań",
+      "body": [
+        "Renar jest lisem z razy Bestioludzi, dowodzi jednostką ktora nadzoruje obszar więzienny w Calionie"
+      ]
     }
   ],
   "lastSave": {
-    "requestId": "dba60c8c-6ee9-436a-ba08-f9cfaa9f248c",
-    "entryId": "the-boss"
+    "requestId": "6bde4b00-9851-48e1-8e18-3467a0120c62",
+    "entryId": "renar-orek"
   }
 }
