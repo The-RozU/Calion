@@ -471,3 +471,115 @@
 /* Portrety dopasowane w panelu: zachowaj wybrany kadr. */
 .character-roster .character-card-custom-portrait .character-portrait-slot img{left:0;top:0;transform:none;width:100%;height:100%;object-fit:cover;object-position:center}
 .cs-portrait img.custom-portrait{aspect-ratio:4/5;object-position:center}
+
+
+/* v0.0.78 • Portrety: jednakowy kadr 4:5 i czytelne wizerunki w katalogu.
+   Panel redaktora eksportuje WebP 640×800, więc to samo 4:5 nie przycina kadru. */
+.character-roster .character-portrait-empty{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:13px;
+  overflow:hidden;
+  color:#e5c799;
+  background:
+    radial-gradient(circle at 51% 43%,rgba(93,112,85,.24),transparent 56%),
+    linear-gradient(145deg,#263b31,#13291f 72%,#101f1a);
+}
+.character-roster .character-portrait-empty .character-portrait-monogram{
+  display:grid;
+  place-items:center;
+  width:clamp(52px,6vw,78px);
+  aspect-ratio:1;
+  border:1px solid #b99560a6;
+  border-radius:50%;
+  color:#dfc18e;
+  background:radial-gradient(circle at 30% 24%,#4e5e47,#1d372a 73%);
+  box-shadow:inset 0 0 0 4px #c9a7731d,0 3px 8px #0004;
+  font:normal clamp(22px,2.3vw,32px)/1 Georgia,serif;
+  letter-spacing:.025em;
+  opacity:1;
+}
+.character-roster .character-portrait-empty small{
+  max-width:115px;
+  color:#d8bc92;
+  font:bold 10px/1.45 Georgia,serif;
+  letter-spacing:.08em;
+  text-align:center;
+}
+@media(min-width:701px){
+  .tavern-theme .character-roster .character-group-grid > .entry-card.character-card-preview{
+    grid-template-columns:clamp(124px,11.6vw,156px) minmax(0,1fr);
+    align-items:center;
+    gap:clamp(16px,1.7vw,25px);
+    min-height:244px;
+    padding:clamp(17px,1.65vw,23px);
+  }
+  .tavern-theme .character-roster .character-group-grid .character-portrait-slot{
+    box-sizing:border-box;
+    position:relative;
+    justify-self:start;
+    align-self:center;
+    width:100%;
+    height:auto;
+    min-height:0;
+    aspect-ratio:4/5;
+    padding:11px 7px;
+    border:1px solid #795635;
+    outline:1px solid #c6a16c;
+    outline-offset:-5px;
+    box-shadow:0 4px 0 #6d502d56,0 8px 15px #2a190b38,inset 0 0 0 4px #caa37123;
+  }
+  .tavern-theme .character-roster .character-group-grid .character-portrait-slot.has-portrait{
+    padding:0;
+    overflow:hidden;
+    background:#1c3025;
+  }
+  .tavern-theme .character-roster .character-group-grid .character-portrait-slot.has-portrait img{
+    display:block;
+    position:absolute;
+    top:6px;
+    right:6px;
+    bottom:6px;
+    left:6px;
+    width:calc(100% - 12px);
+    height:calc(100% - 12px);
+    max-width:none;
+    transform:none;
+    object-fit:cover;
+    object-position:center 22%;
+  }
+  .tavern-theme .character-roster .character-group-grid .character-card-custom-portrait .character-portrait-slot.has-portrait img{
+    object-position:center;
+  }
+  .tavern-theme .character-roster .character-group-grid .character-card-ralfor .character-portrait-slot.has-portrait img{
+    object-position:center;
+  }
+  .tavern-theme .character-roster .character-group-grid .character-card-copy{
+    align-self:stretch;
+    justify-content:center;
+  }
+  .tavern-theme .character-roster .character-group-grid .character-card-preview p{
+    -webkit-line-clamp:3;
+    margin-bottom:13px;
+  }
+  .tavern-theme .character-roster .character-group-grid .character-portrait-empty .character-portrait-monogram{
+    width:min(72px,61%);
+  }
+}
+@media(max-width:700px){
+  .character-roster .character-portrait-empty .character-portrait-monogram{
+    width:clamp(46px,12vw,66px);
+    font-size:clamp(20px,5vw,27px);
+  }
+  .character-roster .character-portrait-empty small{
+    max-width:90px;
+    font-size:9px;
+  }
+}
+/* W większym dossier portrait nie powinien zabierać połowy szerokości. */
+@media(min-width:900px){
+  .cs-identity{grid-template-columns:minmax(0,270px) minmax(0,1fr)}
+  .cs-portrait{max-width:270px}
+}

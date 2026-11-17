@@ -108,8 +108,25 @@
       const portrait=window.CalionPortraits.source(e);
       if(e.portrait)card.classList.add("character-card-custom-portrait");
       if(e.id==="ralfor")card.classList.add("character-card-ralfor");
-      const portraitBox=portrait?'<span class="character-portrait-slot has-portrait" aria-hidden="true"><img src="'+escapeHTML(portrait)+'" alt="" loading="lazy"></span>':'<span class="character-portrait-slot" aria-hidden="true"><span>✥</span><small>PORTRET NIEZACHOWANY</small></span>';
+      const initials=e.title.trim().split(/\s+/).slice(0,2).map(word=>word.charAt(0)).join("").toLocaleUpperCase("pl")||"✥";
+      const emptyPortrait='<span class="character-portrait-slot character-portrait-empty" aria-hidden="true"><span class="character-portrait-monogram">'+escapeHTML(initials)+'</span><small>WIZERUNEK NIEZNANY</small></span>';
+      const portraitBox=portrait?'<span class="character-portrait-slot has-portrait" aria-hidden="true"><img src="'+escapeHTML(portrait)+'" alt="" loading="lazy" decoding="async"></span>':emptyPortrait;
       card.innerHTML=portraitBox+'<div class="character-card-copy"><span class="character-mini-label">Z REJESTRU GILDII</span><h3>'+escapeHTML(e.title)+'</h3><span class="entry-subtitle">'+escapeHTML(e.sub)+'</span><p>'+escapeHTML(e.teaser)+'</p><span class="entry-more">CZYTAJ AKTA '+icon("i-arrow")+'</span></div>';
+    }
+    if(e.cat==="postacie"){
+      const img=card.querySelector(".character-portrait-slot.has-portrait img");
+      if(img)img.addEventListener("error",()=>{
+        const slot=img.parentElement;
+        if(!slot)return;
+        slot.classList.remove("has-portrait");
+        slot.classList.add("character-portrait-empty");
+        const initials=e.title.trim().split(/\s+/).slice(0,2).map(word=>word.charAt(0)).join("").toLocaleUpperCase("pl")||"✥";
+        const mark=document.createElement("span");
+        mark.className="character-portrait-monogram";mark.textContent=initials;
+        const note=document.createElement("small");
+        note.textContent="WIZERUNEK NIEZNANY";
+        slot.replaceChildren(mark,note);
+      },{once:true});
     }
     const teaser=card.querySelector("p");teaser.replaceChildren();window.CalionRichText.inline(teaser,e.teaser,true);
     card.addEventListener("click",()=>openEntry(e));

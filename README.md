@@ -1,6 +1,6 @@
 # Calion · portal uniwersum
 
-**Aktualny motyw: Karczma Calionu v0.0.77.**
+**Aktualny motyw: Karczma Calionu v0.0.78.**
 
 Strona internetowa poświęcona uniwersum Calionu, jego krainom, historii, postaciom, bestiariuszowi, rasom, frakcjom i przyszłym grom. Motyw wizualny łączy średniowieczną karczmę Gildii Poszukiwaczy, pikselowe ilustracje dark fantasy, miedziane i srebrne okucia, skórzane dodatki oraz pergaminowe kroniki.
 
@@ -225,3 +225,10 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Opcjonalne `portrait` wskazuje na `assets/images/portraits/<id>-<hash>.webp`; `null` usuwa zdjęcie z widoku. Brak pola zachowuje dotychczasowe portrety Darena i Ralfora.
 - Kafelki i szczegóły wszystkich postaci odczytują portret z treści i pokazują wybrany kadr. Adresy zewnętrzne i aktywne formaty nie są obsługiwane.
 - Zapis zachowuje przypisanie do zakładki, plotki i pozostałe wpisy. Dodane testy zapisu, konfliktów i wyświetlania portretów.
+
+## 0.0.78 — Portrety i avatary postaci na komputerach
+
+- Karty postaci na szerszych ekranach wyświetlają portrety w jednolitych proporcjach **4:5**, zamiast powiększania obrazów do 155–190% wysokości ramki; zachowano wybrany w panelu kadr WebP 640×800.
+- Puste wizerunki to teraz małe, stylizowane medaliony z inicjałami, zamiast dużych pustych prostokątów. Uszkodzony obraz zastępuje taki sam medalion.
+- Zmniejszono kolumnę portretów na PC i ograniczono szerokość portretu w otwartej kartotece. Układ mobilny zachowuje dotychczasowe proporcje i nawigację.
+- Wersja zapisana wyłącznie na `dev-mode`, bez ingerencji w historie i panel redaktora.
