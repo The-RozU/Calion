@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.0.57",
+  "version": "0.0.58",
   "entries": [
     {
       "id": "miasto-calion",
@@ -551,12 +551,13 @@
       "teaser": "Należy do drużyny The Boss\nPochodzi z miasta Durnhollow.",
       "body": [
         "Thane dołączył do druzyny \"The Boss\" kilka lat temu, kilka razy pomógł Gildii z potworami w pobliżu Calionu.",
-        "Pochodzi z miasta Durnhollow, jego walczy dwoma krótkimi mieczami z wygrawerowanymi Runami, jest silny als sądzimy że nie ujawnił swoich prawdziwych zdolności."
+        "Pochodzi z miasta Durnhollow, jego walczy dwoma krótkimi mieczami z wygrawerowanymi Runami, jest silny als sądzimy że nie ujawnił swoich prawdziwych zdolności.",
+        "Został przydzielony do zadania pilnowania Darena Velka razem z sierżantem Loranem Dask'iem podczas zadania odkrycia spisku Noktusa."
       ]
     }
   ],
   "lastSave": {
-    "requestId": "1c9eafa0-d3da-4461-b873-c05756d088d4",
+    "requestId": "1c80d5ea-8ff5-454d-96ed-d577d3f555a4",
     "entryId": "thane-runehart"
   }
 }
