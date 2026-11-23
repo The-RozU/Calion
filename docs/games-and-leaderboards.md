@@ -75,3 +75,6 @@ To wyłącznie kształt odpowiedzi, nie prawdziwy wynik. Jeśli API nie jest pod
 - Punktacja Kalona BETA: 1000 za pokonanego bossa + 20 za przeciwnika + 5 za losowe wydarzenie. Punktacja może zostać zmieniona.
 - **Uczciwość:** statystyki przychodzą z klienta. Podstawowe sanity-checki serwera nie stanowią pełnej walidacji przebiegu gry; ranking jest testowy i nie należy traktować go jako turniejowego.
 - Jeśli testujesz logowanie przez raw.githack, pamiętaj, że jest to tymczasowy host podglądowy o współdzielonej domenie. Docelowo podgląd z kontami trzeba hostować na własnym subdomenowym originie i skonfigurować Auth Site URL / Redirect URLs.
+
+- Integracja iframe: `calion:request-session` / `calion:session`, z kontrolą `event.source`, `event.origin`, `game`, `version`. Długie wyprawy pobierają odświeżoną sesję przed zapisem.
+- W trybie podglądu nie podawaj hasła używanego w innych usługach. `raw.githack.com` współdzieli origin między różnymi repozytoriami.

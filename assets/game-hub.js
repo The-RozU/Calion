@@ -91,7 +91,7 @@
     boardTitle.textContent=board.id==="overall"?"Ranking ogólny Calionu":"Ranking gry: "+board.name;
     boardHint.textContent=board.id==="overall"
       ?"Wspólna klasyfikacja oparta na pozycjach graczy w poszczególnych grach."
-      :"Każda gra ma własne zasady punktacji. Do zestawienia liczy się najlepszy zweryfikowany wynik gracza.";
+      :"Każda gra ma własne zasady punktacji. Do zestawienia liczy się najlepszy wynik z rankingu BETA.";
     void loadBoard(board);
     if(scroll&&panel&&!panel.hidden){
       panel.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
@@ -121,6 +121,12 @@
     if(!["https://raw.githack.com","https://the-rozu.github.io"].includes(origin))return;
     frame.contentWindow.postMessage({type:"calion:session",game:"kalon",version:1,accessToken:token||null},origin);
   }
+  window.addEventListener("message",event=>{
+    if(!frame?.contentWindow||event.source!==frame.contentWindow)return;
+    const expected=frame.src?new URL(frame.src).origin:null;
+    if(!expected||event.origin!==expected)return;
+    if(event.data?.type==="calion:request-session"&&event.data?.game==="kalon"&&event.data?.version===1)void sendSessionToGame();
+  });
   window.addEventListener("calion:authchange",()=>{showBoard(selected);void sendSessionToGame();});
   if(frame&&frameStatus){
     frame.addEventListener("load",()=>{
