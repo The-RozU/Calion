@@ -67,7 +67,7 @@
   const locationMap=(entry)=>'./assets/images/mapa-'+(mapNames.includes(entry.map)?entry.map:'calion')+'.webp';
   let entries=[],contentReady=false;
   const games=[
-    {id:"kalon",name:"Kalon",type:"Karcianka / roguelike PvE",desc:"Karciana wyprawa przez labirynt 7×10. Starcia, zdarzenia, sklepy i kolejne wyzwania w karczemnym świecie Calionu.",version:"0.5.6",available:true,url:"https://the-rozu.github.io/Karcianka/",icon:"i-game",cover:"kalon",coverText:"WYPRAWA KART"},
+    {id:"kalon",name:"Kalon",type:"Karcianka / roguelike PvE",desc:"Karciana wyprawa przez labirynt 7×10. Starcia, zdarzenia, sklepy i kolejne wyzwania w karczemnym świecie Calionu.",version:"0.5.6",available:true,url:"https://raw.githack.com/The-RozU/Karcianka/dev-mode/index.html",icon:"i-game",cover:"kalon",coverText:"WYPRAWA KART"},
     {id:"survivors",name:"Calion Survivors",type:"Akcja / roguelite",desc:"Walka z falami przeciwników na Zapomnianym Trakcie. Projekt nie jest jeszcze podłączony do portalu.",version:"w przygotowaniu",available:false,icon:"i-sword",cover:"survivors",coverText:"ZAPOMNIANY TRAKT"},
     {id:"td",name:"Calion Tower Defence",type:"Strategia / tower defense",desc:"Wieże, potwory i obrona krainy Calionu. Projekt czeka na grywalną wersję.",version:"w przygotowaniu",available:false,icon:"i-shield",cover:"td",coverText:"OBRONA KRÓLESTWA"},
     {id:"caliobonk",name:"CalioBonk",type:"Akcja / arcade",desc:"Osobny projekt Calionu. Uruchamianie na stronie pojawi się, gdy dostępne będą pliki gry.",version:"w przygotowaniu",available:false,icon:"i-sword",cover:"survivors",coverText:"CALIOBONK"},

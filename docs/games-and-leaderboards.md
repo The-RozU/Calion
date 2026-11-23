@@ -1,6 +1,6 @@
 # Calion Games — portal gier, profile graczy i rankingi
 
-Stan: wersja portalu 0.0.79. **Działa biblioteka i uruchamianie Kalona. Konta oraz online rankingi nie są jeszcze aktywne.** Wyniki nie mogą być generowane pozornie ani bez serwera.
+Stan: wersja portalu 0.0.80. Na gałęzi dev-mode podłączono konto Supabase (rejestracja e-mail, logowanie, zmiana nicku) i odczyt tabel z RLS. Kalon dev-mode korzysta z Edge Function kalon-runs. Wyniki są BETA i jeszcze nie są odporne na oszustwa w grze przeglądarkowej.
 
 ## Biblioteka
 - Kalon (0.5.6), grywalny w ramce z adresu https://the-rozu.github.io/Karcianka/
@@ -64,3 +64,14 @@ To wyłącznie kształt odpowiedzi, nie prawdziwy wynik. Jeśli API nie jest pod
 2. Uruchomienie Supabase Auth i bazy; migracje, zabezpieczenia, publiczne endpointy.
 3. Integracja kodu Kalona z bezpieczną weryfikacją ukończonej rozgrywki.
 4. Aktywacja pierwszego prawdziwego rankingu gry i rankingu ogólnego; dodawanie kolejnych gier.
+
+
+## Aktualne wdrożenie testowe (2026-11-23)
+- Supabase: `https://jwwvwhomjqnozyqwbzwp.supabase.co`, projekt w darmowym planie, Frankfurt. W kodzie frontendu znajduje się jedynie klucz **publishable**.
+- Konta przez Supabase Auth. Potwierdzenie e-mail może być wymagane w zależności od ustawień Auth. Profile mają publiczny nick i RLS.
+- Publiczne zestawienia: `game_leaderboard`, `global_leaderboard`. Zapisy `player_game_scores` dostępne tylko backendowi.
+- Kalon dev-mode: `https://raw.githack.com/The-RozU/Karcianka/dev-mode/index.html`. Produkcyjna wersja Kalona na GitHub Pages nie jest zmieniana.
+- Funkcja `kalon-runs` wymaga JWT; serwer zakłada sesję przy rozpoczęciu, sprawdza czas i spójność podstawowych statystyk, a potem atomowo aktualizuje najlepszy wynik.
+- Punktacja Kalona BETA: 1000 za pokonanego bossa + 20 za przeciwnika + 5 za losowe wydarzenie. Punktacja może zostać zmieniona.
+- **Uczciwość:** statystyki przychodzą z klienta. Podstawowe sanity-checki serwera nie stanowią pełnej walidacji przebiegu gry; ranking jest testowy i nie należy traktować go jako turniejowego.
+- Jeśli testujesz logowanie przez raw.githack, pamiętaj, że jest to tymczasowy host podglądowy o współdzielonej domenie. Docelowo podgląd z kontami trzeba hostować na własnym subdomenowym originie i skonfigurować Auth Site URL / Redirect URLs.

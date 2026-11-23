@@ -15,7 +15,8 @@
     ...gameCatalog.map(g=>({id:g.id,name:g.name,available:!!g.available}))];
   let selected="overall";
   let controller=null;
-  const backend=window.CalionRankingConfig?.apiBase||"";
+  const backend="https://jwwvwhomjqnozyqwbzwp.supabase.co";
+  const pubKey="sb_publishable__a2SI5r42X4eC6bcZFkZCQ_Q6_l4-vT";
 
   function showMessage(heading,description){
     boardBody.replaceChildren();
@@ -38,7 +39,7 @@
     const body=document.createElement("tbody");
     for(const [index,row] of rows.entries()){
       const tr=document.createElement("tr");
-      const values=[index+1,String(row.nickname||"Gracz"),Number(row.score)||0];
+      const values=[Number(row.position)||index+1,String(row.nickname||"Gracz"),Number(row.score)||0];
       for(let i=0;i<values.length;i++){
         const td=document.createElement("td");
         td.textContent=i===2?Math.max(0,Number(values[i])).toLocaleString("pl-PL"):String(values[i]);
@@ -56,28 +57,23 @@
       showMessage("Gra w przygotowaniu","Ranking tej gry uruchomimy wraz z jej pierwszą publiczną wersją.");
       return;
     }
-    if(!backend){
-      showMessage("Tablica jeszcze pusta","Rankingi online wymagają wspólnego systemu kont i serwera wyników. Tutaj pojawią się prawdziwe, zweryfikowane osiągnięcia graczy, gdy podłączymy tę usługę.");
-      return;
-    }
-    if(!/^https:\/\//i.test(backend)){
-      showMessage("Nieprawidłowa konfiguracja","Adres serwera rankingów musi korzystać z HTTPS.");
-      return;
-    }
     showMessage("Odczytywanie zapisów…","Łączenie z archiwum wyników Calionu.");
     try{
-      const url=new URL(backend);
-      url.searchParams.set("board",board.id);
+      const tab=board.id==="overall"?"global_leaderboard":"game_leaderboard";
+      const url=new URL(backend+"/rest/v1/"+tab);
+      url.searchParams.set("select","nickname,score,position");
+      if(board.id!=="overall")url.searchParams.set("game_id","eq."+board.id);
+      url.searchParams.set("order","position.asc");
       url.searchParams.set("limit","50");
-      const response=await fetch(url.href,{signal:controller.signal,credentials:"omit",cache:"no-store"});
+      const response=await fetch(url.href,{signal:controller.signal,credentials:"omit",cache:"no-store",headers:{"apikey":pubKey}});
       if(!response.ok)throw Error("HTTP "+response.status);
       const payload=await response.json();
-      if(!Array.isArray(payload.entries))throw Error("Nieprawidłowe dane rankingu");
-      const valid=payload.entries.filter(row=>
+      if(!Array.isArray(payload))throw Error("Nieprawidłowe dane rankingu");
+      const valid=payload.filter(row=>
         row&&typeof row.nickname==="string"&&row.nickname.length<=32&&
         Number.isFinite(row.score)&&row.score>=0
       ).slice(0,50);
-      if(!valid.length)showMessage("Brak zapisanych wyników","Ta tablica nie ma jeszcze zweryfikowanych rezultatów.");
+      if(!valid.length)showMessage("Brak zapisanych wyników","Ranking testowy czeka na pierwszą wyprawę zalogowanego gracza.");
       else renderTable(valid,board.id==="overall");
     }catch(error){
       if(error.name==="AbortError")return;
@@ -117,11 +113,21 @@
     showBoard(selected);
   }
 
+  async function sendSessionToGame(){
+    if(!frame?.contentWindow||!frame.src||!window.CalionAuth)return;
+    const token=await window.CalionAuth.getAccessToken();
+    const origin=new URL(frame.src).origin;
+    // Exact target origin, never wildcard. Only known Calion games.
+    if(!["https://raw.githack.com","https://the-rozu.github.io"].includes(origin))return;
+    frame.contentWindow.postMessage({type:"calion:session",game:"kalon",version:1,accessToken:token||null},origin);
+  }
+  window.addEventListener("calion:authchange",()=>{showBoard(selected);void sendSessionToGame();});
   if(frame&&frameStatus){
     frame.addEventListener("load",()=>{
       // Nie jest możliwe rozpoznanie odpowiedzi 404 w ramce z innej domeny.
       // Dlatego odsyłacz do samodzielnego uruchomienia gry pozostaje widoczny.
       frameStatus.hidden=true;
+      void sendSessionToGame();
     });
     frame.addEventListener("error",()=>{
       frameStatus.hidden=false;

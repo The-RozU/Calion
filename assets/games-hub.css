@@ -133,3 +133,27 @@
 @media(prefers-reduced-motion:reduce){
   .leaderboard-tab{transition:none}
 }
+
+/* Accounts: guild register in the existing tavern theme. */
+.calion-account-button{min-height:44px;min-width:140px;padding:10px 15px;border:1px solid #a88650;border-radius:4px;background:#192c22;color:#ead6a9;font:700 12px Georgia,serif;cursor:pointer;white-space:normal}
+.calion-account-button:hover,.calion-account-button:focus-visible{background:#24503a;outline-offset:3px}
+.calion-account-dialog{width:min(93vw,440px);max-height:90dvh;overflow:auto;border:2px solid #bc9662;border-radius:7px;box-shadow:0 22px 65px #000a;padding:23px;background:#e8d3a7;color:#34271b;font-family:Georgia,serif}
+.calion-account-dialog::backdrop{background:#020503b9;backdrop-filter:blur(4px)}
+.calion-account-header{display:flex;justify-content:space-between;gap:12px;color:#76502b;font-size:12px;letter-spacing:.13em;align-items:center}
+.calion-account-header button{cursor:pointer;min-width:44px;min-height:44px;background:transparent;color:#46301e;border:1px solid #98764a;font-size:18px}
+.calion-account-dialog h2{font:normal 28px Georgia,serif;margin:10px 0 18px}
+.calion-account-dialog p{line-height:1.5;font-size:14px}
+.calion-auth-modes{display:flex;gap:8px;margin:14px 0}
+.calion-auth-modes button{flex:1;min-height:44px;border:1px solid #ac8752;background:#d5bb8f;color:#46311e;cursor:pointer;font:700 13px Georgia,serif}
+.calion-auth-modes button[aria-pressed="true"]{background:#31553d;color:#fff1d3}
+.calion-account-form{display:flex;flex-direction:column;gap:8px}
+.calion-account-form label{font-weight:bold;font-size:14px}
+.calion-account-form input{width:100%;box-sizing:border-box;padding:11px;border:1px solid #92704c;color:#302417;background:#fff9e8;font:16px Georgia,serif;min-height:44px}
+.calion-account-form #calion-confirm-row{display:flex;flex-direction:column;gap:8px}
+.calion-account-form #calion-confirm-row[hidden],#calion-auth-member[hidden],#calion-auth-guest[hidden],.calion-auth-message[hidden]{display:none}
+.calion-account-form button{cursor:pointer;margin-top:10px;min-height:44px;background:#255439;border:1px solid #19402b;color:#f6e8c9;font:700 15px Georgia,serif}
+.calion-account-form button:disabled{opacity:.6}
+.calion-auth-message{border:1px solid #769670;background:#d9e8ca;padding:9px;font-size:14px}
+.calion-auth-message.error{background:#f3d7cf;border-color:#b66b57}
+.calion-signout{margin-top:15px;min-height:44px;padding:10px 15px;background:#57372c;color:#f5e9d2;border:1px solid #705440;cursor:pointer;font:700 14px Georgia,serif}
+@media(max-width:960px){.calion-account-button{font-size:11px;padding:9px 10px}}
