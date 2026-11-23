@@ -917,7 +917,7 @@ body.tavern-theme::before {
 .world-card .entry-more{font-size:11px;min-height:44px;line-height:1.5}
 .world-card:focus-visible,.location-back:focus-visible{outline:3px solid #f6d591;outline-offset:5px}
 .tavern-theme .world-atlas .world-map-panel{padding:clamp(12px,2vw,26px);border:1px solid #ac8957;box-shadow:0 6px 18px #0005;margin-bottom:32px}
-.world-atlas .world-map-panel>img{border:0}
+.world-atlas .world-map-panel>img{border:0;background:transparent;filter:drop-shadow(0 10px 14px #2717084d)}
 .location-page{padding:clamp(16px,3vw,44px);max-width:1180px;margin:auto}
 .location-back{display:inline-flex;align-items:center;min-height:44px;margin-bottom:18px;color:var(--t-cream);font:17px Georgia,serif}
 .location-sheet{background:radial-gradient(ellipse at top,#f2ddb3,#d0ad75);padding:clamp(22px,4vw,60px);color:var(--t-ink);box-shadow:0 8px 25px #0007;border:1px solid #a77d48}
@@ -1018,3 +1018,8 @@ body.tavern-theme::before {
 /* 0.0.40 — oryginalny portret Darena, kadrowany w oknie kafelka na popiersie. */
 .character-portrait-slot.has-portrait{position:relative;display:block;overflow:hidden;padding:0}
 .character-portrait-slot.has-portrait img{position:absolute;top:0;left:50%;transform:translateX(-50%);width:auto;max-width:none;height:190%;object-fit:cover}
+
+/* v0.0.81: transparent parchment map in the Świat atlas and enlarged view. */
+.tavern-theme .map-dialog{background:#dac18e}
+.tavern-theme .map-dialog-scroll{background:#dac18e}
+.tavern-theme .map-dialog-scroll img{background:transparent}
