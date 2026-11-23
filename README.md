@@ -1,6 +1,6 @@
 # Calion · portal uniwersum
 
-**Aktualny motyw: Karczma Calionu v0.0.78.**
+**Aktualny motyw: Karczma Calionu v0.0.79.**
 
 Strona internetowa poświęcona uniwersum Calionu, jego krainom, historii, postaciom, bestiariuszowi, rasom, frakcjom i przyszłym grom. Motyw wizualny łączy średniowieczną karczmę Gildii Poszukiwaczy, pikselowe ilustracje dark fantasy, miedziane i srebrne okucia, skórzane dodatki oraz pergaminowe kroniki.
 
@@ -232,3 +232,11 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Puste wizerunki to teraz małe, stylizowane medaliony z inicjałami, zamiast dużych pustych prostokątów. Uszkodzony obraz zastępuje taki sam medalion.
 - Zmniejszono kolumnę portretów na PC i ograniczono szerokość portretu w otwartej kartotece. Układ mobilny zachowuje dotychczasowe proporcje i nawigację.
 - Wersja zapisana wyłącznie na `dev-mode`, bez ingerencji w historie i panel redaktora.
+
+## 0.0.79 — Biblioteka gier i tablica rankingów
+
+- Kalon v0.5.6 jest dostępny bezpośrednio w witrynie, osadzony z istniejącego hostingu GitHub Pages gry. Rozgrywka uruchamia się w ramce, z trybem pełnoekranowym i przyciskiem otwarcia w nowej karcie.
+- W bibliotece poprawiono nazewnictwo (Kalon zamiast zdublowanej Karcianki) i dodano planowane CalioBonk oraz Endless Horde. Nie oznaczono pustych repozytoriów jako grywalnych.
+- Dodano Tablicę chwały: ranking ogólny oraz osobne kategorie dla gier, przygotowane do przyszłego podłączenia backendu. Brak fikcyjnych wyników i udawanego logowania.
+- Gra bez logowania pozostaje możliwa; logowanie i zapisywanie zweryfikowanych wyników będą wymagały zewnętrznego serwera.
+- Plan techniczny znajduje się w docs/games-and-leaderboards.md. Zmiany tylko na dev-mode; main bez zmian.

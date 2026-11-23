@@ -67,13 +67,14 @@
   const locationMap=(entry)=>'./assets/images/mapa-'+(mapNames.includes(entry.map)?entry.map:'calion')+'.webp';
   let entries=[],contentReady=false;
   const games=[
-    {id:"survivors",name:"Calion Survivors",type:"Survival action / roguelite",desc:"Grywalny prototyp walki z falami przeciwników. Łotrzyk, broń i przetrwanie na Zapomnianym Trakcie.",version:"0.0.18",available:false,url:"./survivors/",icon:"i-sword",cover:"survivors",coverText:"ZAPOMNIANY TRAKT"},
-    {id:"karcianka",name:"Karciana Szulernia",type:"Karcianka / taktyka",desc:"Karciane pojedynki w karczemnym klimacie Calionu. Osobna gra dostępna na GitHub Pages.",version:"zewnętrzny projekt",available:false,url:"https://the-rozu.github.io/Karcianka/",icon:"i-game",cover:"karcianka",coverText:"KARCZEMNY STÓŁ"},
-    {id:"kalon",name:"Kalon",type:"Karcianka / roguelike",desc:"Planowana karciana wyprawa z atakami, obroną, efektami statusu i pojedynkami z przeciwnikami.",version:"w planach",available:false,icon:"i-book",cover:"kalon",coverText:"WYPRAWA KART"},
-    {id:"td",name:"Calion Tower Defence",type:"Strategia / tower defense",desc:"Wieże, fale potworów i obrona krainy Calionu. Projekt rozwijany niezależnie.",version:"w przygotowaniu",available:false,icon:"i-shield",cover:"td",coverText:"OBRONA KRÓLESTWA"},
-    {id:"idle",name:"Calion Idle RPG",type:"Idle / rozwój bohatera",desc:"Planowana przygoda z rozwojem postaci, wyposażeniem, zadaniami i walkami z bossami.",version:"koncepcja",available:false,icon:"i-star",cover:"idle",coverText:"DROGA BOHATERA"}
+    {id:"kalon",name:"Kalon",type:"Karcianka / roguelike PvE",desc:"Karciana wyprawa przez labirynt 7×10. Starcia, zdarzenia, sklepy i kolejne wyzwania w karczemnym świecie Calionu.",version:"0.5.6",available:true,url:"https://the-rozu.github.io/Karcianka/",icon:"i-game",cover:"kalon",coverText:"WYPRAWA KART"},
+    {id:"survivors",name:"Calion Survivors",type:"Akcja / roguelite",desc:"Walka z falami przeciwników na Zapomnianym Trakcie. Projekt nie jest jeszcze podłączony do portalu.",version:"w przygotowaniu",available:false,icon:"i-sword",cover:"survivors",coverText:"ZAPOMNIANY TRAKT"},
+    {id:"td",name:"Calion Tower Defence",type:"Strategia / tower defense",desc:"Wieże, potwory i obrona krainy Calionu. Projekt czeka na grywalną wersję.",version:"w przygotowaniu",available:false,icon:"i-shield",cover:"td",coverText:"OBRONA KRÓLESTWA"},
+    {id:"caliobonk",name:"CalioBonk",type:"Akcja / arcade",desc:"Osobny projekt Calionu. Uruchamianie na stronie pojawi się, gdy dostępne będą pliki gry.",version:"w przygotowaniu",available:false,icon:"i-sword",cover:"survivors",coverText:"CALIOBONK"},
+    {id:"endless-horde",name:"Endless Horde",type:"Akcja / survival",desc:"Projekt rozgrywki z kolejnymi falami przeciwników. Na razie nie ma publicznej grywalnej wersji.",version:"w przygotowaniu",available:false,icon:"i-skull",cover:"td",coverText:"NIEKOŃCZĄCA SIĘ HORDA"},
+    {id:"idle",name:"Calion Idle RPG",type:"Idle / rozwój bohatera",desc:"Planowana gra z rozwojem postaci, wyposażeniem, zadaniami i walkami z bossami.",version:"koncepcja",available:false,icon:"i-star",cover:"idle",coverText:"DROGA BOHATERA"}
   ];
-  const $=(sel)=>document.querySelector(sel);
+  window.CalionGames=games.map(({id,name,available})=>({id,name,available}));  const $=(sel)=>document.querySelector(sel);
   const home=$("#home-view"),collection=$("#collection-view"),player=$("#play-view"),menu=$("#main-nav");
   const search=$("#archive-search");
   const worldMapPanel=$("#world-map-panel"),mapDialog=$("#map-dialog");
@@ -213,7 +214,11 @@
       card.innerHTML='<div class="game-cover '+g.cover+'"><span class="cover-top">CALION GAMES</span>'+icon(g.icon)+'<span class="cover-bottom">'+escapeHTML(g.coverText)+'</span></div><div class="game-card-content"><div class="game-card-header"><div><span class="entry-tag">'+escapeHTML(g.type)+'</span><h3>'+escapeHTML(g.name)+'</h3></div><span class="game-status '+(g.available?"":"soon")+'">'+(g.available?"GRAJ TERAZ":"W PLANACH")+'</span></div><p>'+escapeHTML(g.desc)+'</p><div class="game-meta">STATUS: '+escapeHTML(g.version)+'</div></div>';
       const wrap=card.querySelector(".game-card-content");
       if(g.available){
-        const a=document.createElement("a");a.className="button button-primary";a.href="#/gry/"+g.id;a.innerHTML=icon("i-game")+" URUCHOM GRĘ "+icon("i-arrow");wrap.append(a);
+        const actions=document.createElement("div");actions.className="game-card-actions";
+        const a=document.createElement("a");a.className="button button-primary";a.href="#/gry/"+g.id;a.innerHTML=icon("i-game")+" URUCHOM GRĘ "+icon("i-arrow");
+        const ranking=document.createElement("button");ranking.type="button";ranking.className="button button-outline";ranking.textContent="RANKING";
+        ranking.addEventListener("click",()=>window.CalionGameHub?.showBoard(g.id,true));
+        actions.append(a,ranking);wrap.append(actions);
       }else{
         const span=document.createElement("span");span.className="button button-outline";span.setAttribute("aria-label","Gra w przygotowaniu");span.textContent="W PRZYGOTOWANIU";wrap.append(span);
       }
@@ -237,7 +242,9 @@
     renderCharacterFilters();
     worldMapPanel.hidden=section!=="swiat";
     search.placeholder=section==="gry"?"Szukaj gier...":"Szukaj w archiwum...";
+    $("#archive-count").hidden=section==="postacie";
     $("#game-library").hidden=section!=="gry";
+    $("#calion-leaderboards").hidden=section!=="gry";
     $("#collection-grid").hidden=section==="gry"||section==="historia";
     $("#history-timeline").hidden=section!=="historia";
     if(section==="gry")renderGames();else renderEntries();
@@ -247,7 +254,10 @@
     $("#player-title").textContent=game.name;
     $("#player-desc").textContent=game.desc;
     $("#player-tag").textContent="GRA PRZEGLĄDARKOWA / "+game.type.toLocaleUpperCase("pl");
-    const frame=$("#game-iframe");if(frame.getAttribute("src")!==game.url)frame.setAttribute("src",game.url);
+    const frame=$("#game-iframe");frame.title=game.name+" — gra Calionu";
+    window.CalionGameHub?.launch(game);
+    if(frame.getAttribute("src")!==game.url)frame.setAttribute("src",game.url);
+    else $("#game-frame-status").hidden=true;
     $("#external-game-link").href=game.url;
     $("#external-game-link").hidden=false;
     return true;

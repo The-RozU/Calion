@@ -1,0 +1,66 @@
+# Calion Games — portal gier, profile graczy i rankingi
+
+Stan: wersja portalu 0.0.79. **Działa biblioteka i uruchamianie Kalona. Konta oraz online rankingi nie są jeszcze aktywne.** Wyniki nie mogą być generowane pozornie ani bez serwera.
+
+## Biblioteka
+- Kalon (0.5.6), grywalny w ramce z adresu https://the-rozu.github.io/Karcianka/
+- Calion Survivors, projekt bez grywalnej publikacji w obecnym portalu
+- Calion Tower Defence, CalioBonk i Endless Horde, repozytoria z samym README
+- Calion Idle RPG, koncepcja
+
+Gra jest uruchamiana wewnątrz zakładki Gry przez iframe. Jest przycisk pełnego ekranu i alternatywa w nowej karcie, gdy przeglądarka nie pozwala na osadzenie. Gry zostają w osobnych repozytoriach, więc nie dublujemy kodu. Gry obecnie niedostępne nie są oznaczone jako grywalne.
+
+## Tożsamość
+- Gość: może wejść do dowolnej dostępnej gry bez rejestracji. Lokalny zapis stanu zależy od gry i ustawień przeglądarki.
+- Konto Calionu: jeden publiczny nick, ewentualny awatar, osiągnięcia i najlepsze wyniki z każdej gry.
+- Przeglądanie rankingów jest publiczne; przesłanie wyniku i historia konta wymagają zalogowania.
+- Rozważany backend: Supabase Auth (magic link, opcjonalnie Google / GitHub) + Postgres + Edge Functions.
+- Właściciel musi utworzyć własny projekt i skonfigurować logowanie. GitHub Pages sam z siebie nie oferuje bazy danych ani bezpiecznej weryfikacji wyników.
+
+## Ranking indywidualny
+Osobna tablica dla każdej gry: miejsce, nick, najlepszy zweryfikowany wynik. W tabeli głównej jest tylko jedno najlepsze podejście na gracza i grę. Więcej podejść może znaleźć się w prywatnej historii konta.
+
+Reguła naliczania punktów jest indywidualna dla każdej gry. W Kalonie kryterium będzie wynik ukończonej wyprawy, ale zatwierdzona formuła końcowa wymaga połączenia z mechaniką gry, ponieważ pojęcie punktów w interfejsie może oznaczać również wynik układów kart.
+
+## Ranking ogólny
+Nie sumujemy surowych punktów różnych gier. Ranking ogólny otrzymuje osobne punkty Calionu za miejsce zajęte w każdej opublikowanej grze, np. orientacyjnie: 1. miejsce 1000, 2. 800, 3. 650, dalsze lokaty odpowiednio mniej. Punkty z aktywnych gier sumują się, brak gry daje 0. Ranking powinien uwzględniać liczbę aktywnych graczy, aby nie nagradzać zbyt mocno pustych tabel. Dokładne progi i zasady remisów wymagają zatwierdzenia przy wdrożeniu serwera.
+
+Możliwe późniejsze zakładki: ranking tygodnia, sezonowy oraz wszech czasów. Sezony powinny mieć osobne archiwa wyników.
+
+## Proponowane struktury danych
+- profiles: id UUID (odwołanie do użytkownika Auth), display_name, avatar_url, created_at
+- games: id TEXT, title, published, score_unit, score_direction
+- runs: id UUID, user_id, game_id, game_version, started_at, ended_at, score, verification_status
+- best_scores: user_id, game_id, run_id, best_score, updated_at (unikalna para user_id + game_id)
+- global_standings: wyliczane punkty Calionu z zatwierdzonych rankingów gier
+
+Włącz RLS i ograniczenia dostępu do tabel. Przeglądarka może czytać wyłącznie publiczne profile i zatwierdzone wyniki. Nie może wstawiać własnych rekordów do best_scores. Zapis końcowego wyniku przeprowadza serwerowa funkcja z uwierzytelnieniem i limitami zapytań.
+
+## Weryfikacja wyników
+Samo zalogowanie użytkownika nie chroni przed oszukiwaniem wyniku, jeśli gra działa po stronie przeglądarki. Kalon musi zgłaszać zdarzenia ze swojej rozgrywki albo korzystać z powtarzalnych ziaren losowania, które serwer potrafi zweryfikować. Dopiero wynik zaakceptowany przez serwer może wejść do głównego rankingu.
+
+Proponowany protokół:
+1. Gracz loguje się do portalu.
+2. Przy starcie rozgrywki serwer wystawia identyfikator rundy i podpisane parametry.
+3. Gra emituje dane zakończenia rozgrywki oraz dziennik wymaganych zdarzeń.
+4. Serwer potwierdza sesję, legalność stanu i wynik, a następnie aktualizuje najlepszy wynik.
+5. Tablica ogólna przelicza punkty Calionu.
+
+W przypadku wykorzystania postMessage z iframe należy walidować origin, source, identyfikator gry oraz wersję protokołu. Nie wolno wysyłać service_role ani sekretów przez przeglądarkę. Komunikat z gry nie jest sam w sobie dowodem uczciwego wyniku.
+
+## Publiczny interfejs odczytu (po uruchomieniu backendu)
+Frontend w assets/game-hub.js obsługuje opcjonalny obiekt ustawiony PRZED jego wczytaniem:
+
+    window.CalionRankingConfig = { apiBase: "https://ADRES-SERWERA/leaderboard" };
+
+Taki URL jest tylko wzorem. Nie dodawać go do produkcyjnego portalu dopóki usługa nie istnieje. Endpoint GET przyjmuje parametry board=overall lub board=kalon i limit=50. Odpowiedź JSON:
+
+    {"entries":[{"nickname":"PRZYKŁADOWY_GRACZ","score":100}]}
+
+To wyłącznie kształt odpowiedzi, nie prawdziwy wynik. Jeśli API nie jest podłączone, portal pokazuje informację o oczekującym systemie zamiast udawać ranking.
+
+## Następne etapy
+1. Test Kalona osadzonego w portalu na komputerze i telefonie, w poziomie i pionie.
+2. Uruchomienie Supabase Auth i bazy; migracje, zabezpieczenia, publiczne endpointy.
+3. Integracja kodu Kalona z bezpieczną weryfikacją ukończonej rozgrywki.
+4. Aktywacja pierwszego prawdziwego rankingu gry i rankingu ogólnego; dodawanie kolejnych gier.

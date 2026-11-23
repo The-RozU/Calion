@@ -1,0 +1,135 @@
+/* Calion Games v0.0.79 — biblioteka gier, odtwarzacz i tablice wyników. */
+.calion-leaderboards[hidden],.game-frame-status[hidden]{display:none!important}
+.calion-leaderboards{
+  margin-top:clamp(28px,4vw,54px);
+  padding:clamp(21px,3.4vw,39px);
+  border:1px solid #976d43;
+  background:linear-gradient(145deg,#e8d1a9,#d6b686 80%);
+  color:#322319;
+  box-shadow:0 9px 0 #39201380,0 17px 22px #0905036b,inset 0 0 0 5px #f1dcaf73;
+  scroll-margin-top:110px;
+}
+.games-ranking-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:20px;
+  padding-bottom:16px;margin-bottom:15px;border-bottom:1px solid #a17c53;
+}
+.games-ranking-eyebrow{
+  display:block;margin-bottom:7px;color:#80542c;
+  font:bold 11px/1.5 Georgia,serif;letter-spacing:.16em;
+}
+.games-ranking-head h2{
+  margin:0;font:normal clamp(28px,3.5vw,42px)/1.2 Georgia,serif;color:#382416;
+}
+.games-ranking-head p{max-width:580px;margin:9px 0 0;font:16px/1.55 Georgia,serif;color:#66492c}
+.games-ranking-seal{
+  flex:0 0 52px;display:grid;place-items:center;
+  height:52px;border:2px solid #906536;border-radius:50%;
+  color:#80572e;font:normal 32px Georgia,serif;
+  background:radial-gradient(circle,#f4e1b5,#d4ac73);
+}
+.leaderboard-tabs{
+  display:flex;flex-wrap:wrap;gap:9px;
+  margin:19px 0 21px;padding-bottom:11px;
+  border-bottom:1px solid #ae8554;
+}
+.leaderboard-tab{
+  min-height:44px;padding:9px 15px;
+  border:1px solid #906a44;
+  background:linear-gradient(160deg,#f8e8c7,#e6c99b);
+  color:#54381f;font:600 15px/1.4 Georgia,serif;
+  cursor:pointer;box-shadow:0 2px 0 #87603970;
+}
+.leaderboard-tab:hover{background:#fff0ce}
+.leaderboard-tab[aria-pressed="true"]{
+  color:#f7e2bd;background:linear-gradient(135deg,#34533f,#172d23);border-color:#8f7856;
+}
+.leaderboard-tab:focus-visible{outline:3px solid #af6c2b;outline-offset:3px}
+.leaderboard-board-head h3{margin:0 0 5px;color:#3f2d1c;font:normal clamp(23px,2.7vw,33px)/1.2 Georgia,serif}
+.leaderboard-board-head p{margin:0 0 16px;color:#745433;font:italic 15px/1.6 Georgia,serif}
+.leaderboard-empty{
+  display:flex;flex-direction:column;align-items:center;
+  gap:8px;min-height:128px;padding:28px 22px;
+  text-align:center;background:#8a613021;
+  border:1px dashed #997448;
+}
+.leaderboard-empty h3{margin:0;color:#49311b;font:normal 23px/1.25 Georgia,serif}
+.leaderboard-empty p{max-width:650px;margin:0;color:#63462d;font:15px/1.6 Georgia,serif}
+.leaderboard-table-wrap{max-width:100%;overflow-x:auto}
+.leaderboard-table{width:100%;border-collapse:collapse;font:15px/1.6 Georgia,serif;color:#3f2d1c}
+.leaderboard-table th,.leaderboard-table td{padding:11px 13px;border-bottom:1px solid #ad885a;text-align:left}
+.leaderboard-table th{color:#694722;background:#ad8b5d26;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.leaderboard-table td:last-child,.leaderboard-table th:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.games-ranking-account{
+  margin:17px 0 0;padding-top:15px;border-top:1px solid #b39163;
+  color:#705332;font:italic 14px/1.6 Georgia,serif;
+}
+.game-card-actions{
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  margin-top:auto;padding-top:11px;
+}
+.game-card-actions .button{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  margin:0;min-height:44px;padding:11px 15px;cursor:pointer;
+  font:600 12px/1.4 Georgia,serif;text-decoration:none;
+}
+.game-card-actions .button:focus-visible{outline:3px solid #bc8c4b;outline-offset:3px}
+.tavern-theme .game-card:has(.game-status:not(.soon)){
+  border-color:#ab804d;box-shadow:0 9px 17px #0d080638;
+}
+.tavern-theme .game-status:not(.soon){color:#f0e2c0;background:#214631;border-color:#628560}
+.tavern-theme .game-frame-shell{
+  position:relative;border:2px solid #b28b56;
+  background:#050b08;box-shadow:0 13px 28px #0b040489;
+}
+.game-frame-status{
+  position:absolute;z-index:3;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px;text-align:center;background:linear-gradient(140deg,#07110edc,#1b2c25e8);
+  color:#f7e7bf;pointer-events:none;
+}
+.game-frame-status strong{font:normal clamp(22px,3vw,31px)/1.3 Georgia,serif}
+.game-frame-status p{max-width:530px;font:15px/1.65 Georgia,serif;color:#d7c2a1}
+.game-port-help{
+  margin:13px 0 0;
+  font:italic 14px/1.55 Georgia,serif;
+  color:#dbc49d;text-align:center;
+}
+.game-player-leaderboard-link{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;padding:9px 15px;
+  color:#f6dfb6;border:1px solid #95764b;
+  text-decoration:none;font:600 13px Georgia,serif;
+}
+.game-player-leaderboard-link:hover{background:#302b1b}
+@media(max-width:720px){
+  .calion-leaderboards{padding:19px 15px}
+  .games-ranking-head{gap:9px}
+  .games-ranking-head p{font-size:14px}
+  .games-ranking-seal{height:43px;flex-basis:43px;font-size:25px}
+  .leaderboard-tabs{
+    flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-inline:contain;
+    -webkit-overflow-scrolling:touch;padding-bottom:9px;
+  }
+  .leaderboard-tab{flex:0 0 auto;padding:10px 14px}
+  .leaderboard-empty{padding:22px 13px}
+  .tavern-theme #play-view .player-header{display:block}
+  .tavern-theme #play-view .player-controls{margin-top:15px;display:flex;gap:9px}
+  .tavern-theme #play-view .player-controls .button,
+  .tavern-theme #play-view .player-controls a{min-height:44px}
+  .tavern-theme .game-frame-shell{
+    width:100%;min-height:340px;height:min(72dvh,620px);aspect-ratio:auto;
+  }
+  .tavern-theme .game-frame-shell:fullscreen{
+    width:100vw;height:100dvh;min-height:0;border:0;aspect-ratio:auto;
+  }
+  .tavern-theme .game-frame-shell iframe{height:100%;width:100%}
+}
+@media(max-width:720px) and (orientation:landscape){
+  .tavern-theme .game-frame-shell{
+    min-height:0;height:auto;aspect-ratio:16/9;
+  }
+  .tavern-theme .game-frame-shell:fullscreen{height:100dvh;aspect-ratio:auto}
+}
+@media(prefers-reduced-motion:reduce){
+  .leaderboard-tab{transition:none}
+}
