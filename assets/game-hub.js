@@ -1,4 +1,4 @@
-/* Calion Games v0.0.79 — biblioteka rankingów i obsługa osadzonego odtwarzacza.
+/* Calion Games v0.0.82 — biblioteka rankingów i obsługa osadzonego odtwarzacza.
    Prawdziwe rankingi wymagają skonfigurowanego API. Nie generujemy fikcyjnych wyników. */
 (function(){
   "use strict";
@@ -12,8 +12,9 @@
   const frameStatus=$("#game-frame-status");
   const gameCatalog=Array.isArray(window.CalionGames)?window.CalionGames:[];
   const boards=[{id:"overall",name:"Ogólny",available:true},
-    ...gameCatalog.map(g=>({id:g.id,name:g.name,available:!!g.available}))];
+    ...gameCatalog.map(g=>({id:g.id,name:g.name,available:!!g.available,rankingAvailable:!!g.rankingAvailable}))];
   let selected="overall";
+  let activeGame=null;
   let controller=null;
   const backend="https://jwwvwhomjqnozyqwbzwp.supabase.co";
   const pubKey="sb_publishable__a2SI5r42X4eC6bcZFkZCQ_Q6_l4-vT";
@@ -55,6 +56,10 @@
     controller=new AbortController();
     if(!board.available){
       showMessage("Gra w przygotowaniu","Ranking tej gry uruchomimy wraz z jej pierwszą publiczną wersją.");
+      return;
+    }
+    if(board.id!=="overall"&&!board.rankingAvailable){
+      showMessage("Ranking w przygotowaniu","W tę grę można już grać, ale zapisywanie wyników do wspólnego rankingu nie jest jeszcze podłączone.");
       return;
     }
     showMessage("Odczytywanie zapisów…","Łączenie z archiwum wyników Calionu.");
@@ -114,15 +119,18 @@
   }
 
   async function sendSessionToGame(){
-    if(!frame?.contentWindow||!frame.src||!window.CalionAuth)return;
+    if(activeGame?.id!=="kalon"||!frame?.contentWindow||!window.CalionAuth)return;
+    const expectedUrl=activeGame.url;
+    if(frame.getAttribute("src")!==expectedUrl)return;
     const token=await window.CalionAuth.getAccessToken();
-    const origin=new URL(frame.src).origin;
+    if(activeGame?.id!=="kalon"||frame.getAttribute("src")!==expectedUrl)return;
+    const origin=new URL(expectedUrl).origin;
     // Exact target origin, never wildcard. Only known Calion games.
     if(!["https://raw.githack.com","https://the-rozu.github.io"].includes(origin))return;
     frame.contentWindow.postMessage({type:"calion:session",game:"kalon",version:1,accessToken:token||null},origin);
   }
   window.addEventListener("message",event=>{
-    if(!frame?.contentWindow||event.source!==frame.contentWindow)return;
+    if(activeGame?.id!=="kalon"||!frame?.contentWindow||event.source!==frame.contentWindow||frame.getAttribute("src")!==activeGame.url)return;
     const expected=frame.src?new URL(frame.src).origin:null;
     if(!expected||event.origin!==expected)return;
     if(event.data?.type==="calion:request-session"&&event.data?.game==="kalon"&&event.data?.version===1)void sendSessionToGame();
@@ -145,6 +153,7 @@
   window.CalionGameHub={
     showBoard,
     launch(game){
+      activeGame=game;
       if(!frameStatus)return;
       frameStatus.hidden=false;
       $("#game-frame-status-title").textContent="Wczytywanie: "+game.name;

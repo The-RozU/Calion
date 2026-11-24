@@ -1,12 +1,15 @@
 # Calion Games — portal gier, profile graczy i rankingi
 
-Stan: wersja portalu 0.0.80. Na gałęzi dev-mode podłączono konto Supabase (rejestracja e-mail, logowanie, zmiana nicku) i odczyt tabel z RLS. Kalon dev-mode korzysta z Edge Function kalon-runs. Wyniki są BETA i jeszcze nie są odporne na oszustwa w grze przeglądarkowej.
+Stan: wersja portalu 0.0.82. Na gałęzi dev-mode podłączono konto Supabase (rejestracja e-mail, logowanie, zmiana nicku) i odczyt tabel z RLS. Kalon dev-mode korzysta z Edge Function kalon-runs. Wyniki są BETA i jeszcze nie są odporne na oszustwa w grze przeglądarkowej.
 
 ## Biblioteka
 - Kalon (0.5.6), grywalny w ramce z adresu https://the-rozu.github.io/Karcianka/
 - Calion Survivors, projekt bez grywalnej publikacji w obecnym portalu
-- Calion Tower Defence, CalioBonk i Endless Horde, repozytoria z samym README
-- Calion Idle RPG, koncepcja
+- Calion Tower Defence (0.0.2): https://the-rozu.github.io/Calion-TD/
+- CalioBonk (0.0.29): https://the-rozu.github.io/CalioBonk/
+- Endless Horde (0.0.19): https://the-rozu.github.io/Endless-Horde/
+
+Trzy nowe gry są osadzone z GitHub Pages; ich rankingi są jeszcze niepodłączone. Idle RPG usunięto z katalogu i zakładek rankingów portalu, bez kasowania danych Supabase. Sesja Kalona jest przekazywana wyłącznie do jego ramki.
 
 Gra jest uruchamiana wewnątrz zakładki Gry przez iframe. Jest przycisk pełnego ekranu i alternatywa w nowej karcie, gdy przeglądarka nie pozwala na osadzenie. Gry zostają w osobnych repozytoriach, więc nie dublujemy kodu. Gry obecnie niedostępne nie są oznaczone jako grywalne.
 

@@ -67,14 +67,13 @@
   const locationMap=(entry)=>'./assets/images/mapa-'+(mapNames.includes(entry.map)?entry.map:'calion')+'.webp';
   let entries=[],contentReady=false;
   const games=[
-    {id:"kalon",name:"Kalon",type:"Karcianka / roguelike PvE",desc:"Karciana wyprawa przez labirynt 7×10. Starcia, zdarzenia, sklepy i kolejne wyzwania w karczemnym świecie Calionu.",version:"0.5.6",available:true,url:"https://raw.githack.com/The-RozU/Karcianka/dev-mode/index.html",icon:"i-game",cover:"kalon",coverText:"WYPRAWA KART"},
+    {id:"kalon",name:"Kalon",type:"Karcianka / roguelike PvE",desc:"Karciana wyprawa przez labirynt 7×10. Starcia, zdarzenia, sklepy i kolejne wyzwania w karczemnym świecie Calionu.",version:"0.5.6",available:true,rankingAvailable:true,url:"https://raw.githack.com/The-RozU/Karcianka/dev-mode/index.html",icon:"i-game",cover:"kalon",coverText:"WYPRAWA KART"},
     {id:"survivors",name:"Calion Survivors",type:"Akcja / roguelite",desc:"Walka z falami przeciwników na Zapomnianym Trakcie. Projekt nie jest jeszcze podłączony do portalu.",version:"w przygotowaniu",available:false,icon:"i-sword",cover:"survivors",coverText:"ZAPOMNIANY TRAKT"},
-    {id:"td",name:"Calion Tower Defence",type:"Strategia / tower defense",desc:"Wieże, potwory i obrona krainy Calionu. Projekt czeka na grywalną wersję.",version:"w przygotowaniu",available:false,icon:"i-shield",cover:"td",coverText:"OBRONA KRÓLESTWA"},
-    {id:"caliobonk",name:"CalioBonk",type:"Akcja / arcade",desc:"Osobny projekt Calionu. Uruchamianie na stronie pojawi się, gdy dostępne będą pliki gry.",version:"w przygotowaniu",available:false,icon:"i-sword",cover:"survivors",coverText:"CALIOBONK"},
-    {id:"endless-horde",name:"Endless Horde",type:"Akcja / survival",desc:"Projekt rozgrywki z kolejnymi falami przeciwników. Na razie nie ma publicznej grywalnej wersji.",version:"w przygotowaniu",available:false,icon:"i-skull",cover:"td",coverText:"NIEKOŃCZĄCA SIĘ HORDA"},
-    {id:"idle",name:"Calion Idle RPG",type:"Idle / rozwój bohatera",desc:"Planowana gra z rozwojem postaci, wyposażeniem, zadaniami i walkami z bossami.",version:"koncepcja",available:false,icon:"i-star",cover:"idle",coverText:"DROGA BOHATERA"}
+    {"id":"td","name":"Calion Tower Defence","type":"Strategia / tower defense","desc":"Broń traktów Calionu, buduj i ulepszaj wieże oraz odpieraj fale przeciwników w dwóch misjach.","version":"0.0.2","available":true,"rankingAvailable":false,"url":"https://the-rozu.github.io/Calion-TD/","icon":"i-shield","cover":"td","coverText":"OBRONA KRÓLESTWA","help":"Buduj wieże na wyznaczonych miejscach. Rozgrywkę możesz powiększyć na pełny ekran."},
+    {"id":"caliobonk","name":"CalioBonk","type":"Akcja / roguelite 3D","desc":"Przemierzaj pogranicze w 3D, walcz z hordami Slime’ów, zdobywaj doświadczenie i wybieraj karty ulepszeń.","version":"0.0.29","available":true,"rankingAvailable":false,"url":"https://the-rozu.github.io/CalioBonk/","icon":"i-sword","cover":"survivors","coverText":"CALIOBONK","help":"Najlepiej grać na komputerze: WSAD, mysz, spacja i Shift. Esc otwiera pauzę."},
+    {"id":"endless-horde","name":"Endless Horde","type":"Akcja / survival 2D","desc":"Wylosuj broń na ruletce, rozwijaj Łotrzyka i przetrwaj pięć minut na Zapomnianym Trakcie.","version":"0.0.19","available":true,"rankingAvailable":false,"url":"https://the-rozu.github.io/Endless-Horde/","icon":"i-skull","cover":"td","coverText":"NIEKOŃCZĄCA SIĘ HORDA","help":"Sterowanie: WSAD lub strzałki, a na telefonie joystick dotykowy."}
   ];
-  window.CalionGames=games.map(({id,name,available})=>({id,name,available}));  const $=(sel)=>document.querySelector(sel);
+  window.CalionGames=games.map(({id,name,available,rankingAvailable})=>({id,name,available,rankingAvailable:!!rankingAvailable}));  const $=(sel)=>document.querySelector(sel);
   const home=$("#home-view"),collection=$("#collection-view"),player=$("#play-view"),menu=$("#main-nav");
   const search=$("#archive-search");
   const worldMapPanel=$("#world-map-panel"),mapDialog=$("#map-dialog");
@@ -216,7 +215,7 @@
       if(g.available){
         const actions=document.createElement("div");actions.className="game-card-actions";
         const a=document.createElement("a");a.className="button button-primary";a.href="#/gry/"+g.id;a.innerHTML=icon("i-game")+" URUCHOM GRĘ "+icon("i-arrow");
-        const ranking=document.createElement("button");ranking.type="button";ranking.className="button button-outline";ranking.textContent="RANKING";
+        const ranking=document.createElement("button");ranking.type="button";ranking.className="button button-outline";ranking.textContent=g.rankingAvailable?"RANKING":"RANKING WKRÓTCE";
         ranking.addEventListener("click",()=>window.CalionGameHub?.showBoard(g.id,true));
         actions.append(a,ranking);wrap.append(actions);
       }else{
@@ -253,6 +252,7 @@
     const game=games.find(g=>g.id===id && g.available);if(!game)return false;
     $("#player-title").textContent=game.name;
     $("#player-desc").textContent=game.desc;
+    $("#game-port-help").textContent=game.help||"Na telefonie Kalon najlepiej działa po obróceniu ekranu poziomo.";
     $("#player-tag").textContent="GRA PRZEGLĄDARKOWA / "+game.type.toLocaleUpperCase("pl");
     const frame=$("#game-iframe");frame.title=game.name+" — gra Calionu";
     window.CalionGameHub?.launch(game);

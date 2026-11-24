@@ -240,3 +240,10 @@ Rozbudowa kanonu na podstawie dokumentów świata Calionu, ilustracji postaci i 
 - Dodano Tablicę chwały: ranking ogólny oraz osobne kategorie dla gier, przygotowane do przyszłego podłączenia backendu. Brak fikcyjnych wyników i udawanego logowania.
 - Gra bez logowania pozostaje możliwa; logowanie i zapisywanie zweryfikowanych wyników będą wymagały zewnętrznego serwera.
 - Plan techniczny znajduje się w docs/games-and-leaderboards.md. Zmiany tylko na dev-mode; main bez zmian.
+
+
+### v0.0.82 — biblioteka gier
+
+- Dodano grywalne CalioBonk, Endless Horde i Calion Tower Defence, z oficjalnych adresów GitHub Pages. Każda uruchamia się w ramce lub w nowej karcie.
+- Usunięto Idle RPG z katalogu i zakładek rankingów. Calion Survivors pozostaje zapowiedzią.
+- Rankingi nowych gier oznaczono jako niepodłączone; przekazywanie sesji ograniczono do Kalona.
